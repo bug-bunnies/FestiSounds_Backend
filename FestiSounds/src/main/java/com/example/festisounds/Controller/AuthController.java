@@ -6,8 +6,11 @@ import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
+import se.michaelthelin.spotify.model_objects.specification.Artist;
+import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
+import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopArtistsRequest;
 
 import java.io.IOException;
 import java.net.URI;
@@ -52,7 +55,27 @@ public class AuthController {
         } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {
             System.out.println("Error: " + e.getMessage());
         }
-        response.sendRedirect("http://localhost:5173/");
+        response.sendRedirect("http://localhost:5173/home/");
         return spotifyApi.getAccessToken();
+    }
+
+    @GetMapping(value = "user-top-artists")
+    public Artist[] getUserTopArtists() {
+
+        final GetUsersTopArtistsRequest getUsersTopArtistsRequest = spotifyApi.getUsersTopArtists()
+                .time_range("medium_term")
+                .limit(10)
+                .offset(5)
+                .build();
+
+        try {
+            final Paging<Artist> artistPaging = getUsersTopArtistsRequest.execute();
+
+            return artistPaging.getItems();
+        } catch (Exception e) {
+
+            System.out.println("Something went wrong!\n" + e.getMessage());
+        }
+        return new Artist[0];
     }
 }
