@@ -1,6 +1,7 @@
 package com.example.festisounds.Controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
@@ -18,11 +19,12 @@ import java.net.URI;
 @RestController
 @RequestMapping("/api")
 public class AuthController {
-    private static final String clientId = "ce13b81ee7934f69bd53aa75c6ef7418";
-    private static final String clientSecret = "1f25f0ee8c254d4dbf24d0e33c1adcb7";
-    private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/api/get-user-code/");
+
+    private static String clientId = System.getenv("clientId");
+    private static String clientSecret = System.getenv("clientSecret");
+    private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/api/get-user-code");
     private static String code = "";
-    private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
+    public static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setClientId(clientId)
             .setClientSecret(clientSecret)
             .setRedirectUri(redirectUri)
@@ -39,7 +41,6 @@ public class AuthController {
         return uri.toString();
     }
 
-
     @GetMapping(value = "get-user-code")
     public String getSpotifyUserCode(@RequestParam("code") String userCode, HttpServletResponse response) throws IOException {
         code = userCode;
@@ -55,27 +56,8 @@ public class AuthController {
         } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {
             System.out.println("Error: " + e.getMessage());
         }
-        response.sendRedirect("http://localhost:5173/home/");
+        response.sendRedirect("http://localhost:5173/home");
         return spotifyApi.getAccessToken();
     }
 
-    @GetMapping(value = "user-top-artists")
-    public Artist[] getUserTopArtists() {
-
-        final GetUsersTopArtistsRequest getUsersTopArtistsRequest = spotifyApi.getUsersTopArtists()
-                .time_range("medium_term")
-                .limit(10)
-                .offset(5)
-                .build();
-
-        try {
-            final Paging<Artist> artistPaging = getUsersTopArtistsRequest.execute();
-
-            return artistPaging.getItems();
-        } catch (Exception e) {
-
-            System.out.println("Something went wrong!\n" + e.getMessage());
-        }
-        return new Artist[0];
-    }
 }
