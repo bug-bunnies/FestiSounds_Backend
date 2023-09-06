@@ -22,7 +22,7 @@ public class AuthController {
     private static final String clientSecret = "1f25f0ee8c254d4dbf24d0e33c1adcb7";
     private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/api/get-user-code");
     private static String code = "";
-    private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
+    public static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setClientId(clientId)
             .setClientSecret(clientSecret)
             .setRedirectUri(redirectUri)
@@ -59,23 +59,5 @@ public class AuthController {
         return spotifyApi.getAccessToken();
     }
 
-    @GetMapping(value = "user-top-artists")
-    public Artist[] getUserTopArtists() {
 
-        final GetUsersTopArtistsRequest getUsersTopArtistsRequest = spotifyApi.getUsersTopArtists()
-                .time_range("medium_term")
-                .limit(10)
-                .offset(5)
-                .build();
-
-        try {
-            final Paging<Artist> artistPaging = getUsersTopArtistsRequest.execute();
-
-            return artistPaging.getItems();
-        } catch (Exception e) {
-
-            System.out.println("Something went wrong!\n" + e.getMessage());
-        }
-        return new Artist[0];
-    }
 }
