@@ -20,7 +20,7 @@ import java.net.URI;
 public class AuthController {
     private static final String clientId = "ce13b81ee7934f69bd53aa75c6ef7418";
     private static final String clientSecret = "1f25f0ee8c254d4dbf24d0e33c1adcb7";
-    private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/api/get-user-code/");
+    private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/api/get-user-code");
     private static String code = "";
     private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setClientId(clientId)
@@ -55,7 +55,7 @@ public class AuthController {
         } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {
             System.out.println("Error: " + e.getMessage());
         }
-        response.sendRedirect("http://localhost:5173/home/");
+        response.sendRedirect("http://localhost:5173/home");
         return spotifyApi.getAccessToken();
     }
 
