@@ -22,7 +22,6 @@ public class AuthController {
 
     private static String clientId = System.getenv("clientId");
     private static String clientSecret = System.getenv("clientSecret");
-
     private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/api/get-user-code");
     private static String code = "";
     public static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
@@ -42,7 +41,6 @@ public class AuthController {
         return uri.toString();
     }
 
-
     @GetMapping(value = "get-user-code")
     public String getSpotifyUserCode(@RequestParam("code") String userCode, HttpServletResponse response) throws IOException {
         code = userCode;
@@ -61,6 +59,5 @@ public class AuthController {
         response.sendRedirect("http://localhost:5173/home");
         return spotifyApi.getAccessToken();
     }
-
 
 }
