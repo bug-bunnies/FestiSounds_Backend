@@ -1,6 +1,7 @@
 package com.example.festisounds.Controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
@@ -18,8 +19,10 @@ import java.net.URI;
 @RestController
 @RequestMapping("/api")
 public class AuthController {
-    private static final String clientId = "ce13b81ee7934f69bd53aa75c6ef7418";
-    private static final String clientSecret = "1f25f0ee8c254d4dbf24d0e33c1adcb7";
+
+    private static String clientId = System.getenv("clientId");
+    private static String clientSecret = System.getenv("clientSecret");
+
     private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/api/get-user-code");
     private static String code = "";
     public static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
