@@ -15,27 +15,27 @@ import static com.example.festisounds.Controller.AuthController.spotifyApi;
 public class SpotifyDataService implements ISpotifyDataService {
 
     @Override
-    public Map<String, Long> userTopGenres() throws Exception {
-        final Artist[] artists = getUsersTopArtists();
-        return Arrays.stream(artists)
+    public Map<String, Long> userTopGenres() {
+        Artist[] usersTopArtists = getUsersTopArtists();
+        System.out.println(usersTopArtists);
+        return Arrays.stream(usersTopArtists)
                 .flatMap(artist -> Arrays.stream(artist.getGenres()))
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
     }
 
     @Override
     public Artist[] getUsersTopArtists() {
-        final GetUsersTopArtistsRequest getUsersTopArtistsRequest = spotifyApi.getUsersTopArtists()
+        GetUsersTopArtistsRequest getUsersTopArtistsRequest = spotifyApi.getUsersTopArtists()
                 .time_range("medium_term")
                 .limit(10)
                 .offset(0)
                 .build();
         try {
-            final Paging<Artist> artistPaging = getUsersTopArtistsRequest.execute();
+            Paging<Artist> artistPaging = getUsersTopArtistsRequest.execute();
             return artistPaging.getItems();
         } catch (Exception e) {
-            System.out.println("Something went wrong!\n" + e.getMessage());
+            throw new RuntimeException("Something went wrong getting top artists!\n" + e.getMessage());
         }
-        return new Artist[0];
     }
 
 }

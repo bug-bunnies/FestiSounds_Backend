@@ -18,8 +18,8 @@ import java.net.URI;
 @RequestMapping("/api")
 public class AuthController {
 
-    private static String clientId = System.getenv("clientId");
-    private static String clientSecret = System.getenv("clientSecret");
+    private static final String clientId = System.getenv("clientId");
+    private static final String clientSecret = System.getenv("clientSecret");
     private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/api/get-user-code");
     private static String code = "";
     public static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
@@ -36,7 +36,6 @@ public class AuthController {
                 .show_dialog(true)
                 .build();
         final URI uri = authorizationCodeUriRequest.execute();
-        System.out.println(uri);
         return uri.toString();
     }
 
@@ -47,7 +46,7 @@ public class AuthController {
                 .build();
         try {
             final AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRequest.execute();
-// Set access and refresh token for further "spotifyApi" object usage
+            // Set access and refresh token for further "spotifyApi" object usage
             spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
             spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
 
@@ -56,7 +55,6 @@ public class AuthController {
             System.out.println("Error: " + e.getMessage());
         }
         response.sendRedirect("http://localhost:5173/home");
-        System.out.println(spotifyApi.getAccessToken());
         return spotifyApi.getAccessToken();
     }
 
