@@ -1,17 +1,15 @@
 package com.example.festisounds.Controller;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
-import se.michaelthelin.spotify.model_objects.specification.Artist;
-import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
-import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopArtistsRequest;
 
 import java.io.IOException;
 import java.net.URI;
@@ -38,6 +36,7 @@ public class AuthController {
                 .show_dialog(true)
                 .build();
         final URI uri = authorizationCodeUriRequest.execute();
+        System.out.println(uri);
         return uri.toString();
     }
 
@@ -57,6 +56,7 @@ public class AuthController {
             System.out.println("Error: " + e.getMessage());
         }
         response.sendRedirect("http://localhost:5173/home");
+        System.out.println(spotifyApi.getAccessToken());
         return spotifyApi.getAccessToken();
     }
 
