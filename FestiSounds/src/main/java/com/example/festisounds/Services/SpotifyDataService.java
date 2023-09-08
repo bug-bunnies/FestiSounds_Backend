@@ -1,15 +1,16 @@
-package com.example.festisounds.Service;
+package com.example.festisounds.Services;
 
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
 import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopArtistsRequest;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.example.festisounds.Controller.AuthController.spotifyApi;
+import static com.example.festisounds.Controllers.AuthController.spotifyApi;
 
 @Service
 public class SpotifyDataService implements ISpotifyDataService {

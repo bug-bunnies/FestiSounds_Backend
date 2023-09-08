@@ -1,7 +1,6 @@
 package com.example.festisounds.Config;
 
-import com.example.festisounds.Controller.SpotifyDataController;
-import com.example.festisounds.Service.SpotifyDataService;
+import com.example.festisounds.Services.SpotifyDataService;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
