@@ -1,6 +1,5 @@
-package com.example.festisounds.Service;
+package com.example.festisounds.Services;
 
-import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
 
 import java.util.Map;

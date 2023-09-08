@@ -1,18 +1,17 @@
 package com.example.festisounds;
 
 import com.example.festisounds.Config.ApplicationTestConfiguration;
-import com.example.festisounds.Service.SpotifyDataService;
+import com.example.festisounds.Services.SpotifyDataService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
-import se.michaelthelin.spotify.model_objects.specification.Followers;
 
-import java.util.Arrays;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @Import(ApplicationTestConfiguration.class)
@@ -34,4 +33,5 @@ public class SpotifyDataControllerTests {
         assertEquals(3, genres.size());
         assertTrue(genres.containsKey("house"));
     }
+
 }
