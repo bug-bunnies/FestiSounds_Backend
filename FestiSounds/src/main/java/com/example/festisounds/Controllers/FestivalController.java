@@ -2,7 +2,6 @@ package com.example.festisounds.Controllers;
 
 import com.example.festisounds.Entites.Festival;
 import com.example.festisounds.Repositories.FestivalRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +13,14 @@ import java.util.UUID;
 public class FestivalController {
 
 //    api/event/update
-
-    public final static String BASE_PATH = "/api/events";
+public final static String BASE_PATH = "/api/festivals";
     public final static String BASE_PATH_ID = BASE_PATH + "/{festivalId}";
-    @Autowired
-    private FestivalRepo festivalRepo;
+
+    private final FestivalRepo festivalRepo;
+
+    public FestivalController(FestivalRepo festivalRepo) {
+        this.festivalRepo = festivalRepo;
+    }
 
     @GetMapping(BASE_PATH)
     public ResponseEntity<List<Festival>> getAllFestivals() {
