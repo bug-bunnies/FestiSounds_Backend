@@ -1,4 +1,4 @@
-package com.example.festisounds.Services;
+package com.example.festisounds.Modules.SpotifyData.Services;
 
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.example.festisounds.Controllers.AuthController.spotifyApi;
+import static com.example.festisounds.Core.Controllers.AuthController.spotifyApi;
 
 @Service
-public class SpotifyDataService implements ISpotifyDataService {
+public class SpotifyDataServiceImpl implements SpotifyDataService {
 
     @Override
     public Map<String, Long> userTopGenres() {

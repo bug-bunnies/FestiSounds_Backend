@@ -1,4 +1,4 @@
-package com.example.festisounds.Controllers;
+package com.example.festisounds.Core.Controllers;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;

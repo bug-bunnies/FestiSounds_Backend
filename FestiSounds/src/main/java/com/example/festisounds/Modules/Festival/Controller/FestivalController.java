@@ -1,7 +1,7 @@
-package com.example.festisounds.Controllers;
+package com.example.festisounds.Modules.Festival.Controller;
 
-import com.example.festisounds.Entites.Festival;
-import com.example.festisounds.Repositories.FestivalRepo;
+import com.example.festisounds.Modules.Festival.Entities.Festival;
+import com.example.festisounds.Modules.Festival.Repository.FestivalRepo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

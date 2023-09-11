@@ -1,11 +1,10 @@
 package com.example.festisounds.Config;
 
-import com.example.festisounds.Services.SpotifyDataService;
+import com.example.festisounds.Modules.SpotifyData.Services.SpotifyDataServiceImpl;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
 import se.michaelthelin.spotify.model_objects.specification.Followers;
 
@@ -19,12 +18,11 @@ public class ApplicationTestConfiguration {
     }
 
     @Autowired
-    SpotifyDataService spotifyDataService;
+    SpotifyDataServiceImpl spotifyDataServiceImpl;
 
     @Bean
-    @Primary
-    public SpotifyDataService mockedSpotifyDataController() {
-        SpotifyDataService mockedSpotifyDataService = Mockito.mock(SpotifyDataService.class);
+    public SpotifyDataServiceImpl mockedSpotifyDataController() {
+        SpotifyDataServiceImpl mockedSpotifyDataServiceImpl = Mockito.mock(SpotifyDataServiceImpl.class);
         Artist artist = new Artist.Builder()
                 .setName("Fred again..")
                 .setExternalUrls(null)
@@ -40,11 +38,11 @@ public class ApplicationTestConfiguration {
 
         Artist[] artists = new Artist[]{artist};
 
-        Mockito.when(mockedSpotifyDataService.getUsersTopArtists())
+        Mockito.when(mockedSpotifyDataServiceImpl.getUsersTopArtists())
                 .thenReturn(artists);
-        Mockito.when(mockedSpotifyDataService.userTopGenres())
+        Mockito.when(mockedSpotifyDataServiceImpl.userTopGenres())
                 .thenCallRealMethod();
-        return mockedSpotifyDataService;
+        return mockedSpotifyDataServiceImpl;
     }
 
 

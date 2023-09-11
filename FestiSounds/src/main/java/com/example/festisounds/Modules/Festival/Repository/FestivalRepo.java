@@ -1,6 +1,6 @@
-package com.example.festisounds.Repositories;
+package com.example.festisounds.Modules.Festival.Repository;
 
-import com.example.festisounds.Entites.Festival;
+import com.example.festisounds.Modules.Festival.Entities.Festival;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
