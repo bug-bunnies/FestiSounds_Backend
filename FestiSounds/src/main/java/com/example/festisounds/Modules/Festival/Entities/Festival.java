@@ -38,8 +38,11 @@ public class Festival {
     @Column(name = "details", nullable = false, length = 500)
     private String details;
 
+//    @ManyToMany
+//    private festivalArtist artist; festivalId spotifyId name
+
 //    @OneToMany
-//    private festivalArtist artist;
+//    festivalGenre name
 
     @Column(name = "location", nullable = false, length = 100)
     private String location;
