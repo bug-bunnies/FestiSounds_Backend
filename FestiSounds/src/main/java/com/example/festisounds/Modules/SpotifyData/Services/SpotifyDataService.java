@@ -1,10 +1,10 @@
-package com.example.festisounds.Services;
+package com.example.festisounds.Modules.SpotifyData.Services;
 
 import se.michaelthelin.spotify.model_objects.specification.Artist;
 
 import java.util.Map;
 
-public interface ISpotifyDataService {
+public interface SpotifyDataService {
 
     Map<String, Long> userTopGenres();
 

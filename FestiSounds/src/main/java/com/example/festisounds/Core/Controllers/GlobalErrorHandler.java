@@ -1,4 +1,4 @@
-package com.example.festisounds.Controllers;
+package com.example.festisounds.Core.Controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

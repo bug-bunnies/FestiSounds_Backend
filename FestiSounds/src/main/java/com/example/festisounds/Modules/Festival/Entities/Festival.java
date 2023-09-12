@@ -1,4 +1,4 @@
-package com.example.festisounds.Entites;
+package com.example.festisounds.Modules.Festival.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;

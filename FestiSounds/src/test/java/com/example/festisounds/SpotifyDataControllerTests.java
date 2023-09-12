@@ -1,7 +1,7 @@
 package com.example.festisounds;
 
 import com.example.festisounds.Config.ApplicationTestConfiguration;
-import com.example.festisounds.Services.SpotifyDataService;
+import com.example.festisounds.Modules.SpotifyData.Services.SpotifyDataServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,17 +19,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class SpotifyDataControllerTests {
 
     @Autowired
-    SpotifyDataService spotifyDataService;
+    SpotifyDataServiceImpl spotifyDataServiceImpl;
 
     @Test
     public void shouldMockGetUsersTopArtists(){
-        Artist[] artists = spotifyDataService.getUsersTopArtists();
+        Artist[] artists = spotifyDataServiceImpl.getUsersTopArtists();
         assertEquals(artists[0].getName(),"Fred again..");
     }
 
     @Test
     public void shouldReturnCorrectGenreValues(){
-        Map<String, Long> genres = spotifyDataService.userTopGenres();
+        Map<String, Long> genres = spotifyDataServiceImpl.userTopGenres();
         assertEquals(3, genres.size());
         assertTrue(genres.containsKey("house"));
     }

@@ -1,4 +1,4 @@
-package com.example.festisounds.Controllers;
+package com.example.festisounds.Core.Controllers;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +48,7 @@ public class AuthController {
             spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
             spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
 
+            System.out.println("Spotify access token: " + spotifyApi.getAccessToken());
             System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
         } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {
             System.out.println("Error: " + e.getMessage());
@@ -55,5 +56,4 @@ public class AuthController {
         response.sendRedirect("http://localhost:5173/home");
         return spotifyApi.getAccessToken();
     }
-
 }
