@@ -21,6 +21,7 @@ public class ApplicationTestConfiguration {
     SpotifyDataServiceImpl spotifyDataServiceImpl;
 
     @Bean
+//    @Primary
     public SpotifyDataServiceImpl mockedSpotifyDataController() {
         SpotifyDataServiceImpl mockedSpotifyDataServiceImpl = Mockito.mock(SpotifyDataServiceImpl.class);
         Artist artist = new Artist.Builder()
