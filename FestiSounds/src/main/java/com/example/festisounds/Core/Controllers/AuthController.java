@@ -49,11 +49,18 @@ public class AuthController {
             spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
 
             System.out.println("Spotify access token: " + spotifyApi.getAccessToken());
+            System.out.println("Spotify refresh token: " + spotifyApi.getRefreshToken());
             System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
         } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {
             System.out.println("Error: " + e.getMessage());
         }
         response.sendRedirect("http://localhost:5173/home");
+        return spotifyApi.getAccessToken();
+    }
+
+    @GetMapping(value = "refresh")
+    public String refreshAccessToken() {
+
         return spotifyApi.getAccessToken();
     }
 }
