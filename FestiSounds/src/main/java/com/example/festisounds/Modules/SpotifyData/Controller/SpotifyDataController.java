@@ -34,4 +34,6 @@ public class SpotifyDataController {
         Map<String, Long> genres = SpotifyDataService.userTopGenres();
             return ResponseEntity.ok(genres);
     }
+
+
 }
