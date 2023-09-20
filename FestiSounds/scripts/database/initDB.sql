@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS festival
+CREATE TABLE IF NOT EXISTS festivals
 (
     id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name               VARCHAR(100) NOT NULL,
@@ -13,4 +13,4 @@ CREATE TABLE IF NOT EXISTS festival
     festival_organizer VARCHAR(100) NOT NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_festival_id ON festival (id);
+CREATE INDEX IF NOT EXISTS idx_festival_id ON festivals (id);
