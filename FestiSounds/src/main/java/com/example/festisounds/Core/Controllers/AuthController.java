@@ -1,6 +1,8 @@
 package com.example.festisounds.Core.Controllers;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
@@ -11,6 +13,8 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 
 import java.io.IOException;
 import java.net.URI;
+
+
 
 @RestController
 @RequestMapping("/api")
@@ -49,11 +53,18 @@ public class AuthController {
             spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
 
             System.out.println("Spotify access token: " + spotifyApi.getAccessToken());
+            System.out.println("Spotify refresh token: " + spotifyApi.getRefreshToken());
             System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
         } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {
             System.out.println("Error: " + e.getMessage());
         }
         response.sendRedirect("http://localhost:5173/home");
+        return spotifyApi.getAccessToken();
+    }
+
+    @GetMapping(value = "refresh")
+    public String refreshAccessToken() {
+
         return spotifyApi.getAccessToken();
     }
 }
