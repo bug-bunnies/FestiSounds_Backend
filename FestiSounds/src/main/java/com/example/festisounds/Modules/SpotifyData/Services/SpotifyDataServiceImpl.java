@@ -1,10 +1,15 @@
 package com.example.festisounds.Modules.SpotifyData.Services;
 
+import com.example.festisounds.Core.Controllers.AuthController;
+import org.apache.hc.core5.http.ParseException;
 import org.springframework.stereotype.Service;
+import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
 import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopArtistsRequest;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
@@ -16,7 +21,7 @@ import static com.example.festisounds.Core.Controllers.AuthController.spotifyApi
 public class SpotifyDataServiceImpl implements SpotifyDataService {
 
     @Override
-    public Map<String, Long> userTopGenres() {
+    public Map<String, Long> userTopGenres() throws IOException, ParseException, SpotifyWebApiException {
         Artist[] usersTopArtists = getUsersTopArtists();
         System.out.println(usersTopArtists);
         return Arrays.stream(usersTopArtists)
@@ -25,12 +30,17 @@ public class SpotifyDataServiceImpl implements SpotifyDataService {
     }
 
     @Override
-    public Artist[] getUsersTopArtists() {
+    public Artist[] getUsersTopArtists() throws IOException, ParseException, SpotifyWebApiException {
+        if (AuthController.expirationToken > LocalDateTime.now().getSecond()) {
+            AuthController.refreshAccessToken();
+        }
+
         GetUsersTopArtistsRequest getUsersTopArtistsRequest = spotifyApi.getUsersTopArtists()
                 .time_range("medium_term")
                 .limit(10)
                 .offset(0)
                 .build();
+
         try {
             Paging<Artist> artistPaging = getUsersTopArtistsRequest.execute();
             return artistPaging.getItems();
