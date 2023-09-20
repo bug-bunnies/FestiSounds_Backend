@@ -13,7 +13,8 @@ import java.io.IOException;
 
 @ControllerAdvice
 public class GlobalErrorHandler extends ResponseEntityExceptionHandler {
-        @ExceptionHandler({RuntimeException.class})
+
+    @ExceptionHandler({RuntimeException.class})
         protected ResponseEntity<String> handleError(RuntimeException ex) {
             String errorMessage = ex.getMessage();
 
