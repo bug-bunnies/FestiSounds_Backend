@@ -1,4 +1,4 @@
-package com.example.festisounds.Modules.FestiSoundArtists.Entities;
+package com.example.festisounds.Modules.FestivalArtists.Entities;
 
 import com.example.festisounds.Modules.Festival.Entities.Festival;
 import jakarta.persistence.*;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "festisound_artist")
-public class FestiSoundArtist {
+public class FestivalArtist {
     @Id
     @Column(name = "id")
     @GeneratedValue(generator = "uuid-hibernate-generator")
