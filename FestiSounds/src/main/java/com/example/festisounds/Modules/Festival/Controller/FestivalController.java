@@ -3,7 +3,6 @@ package com.example.festisounds.Modules.Festival.Controller;
 import com.example.festisounds.Modules.Festival.Entities.Festival;
 import com.example.festisounds.Modules.Festival.Repository.FestivalRepo;
 import com.example.festisounds.Modules.Festival.Service.FestivalService;
-import com.example.festisounds.Modules.SupaBaseDB.SupabaseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,12 +17,10 @@ public final static String BASE_PATH = "/api/festivals";
 
     private final FestivalRepo festivalRepo;
     private final FestivalService festivalService;
-    private final SupabaseService supabaseService;
 
-    public FestivalController(FestivalRepo festivalRepo, FestivalService festivalService, SupabaseService supabaseService) {
+    public FestivalController(FestivalRepo festivalRepo, FestivalService festivalService) {
         this.festivalRepo = festivalRepo;
         this.festivalService = festivalService;
-        this.supabaseService = supabaseService;
     }
 
     @GetMapping(BASE_PATH)
