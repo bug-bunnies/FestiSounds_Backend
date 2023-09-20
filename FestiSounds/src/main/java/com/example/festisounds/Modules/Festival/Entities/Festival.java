@@ -17,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "festival")
+@Table(name = "festivals")
 public class Festival {
 
     @Id
