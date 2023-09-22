@@ -15,13 +15,17 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "festisound_artist")
+@Table(name = "festival_artist")
 public class FestivalArtist {
     @Id
     @Column(name = "id")
     @GeneratedValue(generator = "uuid-hibernate-generator")
     @GenericGenerator(name = "uuid-hibernate-generator", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
+
+    @Column(name = "spotify_id", nullable = false, length=100)
+
+    private String spotifyId;
 
     @Column(name = "artist_name", nullable = false, length = 100)
     private String artistName;
@@ -30,7 +34,9 @@ public class FestivalArtist {
     @ManyToMany
     @JoinTable(
             name = "festival_artist",
-            joinColumns = @JoinColumn(name = "festisound_artist_id"),
-            inverseJoinColumns = @JoinColumn(name = "festival_id"))
+            joinColumns = {
+                    @JoinColumn(name = "festival_id"),
+            inverseJoinColumns = @JoinColumn(name = "spotify_id"))
     private Set<Festival> festivals = new HashSet<>();
+
 }

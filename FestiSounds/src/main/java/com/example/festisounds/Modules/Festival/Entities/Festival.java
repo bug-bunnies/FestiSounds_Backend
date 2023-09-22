@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SourceType;
 import org.hibernate.annotations.UpdateTimestamp;
+import se.michaelthelin.spotify.model_objects.specification.Artist;
 
 import java.time.Instant;
 import java.util.Date;
@@ -41,27 +42,21 @@ public class Festival {
     @Column(name = "details", nullable = false, length = 500)
     private String details;
 
-//    @ManyToMany
-//    private festivalArtist artist; festivalId spotifyId name
-
     @Builder.Default
     @ManyToMany
-    @JoinTable(
-            name = "festival_artist",
-            joinColumns = @JoinColumn(name = "festival_id"),
-            inverseJoinColumns = @JoinColumn(name = "festisound_artist_id"))
+    @JoinColumn(name = "festival_id")
     private Set<FestivalArtist> artists = new HashSet<>();
 
-//    @OneToMany
-//    festivalGenre name
+    @Column(name = "city", nullable = false, length = 100)
+    private String city;
 
-    @Column(name = "location", nullable = false, length = 100)
-    private String location;
+    @Column(name = "country", nullable = false, length = 100)
+    private String country;
 
     @Column(name = "is_robbie_invited")
     private boolean isRobbieInvited;
 
-    @Column(name = "image", nullable = false, length = 500)
+    @Column(name = "image", nullable = true, length = 500)
     private String image;
 
     @Column(name = "created_on")
@@ -72,16 +67,9 @@ public class Festival {
     @UpdateTimestamp(source = SourceType.DB)
     private Instant lastUpdatedOn;
 
-    @Column(name = "festival_organizer", nullable = false, length = 100)
-    private String festivalOrganizer;
+    @Column(name = "organizer", nullable = false, length = 100)
+    private String organizer;
 
-    public void addArtist(FestivalArtist artist) {
-        this.artists.add(artist);
-        artist.getFestivals().add(this);
-    }
-
-    public void removeArtist(FestivalArtist artist) {
-        this.artists.remove(artist);
-        artist.getFestivals().remove(this);
-    }
+    @Column(name = "website", nullable = false, length = 100)
+    private String website;
 }
