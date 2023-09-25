@@ -7,7 +7,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SourceType;
 import org.hibernate.annotations.UpdateTimestamp;
-import se.michaelthelin.spotify.model_objects.specification.Artist;
 
 import java.time.Instant;
 import java.util.Date;
@@ -43,8 +42,7 @@ public class Festival {
     private String details;
 
     @Builder.Default
-    @ManyToMany
-    @JoinColumn(name = "festival_id")
+    @ManyToMany(mappedBy = "festivals")
     private Set<FestivalArtist> artists = new HashSet<>();
 
     @Column(name = "city", nullable = false, length = 100)

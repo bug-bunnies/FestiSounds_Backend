@@ -33,10 +33,11 @@ public class FestivalArtist {
     @Builder.Default
     @ManyToMany
     @JoinTable(
-            name = "festival_artist",
-            joinColumns = {
-                    @JoinColumn(name = "festival_id"),
-            inverseJoinColumns = @JoinColumn(name = "spotify_id"))
+            name = "festival_artist_link",
+            joinColumns = @JoinColumn(name = "festival_artist_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "festival_id", referencedColumnName = "id")
+    )
     private Set<Festival> festivals = new HashSet<>();
+
 
 }
