@@ -24,7 +24,6 @@ public class FestivalArtist {
     private UUID id;
 
     @Column(name = "spotify_id", nullable = false, length=100)
-
     private String spotifyId;
 
     @Column(name = "artist_name", nullable = false, length = 100)
@@ -35,7 +34,7 @@ public class FestivalArtist {
     @JoinTable(
             name = "festival_artist_link",
             joinColumns = @JoinColumn(name = "festival_artist_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "festival_id", referencedColumnName = "id")
+            inverseJoinColumns = @JoinColumn(name = "festival_id", referencedColumnName = "uuid")
     )
     private Set<Festival> festivals = new HashSet<>();
 

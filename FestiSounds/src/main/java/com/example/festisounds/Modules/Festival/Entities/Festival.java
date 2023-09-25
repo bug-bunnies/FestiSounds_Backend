@@ -24,7 +24,7 @@ import java.util.UUID;
 public class Festival {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "uuid")
     @GeneratedValue(generator = "uuid-hibernate-generator")
     @GenericGenerator(name = "uuid-hibernate-generator", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
