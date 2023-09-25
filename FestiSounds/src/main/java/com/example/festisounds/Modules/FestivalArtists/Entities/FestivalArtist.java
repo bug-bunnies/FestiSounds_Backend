@@ -35,7 +35,7 @@ public class FestivalArtist {
     @JoinTable(
             name = "festival_artist_link",
             joinColumns = @JoinColumn(name = "festival_artist_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "festival_id", referencedColumnName = "id")
+            inverseJoinColumns = @JoinColumn(name = "festival_id", referencedColumnName = "uuid")
     )
     private Set<Festival> festivals = new HashSet<>();
 
