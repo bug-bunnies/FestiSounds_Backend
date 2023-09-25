@@ -24,7 +24,6 @@ public class FestivalArtist {
     private UUID id;
 
     @Column(name = "spotify_id", nullable = false, length=100)
-
     private String spotifyId;
 
     @Column(name = "artist_name", nullable = false, length = 100)
