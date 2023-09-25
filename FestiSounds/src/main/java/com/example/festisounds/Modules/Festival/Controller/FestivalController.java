@@ -32,6 +32,7 @@ public final static String BASE_PATH = "/api/festivals";
 
     @PostMapping(BASE_PATH)
     public ResponseEntity<Festival> createFestival(@RequestBody Festival festival) {
+        System.out.println(festival);
         return ResponseEntity.ok(festivalService.createFestival(festival));
     }
 
