@@ -1,4 +1,4 @@
-package com.example.festisounds.Modules.FestiSoundArtists.Entities;
+package com.example.festisounds.Modules.FestivalArtists.Entities;
 
 import com.example.festisounds.Modules.Festival.Entities.Festival;
 import jakarta.persistence.*;
@@ -15,13 +15,17 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "festisound_artist")
-public class FestiSoundArtist {
+@Table(name = "festival_artist")
+public class FestivalArtist {
     @Id
     @Column(name = "id")
     @GeneratedValue(generator = "uuid-hibernate-generator")
     @GenericGenerator(name = "uuid-hibernate-generator", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
+
+    @Column(name = "spotify_id", nullable = false, length=100)
+
+    private String spotifyId;
 
     @Column(name = "artist_name", nullable = false, length = 100)
     private String artistName;
@@ -29,8 +33,11 @@ public class FestiSoundArtist {
     @Builder.Default
     @ManyToMany
     @JoinTable(
-            name = "festival_artist",
-            joinColumns = @JoinColumn(name = "festisound_artist_id"),
-            inverseJoinColumns = @JoinColumn(name = "festival_id"))
+            name = "festival_artist_link",
+            joinColumns = @JoinColumn(name = "festival_artist_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "festival_id", referencedColumnName = "id")
+    )
     private Set<Festival> festivals = new HashSet<>();
+
+
 }
