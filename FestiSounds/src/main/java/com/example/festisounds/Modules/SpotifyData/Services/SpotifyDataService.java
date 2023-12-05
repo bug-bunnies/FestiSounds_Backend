@@ -12,4 +12,7 @@ public interface SpotifyDataService {
     Map<String, Long> userTopGenres() throws IOException, ParseException, SpotifyWebApiException;
 
     Artist[] getUsersTopArtists() throws IOException, ParseException, SpotifyWebApiException;
+    Artist[] getUsersArtists() throws IOException, ParseException, SpotifyWebApiException;
+    Artist[] getUsersArtistsForTimeframe() throws IOException, ParseException, SpotifyWebApiException;
+
 }

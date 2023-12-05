@@ -29,6 +29,8 @@ public class SpotifyDataServiceImpl implements SpotifyDataService {
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
     }
 
+
+    // This method can probably be removed.
     @Override
     public Artist[] getUsersTopArtists() throws IOException, ParseException, SpotifyWebApiException {
         if (AuthController.expirationToken > LocalDateTime.now().getSecond()) {
@@ -47,6 +49,34 @@ public class SpotifyDataServiceImpl implements SpotifyDataService {
         } catch (Exception e) {
             throw new RuntimeException("Something went wrong getting top artists!\n" + e.getMessage());
         }
+    }
+
+    @Override
+    public Artist[] getUsersArtists() throws IOException, ParseException, SpotifyWebApiException {
+        if (AuthController.expirationToken > LocalDateTime.now().getSecond()) {
+            AuthController.refreshAccessToken();
+        }
+        // Do these 3 calls in parallel eventually - can reduce number of calls if api calls become too expensive
+        GetUsersTopArtistsRequest getUsersArtistsShortTerm = spotifyApi.getUsersTopArtists()
+                .time_range("short_term")
+                .limit(50)
+                .build();
+        GetUsersTopArtistsRequest getUsersArtistsMediumTerm = spotifyApi.getUsersTopArtists()
+                .time_range("medium_term")
+                .limit(50)
+                .build();
+        GetUsersTopArtistsRequest getUsersArtistsLongTerm = spotifyApi.getUsersTopArtists()
+                .time_range("long_term")
+                .limit(50)
+                .build();
+
+        try {
+            Paging<Artist> artistPaging = getUsersTopArtistsRequest.execute();
+            return artistPaging.getItems();
+        } catch (Exception e) {
+            throw new RuntimeException("Something went wrong getting top artists!\n" + e.getMessage());
+        }
+        return new Artist[0];
     }
 
 }
