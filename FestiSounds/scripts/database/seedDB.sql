@@ -1,26 +1,14 @@
--- Add 5 test festivals to the "festival" table
-
--- Festival 1
-INSERT INTO festival (name, start_date, end_date, details, location, is_robbie_invited, image, festival_organizer)
-VALUES ('Summer Music Festival', '2023-06-15', '2023-06-17', 'Three days of live music and fun in the sun.',
-        'Beachfront Park', true, 'summer_music_festival.jpg', 'Music Events Inc.');
-
--- Festival 2
-INSERT INTO festival (name, start_date, end_date, details, location, is_robbie_invited, image, festival_organizer)
-VALUES ('RockFest 2023', '2023-07-20', '2023-07-23', 'The biggest rock festival of the year!', 'Rockville Arena', true,
-        'rockfest_2023.jpg', 'Rock Productions LLC');
-
--- Festival 3
-INSERT INTO festival (name, start_date, end_date, details, location, is_robbie_invited, image, festival_organizer)
-VALUES ('Jazz on the Green', '2023-08-05', '2023-08-07', 'Smooth jazz under the stars.', 'City Park', false,
-        'jazz_on_the_green.jpg', 'Jazz Nights');
-
--- Festival 4
-INSERT INTO festival (name, start_date, end_date, details, location, is_robbie_invited, image, festival_organizer)
-VALUES ('EDM Extravaganza', '2023-09-10', '2023-09-12', 'Electronic dance music all weekend long.', 'Electro Dome',
-        true, 'edm_extravaganza.jpg', 'EDM Events Worldwide');
-
--- Festival 5
-INSERT INTO festival (name, start_date, end_date, details, location, is_robbie_invited, image, festival_organizer)
-VALUES ('Country Fest 2023', '2023-10-15', '2023-10-17', 'A celebration of country music in the heart of Texas.',
-        'Texas Ranch', false, 'country_fest_2023.jpg', 'Country Vibes LLC');
+INSERT INTO festivals(uuid, name, start_date, end_date, details, city, country, is_robbie_invited, image, created_on,
+                      last_updated_on, organizer, website)
+VALUES (UUID_GENERATE_V4(), 'Fest1', TIMESTAMP '2023-09-26 14:00:00', TIMESTAMP '2023-09-27 22:00:00',
+        'Details for Fest1', 'City1', 'Country1', TRUE, 'https://example.com/image1.jpg',
+        TIMESTAMP '2023-09-25 13:00:00', TIMESTAMP '2023-09-25 13:00:00', 'Organizer1', 'https://fest1.com'),
+       (UUID_GENERATE_V4(), 'Fest2', TIMESTAMP '2023-10-01 14:00:00', TIMESTAMP '2023-10-02 22:00:00',
+        'Details for Fest2', 'City2', 'Country2', FALSE, 'https://example.com/image2.jpg',
+        TIMESTAMP '2023-09-25 13:00:00', TIMESTAMP '2023-09-25 13:00:00', 'Organizer2', 'https://fest2.com'),
+       (UUID_GENERATE_V4(), 'Fest3', TIMESTAMP '2023-10-06 14:00:00', TIMESTAMP '2023-10-07 22:00:00',
+        'Details for Fest3', 'City3', 'Country3', TRUE, 'https://example.com/image3.jpg',
+        TIMESTAMP '2023-09-25 13:00:00', TIMESTAMP '2023-09-25 13:00:00', 'Organizer3', 'https://fest3.com'),
+       (UUID_GENERATE_V4(), 'Fest4', TIMESTAMP '2023-10-11 14:00:00', TIMESTAMP '2023-10-12 22:00:00',
+        'Details for Fest4', 'City4', 'Country4', FALSE, 'https://example.com/image4.jpg',
+        TIMESTAMP '2023-09-25 13:00:00', TIMESTAMP '2023-09-25 13:00:00', 'Organizer4', 'https://fest4.com')

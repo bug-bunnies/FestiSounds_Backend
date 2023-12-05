@@ -2,6 +2,8 @@ package com.example.festisounds.Modules.Festival.Controller;
 
 import com.example.festisounds.Modules.Festival.Entities.Festival;
 import com.example.festisounds.Modules.Festival.Repository.FestivalRepo;
+import com.example.festisounds.Modules.Festival.Service.FestivalService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,17 +12,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 public class FestivalController {
-
-//    api/event/update
 public final static String BASE_PATH = "/api/festivals";
     public final static String BASE_PATH_ID = BASE_PATH + "/{festivalId}";
 
     private final FestivalRepo festivalRepo;
-
-    public FestivalController(FestivalRepo festivalRepo) {
-        this.festivalRepo = festivalRepo;
-    }
+    private final FestivalService festivalService;
 
     @GetMapping(BASE_PATH)
     public ResponseEntity<List<Festival>> getAllFestivals() {
@@ -34,7 +32,8 @@ public final static String BASE_PATH = "/api/festivals";
 
     @PostMapping(BASE_PATH)
     public ResponseEntity<Festival> createFestival(@RequestBody Festival festival) {
-        return ResponseEntity.ok(festivalRepo.save(festival));
+        System.out.println(festival);
+        return ResponseEntity.ok(festivalService.createFestival(festival));
     }
 
     @DeleteMapping(BASE_PATH_ID)

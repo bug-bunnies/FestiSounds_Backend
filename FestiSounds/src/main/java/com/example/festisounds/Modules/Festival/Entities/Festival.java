@@ -1,5 +1,6 @@
 package com.example.festisounds.Modules.Festival.Entities;
 
+import com.example.festisounds.Modules.FestivalArtists.Entities.FestivalArtist;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,6 +10,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -17,11 +20,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "festival")
+@Table(name = "festivals")
 public class Festival {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "uuid")
     @GeneratedValue(generator = "uuid-hibernate-generator")
     @GenericGenerator(name = "uuid-hibernate-generator", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
@@ -38,16 +41,20 @@ public class Festival {
     @Column(name = "details", nullable = false, length = 500)
     private String details;
 
-//    @OneToMany
-//    private festivalArtist artist;
+    @Builder.Default
+    @ManyToMany(mappedBy = "festivals")
+    private Set<FestivalArtist> artists = new HashSet<>();
 
-    @Column(name = "location", nullable = false, length = 100)
-    private String location;
+    @Column(name = "city", nullable = false, length = 100)
+    private String city;
+
+    @Column(name = "country", nullable = false, length = 100)
+    private String country;
 
     @Column(name = "is_robbie_invited")
     private boolean isRobbieInvited;
 
-    @Column(name = "image", nullable = false, length = 500)
+    @Column(name = "image", nullable = true, length = 500)
     private String image;
 
     @Column(name = "created_on")
@@ -58,6 +65,9 @@ public class Festival {
     @UpdateTimestamp(source = SourceType.DB)
     private Instant lastUpdatedOn;
 
-    @Column(name = "festival_organizer", nullable = false, length = 100)
-    private String festivalOrganizer;
+    @Column(name = "organizer", nullable = false, length = 100)
+    private String organizer;
+
+    @Column(name = "website", nullable = false, length = 100)
+    private String website;
 }
