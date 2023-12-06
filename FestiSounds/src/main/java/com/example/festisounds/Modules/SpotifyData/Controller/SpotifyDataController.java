@@ -29,16 +29,16 @@ public class SpotifyDataController {
     @GetMapping(BASE_PATH_TOP_ARTISTS)
     public ResponseEntity<Artist[]> getUserTopArtists() throws IOException, ParseException, SpotifyWebApiException {
 
-        return ResponseEntity.ok(SpotifyDataService.getUsersTopArtists());
+        return ResponseEntity.ok(SpotifyDataService.getUsersArtistsForTimeframe("medium_term"));
 
     }
 
     //    @GetMapping(value = "get-genres")
-    @GetMapping(BASE_PATH_GET_GENRES)
-    public ResponseEntity<Map<String, Long>> getUserTopArtistsGenres() throws IOException, ParseException, SpotifyWebApiException {
-        Map<String, Long> genres = SpotifyDataService.userTopGenres();
-            return ResponseEntity.ok(genres);
-    }
+//    @GetMapping(BASE_PATH_GET_GENRES)
+//    public ResponseEntity<Map<String, Long>> getUserTopArtistsGenres() throws IOException, ParseException, SpotifyWebApiException {
+//        Map<String, Long> genres = SpotifyDataService.userTopGenres();
+//            return ResponseEntity.ok(genres);
+//    }
 
 
 }

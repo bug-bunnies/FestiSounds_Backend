@@ -110,5 +110,4 @@ public class SpotifyDataServiceImpl implements SpotifyDataService {
             throw new RuntimeException("Something went wrong getting top tracks!\n" + e.getMessage());
         }
     }
-
 }
