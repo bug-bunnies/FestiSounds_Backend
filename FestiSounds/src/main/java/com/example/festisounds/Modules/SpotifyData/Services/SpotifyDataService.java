@@ -10,9 +10,6 @@ import java.io.IOException;
 
 public interface SpotifyDataService {
 
-//    Map<String, Long> userTopGenres() throws IOException, ParseException, SpotifyWebApiException;
-
-//    Artist[] getUsersTopArtists() throws IOException, ParseException, SpotifyWebApiException;
     TopItemsDTO getUsersItems() throws IOException, ParseException, SpotifyWebApiException;
     Artist[] getUsersArtistsForTimeframe(String timeframe) throws IOException, ParseException, SpotifyWebApiException;
     Track[] getUsersTracksForTimeframe(String timeframe) throws IOException, ParseException, SpotifyWebApiException;
