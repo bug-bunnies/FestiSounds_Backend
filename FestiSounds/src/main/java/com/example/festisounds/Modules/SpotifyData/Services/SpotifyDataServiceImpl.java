@@ -13,10 +13,6 @@ import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUser
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static com.example.festisounds.Core.Controllers.AuthController.spotifyApi;
 
@@ -24,36 +20,6 @@ import static com.example.festisounds.Core.Controllers.AuthController.spotifyApi
 public class SpotifyDataServiceImpl implements SpotifyDataService {
 
     public static final int resultLimit = 50;
-
-//    @Override
-//    public Map<String, Long> userTopGenres() throws IOException, ParseException, SpotifyWebApiException {
-//        Artist[] usersTopArtists = getUsersTopArtists();
-//        System.out.println(usersTopArtists);
-//        return Arrays.stream(usersTopArtists)
-//                .flatMap(artist -> Arrays.stream(artist.getGenres()))
-//                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-//    }
-//
-//    @Override
-//    public Artist[] getUsersTopArtists() throws IOException, ParseException, SpotifyWebApiException {
-//        if (AuthController.expirationToken > LocalDateTime.now().getSecond()) {
-//            AuthController.refreshAccessToken();
-//        }
-//
-//        GetUsersTopArtistsRequest getUsersTopArtistsRequest = spotifyApi.getUsersTopArtists()
-//                .time_range("medium_term")
-//                .limit(10)
-//                .offset(0)
-//                .build();
-//
-//        try {
-//            Paging<Artist> artistPaging = getUsersTopArtistsRequest.execute();
-//            return artistPaging.getItems();
-//        } catch (Exception e) {
-//            throw new RuntimeException("Something went wrong getting top artists!\n" + e.getMessage());
-//        }
-//    }
-
     @Override
     public TopItemsTimeframeDTO getUsersItems() throws IOException, ParseException, SpotifyWebApiException {
         if (AuthController.expirationToken > LocalDateTime.now().getSecond()) {
