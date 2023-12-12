@@ -15,6 +15,7 @@ import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUser
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static com.example.festisounds.Core.Controllers.AuthController.spotifyApi;
@@ -45,7 +46,13 @@ public class SpotifyDataProcessingServiceImpl implements SpotifyDataProcessingSe
 
     private HashMap<String, Double> generateGenreRanking(Artist[] artists) {
         HashMap<String, Double> genreRanking = new HashMap<>();
-        return null;
+        double maxValue = (double) ((artists.length) * (artists.length + 1)) /2;
+        for (int i = artists.length; i > 0; i--) {
+            double finalI = i;
+            Arrays.stream(artists[i-1].getGenres())
+                    .map(genre -> genreRanking.merge(genre, finalI/(maxValue*100), Double::sum));
+        }
+        return genreRanking;
     }
 
     private HashMap<String, Double> getGenreRankingFromTracks(TopTracksDTO topTracksDTO) {
