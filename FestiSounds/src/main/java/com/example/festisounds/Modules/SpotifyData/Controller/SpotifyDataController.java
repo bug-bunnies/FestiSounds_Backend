@@ -20,7 +20,6 @@ public class SpotifyDataController {
         this.SpotifyDataService = SpotifyDataService;
     }
 
-    //    @GetMapping(value = "user-top-artists")
     @GetMapping(BASE_PATH_TOP_ARTISTS)
     public ResponseEntity<Artist[]> getUserTopArtists() throws IOException, ParseException, SpotifyWebApiException {
 

@@ -1,7 +1,9 @@
 package com.example.festisounds.Modules.SpotifyData.Services;
 
 import com.example.festisounds.Core.Controllers.AuthController;
-import com.example.festisounds.Modules.SpotifyData.DTOs.TopItemsTimeframeDTO;
+import com.example.festisounds.Modules.SpotifyData.DTOs.TopArtistsDTO;
+import com.example.festisounds.Modules.SpotifyData.DTOs.TopItemsDTO;
+import com.example.festisounds.Modules.SpotifyData.DTOs.TopTracksDTO;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -21,7 +23,7 @@ public class SpotifyDataServiceImpl implements SpotifyDataService {
 
     public static final int resultLimit = 50;
     @Override
-    public TopItemsTimeframeDTO getUsersItems() throws IOException, ParseException, SpotifyWebApiException {
+    public TopItemsDTO getUsersItems() throws IOException, ParseException, SpotifyWebApiException {
         if (AuthController.expirationToken > LocalDateTime.now().getSecond()) {
             AuthController.refreshAccessToken();
         }
@@ -29,12 +31,14 @@ public class SpotifyDataServiceImpl implements SpotifyDataService {
         Artist[] topShortTermArtists = getUsersArtistsForTimeframe("short_term");
         Artist[] topMediumTermArtists = getUsersArtistsForTimeframe("medium_term");
         Artist[] topLongTermArtists = getUsersArtistsForTimeframe("long_term");
+        TopArtistsDTO topArtists = new TopArtistsDTO(topShortTermArtists, topMediumTermArtists, topLongTermArtists);
 
         Track[] topShortTermTracks = getUsersTracksForTimeframe("short_term");
         Track[] topMediumTermTracks = getUsersTracksForTimeframe("medium_term");
         Track[] topLongTermTracks = getUsersTracksForTimeframe("long_term");
+        TopTracksDTO topTracks = new TopTracksDTO(topShortTermTracks, topMediumTermTracks, topLongTermTracks);
 
-        return new TopItemsTimeframeDTO(topShortTermArtists, topMediumTermArtists, topLongTermArtists, topShortTermTracks, topMediumTermTracks, topLongTermTracks);
+        return new TopItemsDTO(topArtists, topTracks);
     }
 
     @Override
