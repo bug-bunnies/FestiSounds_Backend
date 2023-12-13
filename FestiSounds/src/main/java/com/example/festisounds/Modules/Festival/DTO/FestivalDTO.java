@@ -1,5 +1,6 @@
 package com.example.festisounds.Modules.Festival.DTO;
 
+import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistDTO;
 import com.example.festisounds.Modules.FestivalArtists.Entities.FestivalArtist;
 
 import java.util.Date;
@@ -12,7 +13,7 @@ public record FestivalDTO(
         Date startDate,
         Date endDate,
         String details,
-        Set<FestivalArtist> artists,
+        Set<ArtistDTO> artists,
         String city,
         String country,
         String organizer,

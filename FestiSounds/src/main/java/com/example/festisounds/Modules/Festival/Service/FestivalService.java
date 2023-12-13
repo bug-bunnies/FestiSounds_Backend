@@ -36,9 +36,9 @@ public class FestivalService {
         return FestivalDTOBuilder.festivalDataBuilder(festivalById);
     }
 
-    // needs to check for matching names - now working with exact name
+    // needs to check for not matching names
     public FestivalDTO[] getFestivalsByName(String name) {
-        List<Festival> festivalsByName = festivalRepo.queryFestivalsByName(name);
+        List<Festival> festivalsByName = festivalRepo.findByNameContainingIgnoreCase(name);
         return festivalsByName.stream()
                 .map(FestivalDTOBuilder::festivalDataBuilder)
                 .collect(Collectors.toList()).toArray(new FestivalDTO[0]);
@@ -51,8 +51,6 @@ public class FestivalService {
             throw new NotFoundException("Festival not found!");
         }
     }
-
-
 
 
 }
