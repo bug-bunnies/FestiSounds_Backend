@@ -1,6 +1,5 @@
 package com.example.festisounds.Modules.SpotifyData.Services;
 
-import com.example.festisounds.Core.Controllers.AuthController;
 import com.example.festisounds.Modules.SpotifyData.DTOs.TopArtistsDTO;
 import com.example.festisounds.Modules.SpotifyData.DTOs.TopItemsDTO;
 import com.example.festisounds.Modules.SpotifyData.DTOs.TopTracksDTO;
@@ -8,17 +7,10 @@ import org.apache.hc.core5.http.ParseException;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
-import se.michaelthelin.spotify.model_objects.specification.Paging;
-import se.michaelthelin.spotify.model_objects.specification.Track;
-import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopArtistsRequest;
-import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopTracksRequest;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
-
-import static com.example.festisounds.Core.Controllers.AuthController.spotifyApi;
 
 @Service
 public class SpotifyDataProcessingServiceImpl implements SpotifyDataProcessingService {
@@ -39,12 +31,15 @@ public class SpotifyDataProcessingServiceImpl implements SpotifyDataProcessingSe
         HashMap<String, Double> genreRankingFromTracks = getGenreRankingFromTracks(usersTopArtistsAndTracks.topTracks());
         return null;
     }
-    private HashMap<String, Double> getGenreRankingFromArtists(TopArtistsDTO topArtistsDTO) {
+
+    @Override
+    public HashMap<String, Double> getGenreRankingFromArtists(TopArtistsDTO topArtistsDTO) {
         HashMap<String, Double> shortTermGenreRating = generateGenreRanking(topArtistsDTO.shortTermArtists());
         return null;
     }
 
-    private HashMap<String, Double> generateGenreRanking(Artist[] artists) {
+    @Override
+    public HashMap<String, Double> generateGenreRanking(Artist[] artists) {
         HashMap<String, Double> genreRanking = new HashMap<>();
         double maxValue = (double) ((artists.length) * (artists.length + 1)) /2;
         for (int i = artists.length; i > 0; i--) {
@@ -55,7 +50,8 @@ public class SpotifyDataProcessingServiceImpl implements SpotifyDataProcessingSe
         return genreRanking;
     }
 
-    private HashMap<String, Double> getGenreRankingFromTracks(TopTracksDTO topTracksDTO) {
+    @Override
+    public HashMap<String, Double> getGenreRankingFromTracks(TopTracksDTO topTracksDTO) {
         return null;
     }
 
