@@ -24,7 +24,7 @@ public class GlobalErrorHandler extends ResponseEntityExceptionHandler {
         }
 
     @ExceptionHandler({SpotifyWebApiException.class})
-    protected void handleSpotifyUnautherized(SpotifyWebApiException ex) throws IOException, ParseException, SpotifyWebApiException {
+    protected void handleSpotifyUnauthorized(SpotifyWebApiException ex) throws IOException, ParseException, SpotifyWebApiException {
         if (ex instanceof UnauthorizedException) {
             AuthController.refreshAccessToken();
         }

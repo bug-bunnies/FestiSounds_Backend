@@ -1,9 +1,15 @@
 package com.example.festisounds.Modules.Festival.Service;
 
+import com.example.festisounds.Modules.Festival.DTO.FestivalDTO;
 import com.example.festisounds.Modules.Festival.Entities.Festival;
 import com.example.festisounds.Modules.Festival.Repository.FestivalRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,4 +23,36 @@ public class FestivalService {
     public Festival createFestival(Festival festival) {
         return festivalRepo.save(festival);
     }
+
+    public FestivalDTO[] getAllFestivals() {
+        List<Festival> festivals = festivalRepo.findAll();
+        return festivals.stream()
+                .map(FestivalDTOBuilder::festivalDataBuilder)
+                .collect(Collectors.toList()).toArray(new FestivalDTO[0]);
+    }
+
+    public FestivalDTO getFestivalById(UUID id) {
+        Festival festivalById = festivalRepo.findById(id).orElseThrow();
+        return FestivalDTOBuilder.festivalDataBuilder(festivalById);
+    }
+
+    // needs to check for matching names - now working with exact name
+    public FestivalDTO[] getFestivalsByName(String name) {
+        List<Festival> festivalsByName = festivalRepo.queryFestivalsByName(name);
+        return festivalsByName.stream()
+                .map(FestivalDTOBuilder::festivalDataBuilder)
+                .collect(Collectors.toList()).toArray(new FestivalDTO[0]);
+    }
+
+    public void delete(UUID id) {
+        if (festivalRepo.findById(id).isPresent()) {
+            festivalRepo.deleteById(id);
+        } else {
+            throw new NotFoundException("Festival not found!");
+        }
+    }
+
+
+
+
 }
