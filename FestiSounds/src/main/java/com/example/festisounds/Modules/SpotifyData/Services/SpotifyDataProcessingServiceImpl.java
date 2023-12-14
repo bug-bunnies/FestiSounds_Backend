@@ -42,10 +42,11 @@ public class SpotifyDataProcessingServiceImpl implements SpotifyDataProcessingSe
     public HashMap<String, Double> generateGenreRanking(Artist[] artists) {
         HashMap<String, Double> genreRanking = new HashMap<>();
         double maxValue = (double) ((artists.length) * (artists.length + 1)) /2;
-        for (int i = artists.length; i > 0; i--) {
-            double finalI = i;
-            Arrays.stream(artists[i-1].getGenres())
-                    .map(genre -> genreRanking.merge(genre, finalI/(maxValue*100), Double::sum));
+        for (int i = 0; i < artists.length; i++) {
+            double score = artists.length-i;
+            for (String genre : artists[i].getGenres()) {
+                genreRanking.merge(genre, score/(maxValue/100), Double::sum);
+            }
         }
         return genreRanking;
     }
