@@ -19,7 +19,6 @@ public class FestivalController {
     public final static String BASE_PATH_ID = BASE_PATH + "/{festivalId}";
     public final static String BASE_PATH_SEARCH = BASE_PATH + "/search";
 
-    private final FestivalRepo festivalRepo;
     private final FestivalService festivalService;
 
     @GetMapping(BASE_PATH)
