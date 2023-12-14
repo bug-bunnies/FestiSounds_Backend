@@ -5,6 +5,7 @@ import com.example.festisounds.Modules.SpotifyData.DTOs.TopItemsDTO;
 import com.example.festisounds.Modules.SpotifyData.DTOs.TopTracksDTO;
 import com.example.festisounds.Modules.SpotifyData.DTOs.WeightingsDTO;
 import org.apache.hc.core5.http.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
@@ -20,13 +21,14 @@ public class SpotifyDataProcessingServiceImpl implements SpotifyDataProcessingSe
     private final float longTermWeighting;
     private final SpotifyDataService SpotifyDataService;
 
+    @Autowired
     public SpotifyDataProcessingServiceImpl(SpotifyDataService SpotifyDataService) {
         this.SpotifyDataService = SpotifyDataService;
         this.artistWeighting = 0.6F;
         this.shortTermWeighting = 0.1F;
         this.longTermWeighting = 0.1F;
     }
-    public SpotifyDataProcessingServiceImpl(SpotifyDataService SpotifyDataService, WeightingsDTO weightings) {
+    public SpotifyDataProcessingServiceImpl(@Autowired SpotifyDataService SpotifyDataService, WeightingsDTO weightings) {
         this.SpotifyDataService = SpotifyDataService;
         this.artistWeighting = weightings.longTermWeighting();
         this.shortTermWeighting = weightings.shortTermWeighting();
