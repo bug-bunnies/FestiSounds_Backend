@@ -9,9 +9,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FestivalService {
 
-    private static final String SUPABASE_URL = System.getenv("supabaseUrl");
-    private static final String SUPABASE_KEY = System.getenv("supabaseKey");
-
     private final FestivalRepo festivalRepo;
 
     public Festival createFestival(Festival festival) {
