@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/test")
+@RequestMapping("/api")
 public class RenderTestController {
 
-    @GetMapping
+    @GetMapping("/test-render-update")
     public String testRenderUpdate() {
         return "This has been updated.";
     }
