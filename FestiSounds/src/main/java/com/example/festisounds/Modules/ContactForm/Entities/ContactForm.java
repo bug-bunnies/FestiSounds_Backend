@@ -1,6 +1,5 @@
 package com.example.festisounds.Modules.ContactForm.Entities;
 
-import jakarta.annotation.Nullable;
 import lombok.*;
 
 @AllArgsConstructor
