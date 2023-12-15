@@ -46,10 +46,16 @@ public class SpotifyDataProcessingServiceImpl implements SpotifyDataProcessingSe
     public HashMap<String, Double> getGenreRankingFromArtists(TopArtistsDTO topArtistsDTO) {
         // Make these in parallel
         HashMap<String, Double> shortTermGenreRating = generateGenreRanking(topArtistsDTO.shortTermArtists());
-        HashMap<String, Double> mediumTermGenreRating = generateGenreRanking(topArtistsDTO.shortTermArtists());
-        HashMap<String, Double> longTermGenreRating = generateGenreRanking(topArtistsDTO.shortTermArtists());
+        HashMap<String, Double> mediumTermGenreRating = generateGenreRanking(topArtistsDTO.mediumTermArtists());
+        HashMap<String, Double> longTermGenreRating = generateGenreRanking(topArtistsDTO.longTermArtists());
 
-        return null;
+        HashMap<String, Double> combinedGenreRating = new HashMap<>(shortTermGenreRating);
+        mediumTermGenreRating.forEach(
+                (key, value) -> combinedGenreRating.merge(key, value, (v1, v2) -> v1 + v2*(1-(shortTermWeighting+longTermWeighting))));
+        longTermGenreRating.forEach(
+                (key, value) -> combinedGenreRating.merge(key, value, (v1, v2) -> v1 + v2*longTermWeighting));
+
+        return combinedGenreRating;
     }
 
     @Override
