@@ -41,7 +41,7 @@ public class ContactFormController {
 
             return new ResponseEntity<>("Email sent", HttpStatus.OK);
         } catch (MailException e) {
-            return new ResponseEntity<>("Error in sending email", HttpStatus.UNPROCESSABLE_ENTITY);
+            return new ResponseEntity<>("Error in sending email", HttpStatus.BAD_REQUEST);
         }
     }
 

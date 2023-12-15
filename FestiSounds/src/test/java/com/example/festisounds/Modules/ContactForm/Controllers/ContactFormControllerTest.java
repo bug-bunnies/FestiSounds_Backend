@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -25,7 +26,7 @@ public class ContactFormControllerTest {
     JavaMailSender javaMailSender;
 
     @Test
-    public void testSendEmail_() {
+    public void testSendEmail_withAllDetails_ShouldReturnOK() {
         // Arrange
         ContactForm contactForm = new ContactForm("Max Burrows", "maxajburrows@example.com", "1234567890", "Your app is great", "I love your app so much");
 
@@ -36,4 +37,17 @@ public class ContactFormControllerTest {
         verify(javaMailSender, times(1)).send(any(SimpleMailMessage.class));
         assertEquals(ResponseEntity.ok("Email sent"), responseEntity);
     }
+
+    @Test
+    public void testSendEmail_withMissingPhoneNumber_ShouldReturnOK() {
+        // Given
+        ContactForm contactForm = new ContactForm("John Doe", "john.doe@example.com", null, "Subject", "Details");
+
+        // When
+        ResponseEntity<?> responseEntity = contactFormController.sendEmail(contactForm);
+
+        // Then
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
 }
