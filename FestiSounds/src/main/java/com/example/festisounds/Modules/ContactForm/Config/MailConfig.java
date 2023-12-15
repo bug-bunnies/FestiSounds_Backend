@@ -16,8 +16,7 @@ public class MailConfig {
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
-        String RECEIVING_EMAIL_ADDRESS = "festisoundsapp@gmail.com";
-        mailSender.setUsername(RECEIVING_EMAIL_ADDRESS);
+        mailSender.setUsername("festisoundsapp@gmail.com");
         mailSender.setPassword("festisoundspw");
 
         Properties props = mailSender.getJavaMailProperties();

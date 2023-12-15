@@ -40,13 +40,13 @@ public class ContactFormControllerTest {
 
     @Test
     public void testSendEmail_withMissingPhoneNumber_ShouldReturnOK() {
-        // Given
+        // Arrange
         ContactForm contactForm = new ContactForm("John Doe", "john.doe@example.com", null, "Subject", "Details");
 
-        // When
+        // Act
         ResponseEntity<?> responseEntity = contactFormController.sendEmail(contactForm);
 
-        // Then
+        // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
