@@ -13,12 +13,14 @@ import java.util.UUID;
 @Setter
 @Builder
 @AllArgsConstructor
+@RequiredArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "festival_artist")
 public class FestivalArtist {
     @Id
     @Column(name = "id")
+    @NonNull
     @GeneratedValue(generator = "uuid-hibernate-generator")
     @GenericGenerator(name = "uuid-hibernate-generator", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
@@ -29,7 +31,8 @@ public class FestivalArtist {
     @Column(name = "artist_name", nullable = false, length = 100)
     private String artistName;
 
-    @Builder.Default
+//    @Builder.Default
+    @NonNull
     @ManyToMany
     @JoinTable(
             name = "festival_artist_link",
@@ -38,5 +41,9 @@ public class FestivalArtist {
     )
     private Set<Festival> festivals = new HashSet<>();
 
+    public FestivalArtist(String spotifyId, String name) {
+        this.artistName = name;
+        this.spotifyId = spotifyId;
+    }
 
 }
