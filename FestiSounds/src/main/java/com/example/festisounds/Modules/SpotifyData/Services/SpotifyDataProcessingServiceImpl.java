@@ -38,8 +38,8 @@ public class SpotifyDataProcessingServiceImpl implements SpotifyDataProcessingSe
     public HashMap<String, Double> rankUsersFavouriteGenres() throws IOException, ParseException, SpotifyWebApiException {
         TopItemsDTO usersTopArtistsAndTracks = SpotifyDataService.getUsersItems();
         HashMap<String, Double> genreRankingFromArtists = getGenreRankingFromArtists(usersTopArtistsAndTracks.topArtists());
-        HashMap<String, Double> genreRankingFromTracks = getGenreRankingFromTracks(usersTopArtistsAndTracks.topTracks());
-        return null;
+        //HashMap<String, Double> genreRankingFromTracks = getGenreRankingFromTracks(usersTopArtistsAndTracks.topTracks());
+        return genreRankingFromArtists;
     }
 
     @Override
