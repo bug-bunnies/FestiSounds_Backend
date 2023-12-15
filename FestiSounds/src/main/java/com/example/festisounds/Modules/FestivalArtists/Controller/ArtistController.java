@@ -7,6 +7,7 @@ import com.example.festisounds.Modules.FestivalArtists.Service.ArtistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import se.michaelthelin.spotify.model_objects.specification.Artist;
 
 import java.util.UUID;
 
@@ -28,7 +29,7 @@ public class ArtistController {
 
 
     @GetMapping("/api/getArtist")
-    public ResponseEntity<String> getAllArtist(@RequestParam String artistName) {
+    public ResponseEntity<Artist[]> getAllArtist(@RequestParam String artistName) {
         return ResponseEntity.ok(service.getSpotifyId(artistName));
     }
 

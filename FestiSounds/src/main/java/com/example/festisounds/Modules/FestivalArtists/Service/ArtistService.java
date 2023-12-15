@@ -12,7 +12,6 @@ import se.michaelthelin.spotify.requests.data.search.simplified.SearchArtistsReq
 
 import java.util.Arrays;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +20,8 @@ public class ArtistService {
     private final FestivalRepo festivalRepo;
 
     private static String token =
-            "BQBhClwu5_-dVMFidjgeiBlBjtfs1D7tTHLa_eKh1ZsdQp3hXUEnMd83w23JrqVLtuIbFLdWzg3lyBpi3saIB6dYhioYGrwcBuP2b12M8-AFKuwNskfbSPYdRTNjJExpxEd7xK3VvQwMrefMJ9EmYnrZzm7qYyWVppq0g7nSgSFg7d7Mo5Jl3wxfL8BGHlSnEifvbq21cFUtY5cOJPBiHyVwnvk";
+
+                   "BQCXld07JUNJYWMSjtKXaXtzOQcgWJR8nZsEdrao0Mi6K5o9s_2OpAEauxp7R0q5p5otejk5hvOBfdH5gF_IpRgBA-JYn02235q5TMcJu__E3Fg0ohtIEzaMUEP_RJjAtQINNCtMLiOcaTPm0iOf4SbkqTUOXe1j9UOmL0tppd5ZPIaGSJPmE-gxTgM013deOytjgI1LxxLXUS3qPrrYhikEYpQ";
 
     private static final String clientId = System.getenv("clientId");
     private static final String clientSecret = System.getenv("clientSecret");
@@ -35,20 +35,28 @@ public class ArtistService {
 
     public FestivalArtist createArtist(String name, UUID festivalId) {
         Festival festival = festivalRepo.findById(festivalId).orElseThrow();
-       String art = getSpotifyId(name);
+       Artist[] art = getSpotifyId(name);
+       String spotyId = Arrays.stream(art).map(x -> x.getId()).findFirst().orElse("not there");
+       String[] genres = Arrays
+               .stream(art)
+               .map(x -> x.getGenres())
+               .findFirst()
+               .orElse(new String[]{"no!"});
+
        name = name.toUpperCase().strip();
-       FestivalArtist newArtist = repository.save(new FestivalArtist(art, name));
-       newArtist.getFestivals().add(festival);
+       FestivalArtist newArtist = repository.save(new FestivalArtist(spotyId, name, festival, genres));
        return newArtist;
     }
 
-    public String getSpotifyId(String name) {
+
+
+    public Artist[] getSpotifyId(String name) {
        SearchArtistsRequest searchArtist = spotify.searchArtists(name)
                .build();
 
         try {
             Artist[] artist = searchArtist.execute().getItems();
-            return Arrays.stream(artist).map(x -> x.getId()).findFirst().orElse("not there");
+            return artist;
         } catch (Exception e) {
             throw new RuntimeException("Something went wrong getting top tracks!\n" + e.getMessage());
         }

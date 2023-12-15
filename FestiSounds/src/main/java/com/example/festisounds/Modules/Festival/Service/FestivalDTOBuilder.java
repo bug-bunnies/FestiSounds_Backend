@@ -27,6 +27,6 @@ public class FestivalDTOBuilder {
 
     public static ArtistDTO artistDataBuilder(FestivalArtist artist) {
         return new ArtistDTO(artist.getId(),
-                artist.getSpotifyId(), artist.getArtistName());
+                artist.getSpotifyId(), artist.getArtistName(), artist.getGenres());
     }
 }
