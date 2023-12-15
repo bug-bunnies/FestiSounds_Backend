@@ -75,6 +75,4 @@ public class AuthController {
         response.sendRedirect("http://localhost:5173");
         return spotifyApi.getAccessToken();
     }
-
-
 }
