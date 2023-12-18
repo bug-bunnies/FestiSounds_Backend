@@ -26,11 +26,10 @@ public class ArtistController {
         return ResponseEntity.status(200);
     }
 
-
-
     @GetMapping("/api/getArtist")
     public ResponseEntity<Artist[]> getAllArtist(@RequestParam String artistName) {
-        return ResponseEntity.ok(service.getSpotifyId(artistName));
+        return ResponseEntity.ok(service.getSpotifyArtistData(artistName));
     }
+
 
 }
