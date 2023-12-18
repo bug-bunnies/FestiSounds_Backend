@@ -3,6 +3,7 @@ package com.example.festisounds.Modules.FestivalArtists.Service;
 import com.example.festisounds.Core.Controllers.SpotifyClientCredentials;
 import com.example.festisounds.Modules.Festival.Entities.Festival;
 import com.example.festisounds.Modules.Festival.Repository.FestivalRepo;
+import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistDTO;
 import com.example.festisounds.Modules.FestivalArtists.Entities.FestivalArtist;
 import com.example.festisounds.Modules.FestivalArtists.Repositories.FestivalArtistRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,20 +23,8 @@ public class ArtistService {
 
     private final SpotifyClientCredentials spotify;
 
-//    private static String token =
-//
-//                   "BQCXld07JUNJYWMSjtKXaXtzOQcgWJR8nZsEdrao0Mi6K5o9s_2OpAEauxp7R0q5p5otejk5hvOBfdH5gF_IpRgBA-JYn02235q5TMcJu__E3Fg0ohtIEzaMUEP_RJjAtQINNCtMLiOcaTPm0iOf4SbkqTUOXe1j9UOmL0tppd5ZPIaGSJPmE-gxTgM013deOytjgI1LxxLXUS3qPrrYhikEYpQ";
-//
-//    private static final String clientId = System.getenv("clientId");
-//    private static final String clientSecret = System.getenv("clientSecret");
-//
-//    public static final SpotifyApi spotify = new SpotifyApi.Builder()
-//            .setClientId(clientId)
-//            .setClientSecret(clientSecret)
-//            .setAccessToken(token)
-//            .build();
-
     public Artist[] getSpotifyArtistData(String name) {
+//         call for token, to be moved in a separate function with check if token is present
         SpotifyApi spotifyApy = spotify.clientCredentials_Sync();
        SearchArtistsRequest searchArtist = spotifyApy.searchArtists(name)
                .build();
@@ -69,5 +58,44 @@ public class ArtistService {
        return newArtist;
     }
 
+    public FestivalArtist findArtist(String name) {
+        FestivalArtist artist = repository.findFestivalArtistByArtistName(name);
+        System.out.println(name + " " + artist.getArtistName());
+        return artist;
+    }
+
+    public String addArtistToFestival(String name, UUID festivalId) {
+        Festival festival = festivalRepo.findById(festivalId).orElseThrow();
+        FestivalArtist artist = findArtist(name);
+        artist.getFestivals().add(festival);
+        repository.save(artist);
+        return festival.getName();
+    }
+
+    public void updateArtistGenres(String name) throws Exception {
+        try {
+            FestivalArtist existingArtist = findArtist(name);
+
+            Artist[] spotifyArtistData = getSpotifyArtistData(name);
+
+            String[] genres = Arrays
+                    .stream(spotifyArtistData)
+                    .map(x -> x.getGenres())
+                    .findFirst()
+                    .orElse(new String[]{"no!"});
+
+            for (String genre : genres) {
+                System.out.println(genre);
+                existingArtist.getGenres().add(genre);
+            }
+            repository.save(existingArtist);
+            System.out.println(existingArtist.getGenres() + " genres");
+//            return new ArtistDTO(existingArtist.getId(), existingArtist.getSpotifyId(),
+//                    existingArtist.getArtistName(), existingArtist.getGenres());
+        } catch (Exception e) {
+            throw new Exception("Artist not found!");
+        }
+
+    }
 
 }
