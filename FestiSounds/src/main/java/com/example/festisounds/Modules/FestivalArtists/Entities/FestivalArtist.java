@@ -31,6 +31,7 @@ public class FestivalArtist {
     private String spotifyId;
 
     @Column(name = "artist_name", nullable = false, length = 100)
+
     private String artistName;
 
     @NonNull

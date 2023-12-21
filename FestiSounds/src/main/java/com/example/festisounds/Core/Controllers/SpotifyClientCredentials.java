@@ -36,6 +36,15 @@ public class SpotifyClientCredentials {
             return spotifyClientApi;
     }
 
+    public static SpotifyApi checkForToken() {
+            String token = spotifyClientApi.getAccessToken();
+            if (token == null) {
+                clientCredentials_Sync();
+            } else {
+                System.out.println(token);
+            }
+        return spotifyClientApi;
+    }
 
 
 //    Async alternative:::

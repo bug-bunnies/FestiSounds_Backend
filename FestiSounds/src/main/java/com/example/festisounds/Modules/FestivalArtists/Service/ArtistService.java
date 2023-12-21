@@ -14,6 +14,7 @@ import se.michaelthelin.spotify.requests.data.search.simplified.SearchArtistsReq
 
 import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +24,11 @@ public class ArtistService {
 
     private final SpotifyClientCredentials spotify;
 
+
     public Artist[] getSpotifyArtistData(String name) {
-//         call for token, to be moved in a separate function with check if token is present
-        SpotifyApi spotifyApy = spotify.clientCredentials_Sync();
-       SearchArtistsRequest searchArtist = spotifyApy.searchArtists(name)
+        SpotifyApi spotifyApi = spotify.checkForToken();
+
+        SearchArtistsRequest searchArtist = spotifyApi.searchArtists(name)
                .build();
 
         try {
@@ -38,24 +40,41 @@ public class ArtistService {
     }
 
     public FestivalArtist createArtist(String name, UUID festivalId) {
-        Festival festival = festivalRepo.findById(festivalId).orElseThrow();
-       Artist[] art = getSpotifyArtistData(name);
+        FestivalArtist artist = findArtist(name);
+        if (artist != null) {
+            addArtistToFestival(name, festivalId);
+            return artist;
+        }
 
-       String spotyId = Arrays
+        Festival festival = festivalRepo.findById(festivalId).orElseThrow();
+        Artist[] art = getSpotifyArtistData(name);
+
+        String spotyId = Arrays
                .stream(art)
                .map(x -> x.getId())
                .findFirst()
                .orElse("not there");
 
-       String[] genres = Arrays
+        String[] genres = Arrays
                .stream(art)
                .map(x -> x.getGenres())
                .findFirst()
                .orElse(new String[]{"no!"});
 
-       name = name.toUpperCase().strip();
-       FestivalArtist newArtist = repository.save(new FestivalArtist(spotyId, name, festival, genres));
-       return newArtist;
+        name = name.toUpperCase().strip();
+        FestivalArtist newArtist = repository.save(new FestivalArtist(spotyId, name, festival, genres));
+        return newArtist;
+    }
+
+    public ArtistDTO getArtist(UUID artistId) {
+        FestivalArtist artist = repository.findById(artistId).orElseThrow();
+        ArtistDTO result = new ArtistDTO(artistId, artist.getSpotifyId(),
+                artist.getArtistName(),
+                artist.getGenres(),
+                artist.getFestivals().stream()
+                        .map(f -> f.getName())
+                        .collect(Collectors.toSet()));
+        return result;
     }
 
     public FestivalArtist findArtist(String name) {
@@ -95,7 +114,6 @@ public class ArtistService {
         } catch (Exception e) {
             throw new Exception("Artist not found!");
         }
-
     }
 
 }
