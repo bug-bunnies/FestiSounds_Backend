@@ -34,16 +34,18 @@ public class ArtistController {
     }
 
     @PostMapping("new")
-    public ResponseEntity.BodyBuilder createArtist(@RequestBody String artistName, UUID festivalId) {
+    public ResponseEntity.BodyBuilder createArtist(@RequestParam String artistName, @RequestParam UUID festivalId) {
         String[] artists = artistName.split(",");
         for (String name : artists) {
+        System.out.println(name);
             service.createArtist(name, festivalId);
         }
         return ResponseEntity.status(200);
     }
 
     @PutMapping("festival")
-    public ResponseEntity<String> updateFestival(@RequestBody String artistName, UUID festivalId) {
+    public ResponseEntity<String> updateFestival(@RequestParam String artistName, @RequestParam UUID festivalId) {
+        System.out.println(artistName + " artist name");
         return ResponseEntity.ok(service.addArtistToFestival(artistName, festivalId));
     }
 
@@ -56,6 +58,18 @@ public class ArtistController {
 //           list.add(updatedArtist);
         }
         return ResponseEntity.status(200);
+    }
+
+    @DeleteMapping("{artistId}")
+    public ResponseEntity.HeadersBuilder deleteArtist(@PathVariable UUID artistId) {
+        try {
+            ArtistDTO artist = service.getArtist(artistId);
+            if (artist != null)
+                service.deleteArtist(artistId);
+            return ResponseEntity.status(200);
+        } catch (Exception e) {
+            return ResponseEntity.status(404);
+        }
     }
 
 }

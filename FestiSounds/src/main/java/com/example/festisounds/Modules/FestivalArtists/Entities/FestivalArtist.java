@@ -49,6 +49,7 @@ public class FestivalArtist {
     @Column(name = "spotify_genre", nullable = false)
     private Set<String> genres = new HashSet<>();
 
+
     public FestivalArtist(String spotifyId, String name, Festival festival, String[] genres) {
         this.artistName = name;
         this.spotifyId = spotifyId;

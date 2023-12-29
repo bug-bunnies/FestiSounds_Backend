@@ -79,7 +79,6 @@ public class ArtistService {
 
     public FestivalArtist findArtist(String name) {
         FestivalArtist artist = repository.findFestivalArtistByArtistName(name);
-        System.out.println(name + " " + artist.getArtistName());
         return artist;
     }
 
@@ -114,6 +113,10 @@ public class ArtistService {
         } catch (Exception e) {
             throw new Exception("Artist not found!");
         }
+    }
+
+    public void deleteArtist(UUID id) {
+        repository.deleteById(id);
     }
 
 }
