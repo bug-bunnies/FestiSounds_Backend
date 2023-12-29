@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.webjars.NotFoundException;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
 
+import java.sql.SQLException;
 import java.util.UUID;
 
 @RestController
@@ -34,10 +35,9 @@ public class ArtistController {
     }
 
     @PostMapping("new")
-    public ResponseEntity.BodyBuilder createArtist(@RequestParam String artistName, @RequestParam UUID festivalId) {
+    public ResponseEntity.HeadersBuilder createArtist(@RequestParam String artistName, @RequestParam UUID festivalId) throws SQLException {
         String[] artists = artistName.split(",");
         for (String name : artists) {
-        System.out.println(name);
             service.createArtist(name, festivalId);
         }
         return ResponseEntity.status(200);
@@ -45,17 +45,14 @@ public class ArtistController {
 
     @PutMapping("festival")
     public ResponseEntity<String> updateFestival(@RequestParam String artistName, @RequestParam UUID festivalId) {
-        System.out.println(artistName + " artist name");
         return ResponseEntity.ok(service.addArtistToFestival(artistName, festivalId));
     }
 
     @PutMapping("genres")
     public ResponseEntity.BodyBuilder updateGenres(@RequestBody String artistName) throws Exception {
         String[] artists = artistName.split(",");
-//        ArrayList<ArtistDTO> list = new ArrayList<>();
         for (String name : artists) {
            service.updateArtistGenres(name.trim());
-//           list.add(updatedArtist);
         }
         return ResponseEntity.status(200);
     }

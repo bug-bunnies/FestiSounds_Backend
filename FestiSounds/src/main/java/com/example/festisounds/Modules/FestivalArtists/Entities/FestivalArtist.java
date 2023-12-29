@@ -27,11 +27,10 @@ public class FestivalArtist {
     @GenericGenerator(name = "uuid-hibernate-generator", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @Column(name = "spotify_id", nullable = false, length=100)
+    @Column(name = "spotify_id", nullable = false, length=100, unique = true)
     private String spotifyId;
 
-    @Column(name = "artist_name", nullable = false, length = 100)
-
+    @Column(name = "artist_name", nullable = false, length = 100, unique = true)
     private String artistName;
 
     @NonNull
@@ -48,7 +47,6 @@ public class FestivalArtist {
     @CollectionTable(name = "genres", joinColumns = @JoinColumn(name = "id", referencedColumnName = "id"))
     @Column(name = "spotify_genre", nullable = false)
     private Set<String> genres = new HashSet<>();
-
 
     public FestivalArtist(String spotifyId, String name, Festival festival, String[] genres) {
         this.artistName = name;
