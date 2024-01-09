@@ -22,8 +22,6 @@ public class SpotifyDataController {
 
     @GetMapping(BASE_PATH_TOP_ARTISTS)
     public ResponseEntity<Artist[]> getUserTopArtists() throws IOException, ParseException, SpotifyWebApiException {
-
         return ResponseEntity.ok(SpotifyDataService.getUsersArtistsForTimeframe("medium_term"));
-
     }
 }
