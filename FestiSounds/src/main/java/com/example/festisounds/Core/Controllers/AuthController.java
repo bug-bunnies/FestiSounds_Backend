@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/")
 public class AuthController {
 
     private static final String clientId = System.getenv("clientId");
