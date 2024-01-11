@@ -6,6 +6,7 @@ import com.example.festisounds.Modules.UserData.DTOs.TopTracksDTO;
 import com.example.festisounds.Modules.UserData.DTOs.WeightingsDTO;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
@@ -34,6 +35,8 @@ public class UserProcessingServiceImpl implements UserProcessingService {
         this.shortTermWeighting = weightings.shortTermWeighting();
         this.longTermWeighting = weightings.longTermWeighting();
     }
+
+    @Cacheable("user-genre-data")
     @Override
     public HashMap<String, Double> rankUsersFavouriteGenres() throws IOException, ParseException, SpotifyWebApiException {
         TopItemsDTO usersTopArtistsAndTracks = UserRequestService.getUsersItems();

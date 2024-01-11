@@ -22,6 +22,7 @@ import static com.example.festisounds.Core.Controllers.AuthController.spotifyApi
 public class UserRequestServiceImpl implements UserRequestService {
 
     public static final int resultLimit = 50;
+
     @Override
     public TopItemsDTO getUsersItems() throws IOException, ParseException, SpotifyWebApiException {
         if (AuthController.expirationToken > LocalDateTime.now().getSecond()) {

@@ -1,7 +1,11 @@
 package com.example.festisounds.Core.Controllers;
 
+import com.example.festisounds.Modules.UserData.Services.UserProcessingServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.hc.core5.http.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
@@ -26,6 +30,12 @@ public class AuthController {
     private static String code = "";
 
     public static Integer expirationToken;
+
+    @Autowired
+    private UserProcessingServiceImpl userProcessingService;
+
+    @Autowired
+    CacheManager cacheManager;
 
     public static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setClientId(clientId)
@@ -69,6 +79,14 @@ public class AuthController {
             System.out.println("Spotify access token: " + spotifyApi.getAccessToken());
             System.out.println("Spotify refresh token: " + spotifyApi.getRefreshToken());
             System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
+
+            userProcessingService.rankUsersFavouriteGenres();
+//            System.out.println(Objects.requireNonNull(cacheManager.getCache("user-genre-data")).toString());
+
+            Cache cache = cacheManager.getCache("user-genre-data");
+            Object nativeCache = cache.getNativeCache().toString();
+            System.out.println(nativeCache);
+
         } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {
             System.out.println("Error: " + e.getMessage());
         }
