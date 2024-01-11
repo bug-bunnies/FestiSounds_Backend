@@ -1,5 +1,6 @@
 package com.example.festisounds.Modules.UserData.Services;
 
+import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistDTO;
 import com.example.festisounds.Modules.UserData.DTOs.TopArtistsDTO;
 import com.example.festisounds.Modules.UserData.DTOs.TopTracksDTO;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -15,4 +16,6 @@ public interface UserProcessingService {
     HashMap<String, Double> getGenreRankingFromArtists(TopArtistsDTO topArtistsDTO);
     HashMap<String, Double> generateGenreRanking(Artist[] artists);
     HashMap<String, Double> getGenreRankingFromTracks(TopTracksDTO topTracksDTO);
+
+    HashMap<ArtistDTO, Double> getArtistRankingFromFestival(String festivalId);
 }

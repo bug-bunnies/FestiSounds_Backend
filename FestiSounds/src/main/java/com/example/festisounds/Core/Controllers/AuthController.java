@@ -6,6 +6,7 @@ import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.interceptor.SimpleKey;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
@@ -18,6 +19,7 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 
 @RestController
@@ -36,6 +38,7 @@ public class AuthController {
 
     @Autowired
     CacheManager cacheManager;
+
 
     public static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setClientId(clientId)
@@ -81,11 +84,12 @@ public class AuthController {
             System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
 
             userProcessingService.rankUsersFavouriteGenres();
-//            System.out.println(Objects.requireNonNull(cacheManager.getCache("user-genre-data")).toString());
 
+//            TODO: Finish comparing data.
             Cache cache = cacheManager.getCache("user-genre-data");
-            Object nativeCache = cache.getNativeCache().toString();
-            System.out.println(nativeCache);
+            HashMap<String, Double> genreData = cache.get(new SimpleKey(), HashMap.class);
+            System.out.println(genreData.get("house"));
+
 
         } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {
             System.out.println("Error: " + e.getMessage());
