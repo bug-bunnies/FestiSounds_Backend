@@ -14,11 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Test processing of the spotify data")
 //@SpringBootTest
-class UserDataProcessingServiceImplTest {
+class UserProcessingServiceImplTest {
 
-    UserDataServiceImpl dataService = new UserDataServiceImpl();
-    UserDataProcessingServiceImpl service = new UserDataProcessingServiceImpl(dataService);
-//    public UserDataProcessingServiceImplTest(UserDataProcessingServiceImpl spotifyDataProcessingServiceImpl) {
+    UserRequestServiceImpl dataService = new UserRequestServiceImpl();
+    UserProcessingServiceImpl service = new UserProcessingServiceImpl(dataService);
+//    public UserProcessingServiceImplTest(UserProcessingServiceImpl spotifyDataProcessingServiceImpl) {
 //        this.spotifyDataProcessingServiceImpl = spotifyDataProcessingServiceImpl;
 //    }
 

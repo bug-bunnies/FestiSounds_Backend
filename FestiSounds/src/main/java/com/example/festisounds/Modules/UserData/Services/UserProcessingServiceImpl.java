@@ -14,29 +14,29 @@ import java.io.IOException;
 import java.util.HashMap;
 
 @Service
-public class UserDataProcessingServiceImpl implements UserDataProcessingService {
+public class UserProcessingServiceImpl implements UserProcessingService {
 
     private final float artistWeighting;
     private final float shortTermWeighting;
     private final float longTermWeighting;
-    private final UserDataService UserDataService;
+    private final UserRequestService UserRequestService;
 
     @Autowired
-    public UserDataProcessingServiceImpl(UserDataService UserDataService) {
-        this.UserDataService = UserDataService;
+    public UserProcessingServiceImpl(UserRequestService UserRequestService) {
+        this.UserRequestService = UserRequestService;
         this.artistWeighting = 0.6F;
         this.shortTermWeighting = 0.1F;
         this.longTermWeighting = 0.1F;
     }
-    public UserDataProcessingServiceImpl(@Autowired UserDataService UserDataService, WeightingsDTO weightings) {
-        this.UserDataService = UserDataService;
+    public UserProcessingServiceImpl(@Autowired UserRequestService UserRequestService, WeightingsDTO weightings) {
+        this.UserRequestService = UserRequestService;
         this.artistWeighting = weightings.longTermWeighting();
         this.shortTermWeighting = weightings.shortTermWeighting();
         this.longTermWeighting = weightings.longTermWeighting();
     }
     @Override
     public HashMap<String, Double> rankUsersFavouriteGenres() throws IOException, ParseException, SpotifyWebApiException {
-        TopItemsDTO usersTopArtistsAndTracks = UserDataService.getUsersItems();
+        TopItemsDTO usersTopArtistsAndTracks = UserRequestService.getUsersItems();
         HashMap<String, Double> genreRankingFromArtists = getGenreRankingFromArtists(usersTopArtistsAndTracks.topArtists());
         //HashMap<String, Double> genreRankingFromTracks = getGenreRankingFromTracks(usersTopArtistsAndTracks.topTracks());
         return genreRankingFromArtists;

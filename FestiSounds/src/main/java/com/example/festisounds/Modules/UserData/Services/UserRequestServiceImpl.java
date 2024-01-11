@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import static com.example.festisounds.Core.Controllers.AuthController.spotifyApi;
 
 @Service
-public class UserDataServiceImpl implements UserDataService {
+public class UserRequestServiceImpl implements UserRequestService {
 
     public static final int resultLimit = 50;
     @Override

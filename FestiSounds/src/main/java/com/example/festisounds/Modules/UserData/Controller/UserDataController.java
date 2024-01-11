@@ -1,6 +1,6 @@
 package com.example.festisounds.Modules.UserData.Controller;
 
-import com.example.festisounds.Modules.UserData.Services.UserDataService;
+import com.example.festisounds.Modules.UserData.Services.UserRequestService;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,16 +14,16 @@ import java.io.IOException;
 public class UserDataController {
 
     public static final String BASE_PATH_TOP_ARTISTS = "/api/spotify/user-top-artists";
-    private final UserDataService UserDataService;
+    private final UserRequestService UserRequestService;
 
-    public UserDataController(UserDataService UserDataService) {
-        this.UserDataService = UserDataService;
+    public UserDataController(UserRequestService UserRequestService) {
+        this.UserRequestService = UserRequestService;
     }
 
     @GetMapping(BASE_PATH_TOP_ARTISTS)
     public ResponseEntity<Artist[]> getUserTopArtists() throws IOException, ParseException, SpotifyWebApiException {
 
-        return ResponseEntity.ok(UserDataService.getUsersArtistsForTimeframe("medium_term"));
+        return ResponseEntity.ok(UserRequestService.getUsersArtistsForTimeframe("medium_term"));
 
     }
 }

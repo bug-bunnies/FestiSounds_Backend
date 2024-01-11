@@ -8,7 +8,7 @@ import se.michaelthelin.spotify.model_objects.specification.Track;
 
 import java.io.IOException;
 
-public interface UserDataService {
+public interface UserRequestService {
 
     TopItemsDTO getUsersItems() throws IOException, ParseException, SpotifyWebApiException;
     Artist[] getUsersArtistsForTimeframe(String timeframe) throws IOException, ParseException, SpotifyWebApiException;

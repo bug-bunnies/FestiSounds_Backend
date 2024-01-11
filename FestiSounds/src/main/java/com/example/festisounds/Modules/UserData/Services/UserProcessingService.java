@@ -10,7 +10,7 @@ import org.apache.hc.core5.http.ParseException;
 import java.io.IOException;
 import java.util.HashMap;
 
-public interface UserDataProcessingService {
+public interface UserProcessingService {
     HashMap<String, Double> rankUsersFavouriteGenres() throws IOException, ParseException, SpotifyWebApiException;
     HashMap<String, Double> getGenreRankingFromArtists(TopArtistsDTO topArtistsDTO);
     HashMap<String, Double> generateGenreRanking(Artist[] artists);
