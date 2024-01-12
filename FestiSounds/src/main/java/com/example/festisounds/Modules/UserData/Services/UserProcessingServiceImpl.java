@@ -45,20 +45,6 @@ public class UserProcessingServiceImpl implements UserProcessingService {
         this.longTermWeighting = weightings.longTermWeighting();
     }
 
-    @Override
-    public HashMap<ArtistDTO, Double> getArtistRankingFromFestival(String festivalId) throws IOException, ParseException, SpotifyWebApiException {
-
-        HashMap<String, Double> genreData;
-        Cache cachedGenres = cacheManager.getCache("user-genre-data");
-        if (cachedGenres != null) {
-            genreData = cachedGenres.get(new SimpleKey(), HashMap.class);
-        } else {
-            genreData = rankUsersFavouriteGenres();
-        }
-
-        return null;
-    }
-
     @Cacheable(value="user-genre-data")
     @Override
     public HashMap<String, Double> rankUsersFavouriteGenres() throws IOException, ParseException, SpotifyWebApiException {
@@ -70,7 +56,9 @@ public class UserProcessingServiceImpl implements UserProcessingService {
 
     @CacheEvict(value = "user-genre-data", allEntries = true)
     @Scheduled(fixedRateString = "604800000")
-    public void emptyUserGenreDateCache() {};
+    public void emptyUserGenreDateCache() {
+        // TODO: Make sure as soon as the user uses the app they have fresh data (when stuff is clicked).
+    };
 
 
 
