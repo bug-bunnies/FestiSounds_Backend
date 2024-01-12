@@ -55,7 +55,7 @@ public class UserProcessingServiceImpl implements UserProcessingService {
     }
 
     @CacheEvict(value = "user-genre-data", allEntries = true)
-    @Scheduled(fixedRateString = "604800000")
+    @Scheduled(fixedRateString = "${caching.spring.genreDataRefreshTTL}")
     public void emptyUserGenreDateCache() {
         // TODO: Make sure as soon as the user uses the app they have fresh data (when stuff is clicked).
     };
