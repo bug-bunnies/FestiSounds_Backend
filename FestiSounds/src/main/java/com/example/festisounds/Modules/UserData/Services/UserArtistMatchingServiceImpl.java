@@ -60,7 +60,8 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
         return artistScoresMap;
     }
 
-    private static ArrayList<Double> getGenreScore(HashMap<String, Double> genreData, Set<String> artistGenres) {
+
+     static ArrayList<Double> getGenreScore(HashMap<String, Double> genreData, Set<String> artistGenres) {
         ArrayList<Double> genreScores = new ArrayList<>();
         for (String artistGenre : artistGenres) {
             if (genreData.containsKey(artistGenre.trim())) {
@@ -71,7 +72,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
         return genreScores;
     }
 
-    private static double getArtistScore(ArrayList<Double> genreScores) {
+     static double getArtistScore(ArrayList<Double> genreScores) {
         double artistScore = 0;
         for (Double score : genreScores) {
             double remainder = 100 - artistScore;
