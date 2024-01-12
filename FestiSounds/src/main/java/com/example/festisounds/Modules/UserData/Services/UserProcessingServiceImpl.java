@@ -9,8 +9,10 @@ import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.interceptor.SimpleKey;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
@@ -47,12 +49,13 @@ public class UserProcessingServiceImpl implements UserProcessingService {
     public HashMap<ArtistDTO, Double> getArtistRankingFromFestival(String festivalId) throws IOException, ParseException, SpotifyWebApiException {
 
         HashMap<String, Double> genreData;
-        Cache cache = cacheManager.getCache("user-genre-data");
-        if (cache != null) {
-            genreData = cache.get(new SimpleKey(), HashMap.class);
+        Cache cachedGenres = cacheManager.getCache("user-genre-data");
+        if (cachedGenres != null) {
+            genreData = cachedGenres.get(new SimpleKey(), HashMap.class);
         } else {
             genreData = rankUsersFavouriteGenres();
         }
+
         return null;
     }
 
@@ -64,6 +67,12 @@ public class UserProcessingServiceImpl implements UserProcessingService {
         //HashMap<String, Double> genreRankingFromTracks = getGenreRankingFromTracks(usersTopArtistsAndTracks.topTracks());
         return genreRankingFromArtists;
     }
+
+    @CacheEvict(value = "user-genre-data", allEntries = true)
+    @Scheduled(fixedRateString = "604800000")
+    public void emptyUserGenreDateCache() {};
+
+
 
     @Override
     public HashMap<String, Double> getGenreRankingFromArtists(TopArtistsDTO topArtistsDTO) {

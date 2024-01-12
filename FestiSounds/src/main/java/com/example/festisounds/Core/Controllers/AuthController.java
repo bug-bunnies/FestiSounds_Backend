@@ -83,11 +83,14 @@ public class AuthController {
             System.out.println("Spotify refresh token: " + spotifyApi.getRefreshToken());
             System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
 
-            userProcessingService.rankUsersFavouriteGenres();
+            //userProcessingService.rankUsersFavouriteGenres();
 
 //            TODO: Finish comparing data.
-            Cache cache = cacheManager.getCache("user-genre-data");
-            HashMap<String, Double> genreData = cache.get(new SimpleKey(), HashMap.class);
+            // Cache cache = cacheManager.getCache("user-genre-data");
+            //HashMap<String, Double> genreData = cache.get(new SimpleKey(), HashMap.class);
+            HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
+
+
             System.out.println(genreData.get("house"));
 
 
