@@ -52,22 +52,31 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
         for (ArtistDTO artist : artists) {
             Set<String> artistGenres = artist.genres();
 
-            ArrayList<Double> genreScores = new ArrayList<>();
-            for (String artistGenre : artistGenres) {
-                if (genreData.containsKey(artistGenre.trim())) {
-                    genreScores.add(genreData.get(artistGenre.trim()));
-                }
-            }
-            Collections.sort(genreScores);
+            ArrayList<Double> genreScores = getGenreScore(genreData, artistGenres);
+            Double artistScore = getArtistScore(genreScores);
 
-            double artistScore = 0;
-            for (Double score : genreScores) {
-                double remainder = 100 - artistScore;
-                artistScore += (remainder/100)*score;
-            }
             artistScoresMap.put(artist, artistScore);
         }
         return artistScoresMap;
     }
 
+    private static ArrayList<Double> getGenreScore(HashMap<String, Double> genreData, Set<String> artistGenres) {
+        ArrayList<Double> genreScores = new ArrayList<>();
+        for (String artistGenre : artistGenres) {
+            if (genreData.containsKey(artistGenre.trim())) {
+                genreScores.add(genreData.get(artistGenre.trim()));
+            }
+        }
+        Collections.sort(genreScores);
+        return genreScores;
+    }
+
+    private static double getArtistScore(ArrayList<Double> genreScores) {
+        double artistScore = 0;
+        for (Double score : genreScores) {
+            double remainder = 100 - artistScore;
+            artistScore += (remainder/100)*score;
+        }
+        return artistScore;
+    }
 }
