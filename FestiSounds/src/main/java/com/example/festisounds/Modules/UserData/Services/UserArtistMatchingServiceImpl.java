@@ -25,6 +25,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
     @Override
     public HashMap<ArtistDTO, Double> getArtistRankingFromFestival(String festivalId)
             throws IOException, ParseException, SpotifyWebApiException {
+
         HashMap<String, Double> genreData;
 
         Cache cachedGenres = cacheManager.getCache("user-genre-data");
