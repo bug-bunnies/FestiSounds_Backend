@@ -15,9 +15,7 @@ import org.springframework.cache.interceptor.SimpleKey;
 
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserArtistMatchingServiceImpl implements UserArtistMatchingService {
@@ -48,7 +46,28 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
     @Override
     public HashMap<ArtistDTO, Double> matchGenreDataToFestivalArtists(HashMap<String, Double> genreData, Set<ArtistDTO> artists)
             throws IOException, ParseException, SpotifyWebApiException {
-        return null;
+
+        HashMap<ArtistDTO, Double> artistScoresMap = new HashMap<>();
+
+        for (ArtistDTO artist : artists) {
+            Set<String> artistGenres = artist.genres();
+
+            ArrayList<Double> genreScores = new ArrayList<>();
+            for (String artistGenre : artistGenres) {
+                if (genreData.containsKey(artistGenre.trim())) {
+                    genreScores.add(genreData.get(artistGenre.trim()));
+                }
+            }
+            Collections.sort(genreScores);
+
+            double artistScore = 0;
+            for (Double score : genreScores) {
+                double remainder = 100 - artistScore;
+                artistScore += (remainder/100)*score;
+            }
+            artistScoresMap.put(artist, artistScore);
+        }
+        return artistScoresMap;
     }
 
 }
