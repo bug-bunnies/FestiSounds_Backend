@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.interceptor.SimpleKey;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
@@ -42,6 +43,19 @@ public class UserProcessingServiceImpl implements UserProcessingService {
         this.longTermWeighting = weightings.longTermWeighting();
     }
 
+    @Override
+    public HashMap<ArtistDTO, Double> getArtistRankingFromFestival(String festivalId) throws IOException, ParseException, SpotifyWebApiException {
+
+        HashMap<String, Double> genreData;
+        Cache cache = cacheManager.getCache("user-genre-data");
+        if (cache != null) {
+            genreData = cache.get(new SimpleKey(), HashMap.class);
+        } else {
+            genreData = rankUsersFavouriteGenres();
+        }
+        return null;
+    }
+
     @Cacheable(value="user-genre-data")
     @Override
     public HashMap<String, Double> rankUsersFavouriteGenres() throws IOException, ParseException, SpotifyWebApiException {
@@ -53,7 +67,7 @@ public class UserProcessingServiceImpl implements UserProcessingService {
 
     @Override
     public HashMap<String, Double> getGenreRankingFromArtists(TopArtistsDTO topArtistsDTO) {
-        // Make these in parallel
+        // TODO: Make these in parallel
         HashMap<String, Double> shortTermGenreRating = generateGenreRanking(topArtistsDTO.shortTermArtists());
         HashMap<String, Double> mediumTermGenreRating = generateGenreRanking(topArtistsDTO.mediumTermArtists());
         HashMap<String, Double> longTermGenreRating = generateGenreRanking(topArtistsDTO.longTermArtists());
@@ -85,14 +99,5 @@ public class UserProcessingServiceImpl implements UserProcessingService {
         return null;
     }
 
-    @Override
-    public HashMap<ArtistDTO, Double> getArtistRankingFromFestival(String festivalId) {
 
-        Cache cache = cacheManager.getCache("user-genre-data");
-        Object nativeCache = cache.getNativeCache();
-        System.out.println(nativeCache);
-        cache.get("rap");
-
-        return null;
-    }
 }

@@ -12,10 +12,11 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public interface UserProcessingService {
+    HashMap<ArtistDTO, Double> getArtistRankingFromFestival(String festivalId) throws IOException, ParseException, SpotifyWebApiException;;
+
     HashMap<String, Double> rankUsersFavouriteGenres() throws IOException, ParseException, SpotifyWebApiException;
     HashMap<String, Double> getGenreRankingFromArtists(TopArtistsDTO topArtistsDTO);
     HashMap<String, Double> generateGenreRanking(Artist[] artists);
     HashMap<String, Double> getGenreRankingFromTracks(TopTracksDTO topTracksDTO);
 
-    HashMap<ArtistDTO, Double> getArtistRankingFromFestival(String festivalId);
 }
