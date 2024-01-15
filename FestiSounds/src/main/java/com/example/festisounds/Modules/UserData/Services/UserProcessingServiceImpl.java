@@ -38,7 +38,7 @@ public class UserProcessingServiceImpl implements UserProcessingService {
         this.longTermWeighting = weightings.longTermWeighting();
     }
 
-    @Cacheable(value="user-genre-data")
+    @Cacheable(value="user-genre-data", key = "#root.method.name")
     @Override
     public HashMap<String, Double> rankUsersFavouriteGenres() throws IOException, ParseException, SpotifyWebApiException {
         TopItemsDTO usersTopArtistsAndTracks = UserRequestService.getUsersItems();

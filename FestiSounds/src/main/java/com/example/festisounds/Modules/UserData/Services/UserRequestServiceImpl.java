@@ -43,9 +43,7 @@ public class UserRequestServiceImpl implements UserRequestService {
         Artist[] topLongTermArtists = getUsersArtistsForTimeframe("long_term");
         TopArtistsDTO topArtists = new TopArtistsDTO(topShortTermArtists, topMediumTermArtists, topLongTermArtists);
 
-       ArrayList<String> artists = userRecommendationService.cacheUserArtistData(topShortTermArtists, topMediumTermArtists, topLongTermArtists);
-        System.out.println(artists.get(0) + "  first artist in method!");
-
+        userRecommendationService.cacheUserArtistData(topShortTermArtists, topMediumTermArtists, topLongTermArtists);
 
         Track[] topShortTermTracks = getUsersTracksForTimeframe("short_term");
         Track[] topMediumTermTracks = getUsersTracksForTimeframe("medium_term");
@@ -95,7 +93,7 @@ public class UserRequestServiceImpl implements UserRequestService {
         }
     }
 
-    @Cacheable(value="user-profile-data")
+    @Cacheable(value="user-profile-data", key = "#root.method.name")
     @Override
     public SpotifyUserDataDTO getUserSpotifyInfo() throws IOException, ParseException, SpotifyWebApiException {
         GetCurrentUsersProfileRequest currentUsersProfileRequest = spotifyApi.getCurrentUsersProfile().build();

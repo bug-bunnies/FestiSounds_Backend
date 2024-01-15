@@ -98,23 +98,17 @@ public class AuthController {
             HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
             SpotifyUserDataDTO profileData = userRequestService.getUserSpotifyInfo();
 
-            System.out.println("The cached house genre score: " + genreData.get("house"));
-            System.out.println("The cached spotify user data is: " + profileData);
-
             Cache cachedArtists = cacheManager.getCache("user-top-artists");
             Cache cachedGenre = cacheManager.getCache("user-genre-data");
             Cache cachedUser = cacheManager.getCache("user-profile-data");
 
-            HashMap<String, Double> genre = cachedGenre.get(new SimpleKey(), HashMap.class);
-            SpotifyUserDataDTO user = cachedUser.get(new SimpleKey(), SpotifyUserDataDTO.class);
+            HashMap<String, Double> genre = cachedGenre.get(new SimpleKey("rankUsersFavouriteGenres"), HashMap.class);
+            SpotifyUserDataDTO user = cachedUser.get(new SimpleKey("getUserSpotifyInfo"), SpotifyUserDataDTO.class);
+            ArrayList<String> artistData = cachedArtists.get(new SimpleKey("cacheUserArtistData"), ArrayList.class);
 
 
             System.out.println(genre.get("house") + " genre cache!");
             System.out.println(user.display_name() + " user cache!");
-            System.out.println(cachedArtists);
-            System.out.println(cachedArtists.getNativeCache());
-            ArrayList<String> artistData = cachedArtists.get(new SimpleKey("cacheUserArtistData"), ArrayList.class);
-
             System.out.println("The cached artist list is: " + artistData.toString());
 
 

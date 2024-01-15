@@ -34,7 +34,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
 
         Cache cachedGenres = cacheManager.getCache("user-genre-data");
         if (cachedGenres != null) {
-            genreData = cachedGenres.get(new SimpleKey(), HashMap.class);
+            genreData = cachedGenres.get(new SimpleKey("rankUsersFavouriteGenres"), HashMap.class);
         } else {
             genreData = userProcessingService.rankUsersFavouriteGenres();
         }
