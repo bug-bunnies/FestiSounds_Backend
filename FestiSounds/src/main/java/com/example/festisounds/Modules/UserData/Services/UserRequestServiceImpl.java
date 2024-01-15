@@ -1,6 +1,7 @@
 package com.example.festisounds.Modules.UserData.Services;
 
 import com.example.festisounds.Core.Controllers.AuthController;
+import com.example.festisounds.Modules.UserData.DTOs.SpotifyUserDataDTO;
 import com.example.festisounds.Modules.UserData.DTOs.TopArtistsDTO;
 import com.example.festisounds.Modules.UserData.DTOs.TopItemsDTO;
 import com.example.festisounds.Modules.UserData.DTOs.TopTracksDTO;
@@ -12,9 +13,11 @@ import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopArtistsRequest;
 import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopTracksRequest;
+import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import static com.example.festisounds.Core.Controllers.AuthController.spotifyApi;
 
@@ -80,5 +83,15 @@ public class UserRequestServiceImpl implements UserRequestService {
             // this exception handling probably needs looking at.
             throw new RuntimeException("Something went wrong getting top tracks!\n" + e.getMessage());
         }
+    }
+
+    @Override
+    public SpotifyUserDataDTO getUserSpotifyInfo() throws IOException, ParseException, SpotifyWebApiException {
+        GetCurrentUsersProfileRequest currentUsersProfileRequest = spotifyApi.getCurrentUsersProfile().build();
+        var userInfo = currentUsersProfileRequest.execute();
+
+        SpotifyUserDataDTO spotifyUserDataDTO = new SpotifyUserDataDTO(userInfo.getId(), userInfo.getDisplayName(), Arrays.stream(userInfo.getImages()).findFirst().get().getUrl());
+        System.out.println(spotifyUserDataDTO);
+        return null;
     }
 }

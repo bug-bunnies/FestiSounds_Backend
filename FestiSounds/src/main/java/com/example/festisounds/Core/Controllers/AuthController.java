@@ -4,9 +4,7 @@ import com.example.festisounds.Modules.UserData.Services.UserProcessingServiceIm
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.interceptor.SimpleKey;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
@@ -94,7 +92,7 @@ public class AuthController {
             System.out.println(genreData.get("house"));
 
 
-        } catch (IOException | SpotifyWebApiException | org.apache.hc.core5.http.ParseException e) {
+        } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
         }
         response.sendRedirect("http://localhost:5173");
