@@ -1,6 +1,8 @@
 package com.example.festisounds.Core.Controllers;
 
+import com.example.festisounds.Modules.UserData.DTOs.SpotifyUserDataDTO;
 import com.example.festisounds.Modules.UserData.Services.UserProcessingServiceImpl;
+import com.example.festisounds.Modules.UserData.Services.UserRequestServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class AuthController {
 
     @Autowired
     private UserProcessingServiceImpl userProcessingService;
+
+    @Autowired
+    private UserRequestServiceImpl userRequestService;
 
     @Autowired
     CacheManager cacheManager;
@@ -81,15 +86,14 @@ public class AuthController {
             System.out.println("Spotify refresh token: " + spotifyApi.getRefreshToken());
             System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
 
-            //userProcessingService.rankUsersFavouriteGenres();
-
 //            TODO: Finish comparing data.
-            // Cache cache = cacheManager.getCache("user-genre-data");
-            //HashMap<String, Double> genreData = cache.get(new SimpleKey(), HashMap.class);
             HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
+            SpotifyUserDataDTO profileData = userRequestService.getUserSpotifyInfo();
+            cacheManager.getCache("user-genre-data");
 
+            System.out.println("The cached house genre score: " + genreData.get("house"));
+            System.out.println("The cached spotify user data is: " + profileData);
 
-            System.out.println(genreData.get("house"));
 
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {

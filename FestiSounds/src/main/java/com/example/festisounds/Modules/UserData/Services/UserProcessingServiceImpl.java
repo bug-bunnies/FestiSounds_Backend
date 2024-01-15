@@ -6,7 +6,6 @@ import com.example.festisounds.Modules.UserData.DTOs.TopTracksDTO;
 import com.example.festisounds.Modules.UserData.DTOs.WeightingsDTO;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,9 +18,6 @@ import java.util.HashMap;
 
 @Service
 public class UserProcessingServiceImpl implements UserProcessingService {
-
-    @Autowired
-    CacheManager cacheManager;
 
     private final float artistWeighting;
     private final float shortTermWeighting;

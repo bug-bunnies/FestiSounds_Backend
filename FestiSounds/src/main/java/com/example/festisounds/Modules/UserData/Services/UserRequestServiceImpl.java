@@ -6,6 +6,7 @@ import com.example.festisounds.Modules.UserData.DTOs.TopArtistsDTO;
 import com.example.festisounds.Modules.UserData.DTOs.TopItemsDTO;
 import com.example.festisounds.Modules.UserData.DTOs.TopTracksDTO;
 import org.apache.hc.core5.http.ParseException;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
@@ -85,13 +86,12 @@ public class UserRequestServiceImpl implements UserRequestService {
         }
     }
 
+    @Cacheable(value="user-profile-data")
     @Override
     public SpotifyUserDataDTO getUserSpotifyInfo() throws IOException, ParseException, SpotifyWebApiException {
         GetCurrentUsersProfileRequest currentUsersProfileRequest = spotifyApi.getCurrentUsersProfile().build();
         var userInfo = currentUsersProfileRequest.execute();
 
-        SpotifyUserDataDTO spotifyUserDataDTO = new SpotifyUserDataDTO(userInfo.getId(), userInfo.getDisplayName(), Arrays.stream(userInfo.getImages()).findFirst().get().getUrl());
-        System.out.println(spotifyUserDataDTO);
-        return null;
+        return new SpotifyUserDataDTO(userInfo.getId(), userInfo.getDisplayName(), Arrays.stream(userInfo.getImages()).findFirst().get().getUrl());
     }
 }
