@@ -11,6 +11,6 @@ import org.springframework.context.annotation.Configuration;
 public class CachingConfig {
     @Bean
     public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager("user-genre-data", "user-profile-data");
+        return new ConcurrentMapCacheManager("user-genre-data", "user-profile-data", "user-top-artists");
     }
 }

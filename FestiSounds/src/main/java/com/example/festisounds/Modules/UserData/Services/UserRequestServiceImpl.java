@@ -6,6 +6,7 @@ import com.example.festisounds.Modules.UserData.DTOs.TopArtistsDTO;
 import com.example.festisounds.Modules.UserData.DTOs.TopItemsDTO;
 import com.example.festisounds.Modules.UserData.DTOs.TopTracksDTO;
 import org.apache.hc.core5.http.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -18,12 +19,16 @@ import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfi
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static com.example.festisounds.Core.Controllers.AuthController.spotifyApi;
 
 @Service
 public class UserRequestServiceImpl implements UserRequestService {
+
+    @Autowired
+    private UserRecommendationServiceImpl userRecommendationService;
 
     public static final int resultLimit = 50;
 
@@ -37,6 +42,10 @@ public class UserRequestServiceImpl implements UserRequestService {
         Artist[] topMediumTermArtists = getUsersArtistsForTimeframe("medium_term");
         Artist[] topLongTermArtists = getUsersArtistsForTimeframe("long_term");
         TopArtistsDTO topArtists = new TopArtistsDTO(topShortTermArtists, topMediumTermArtists, topLongTermArtists);
+
+       ArrayList<String> artists = userRecommendationService.cacheUserArtistData(topShortTermArtists, topMediumTermArtists, topLongTermArtists);
+        System.out.println(artists.get(0) + "  first artist in method!");
+
 
         Track[] topShortTermTracks = getUsersTracksForTimeframe("short_term");
         Track[] topMediumTermTracks = getUsersTracksForTimeframe("medium_term");
@@ -94,4 +103,6 @@ public class UserRequestServiceImpl implements UserRequestService {
 
         return new SpotifyUserDataDTO(userInfo.getId(), userInfo.getDisplayName(), Arrays.stream(userInfo.getImages()).findFirst().get().getUrl());
     }
+
+
 }

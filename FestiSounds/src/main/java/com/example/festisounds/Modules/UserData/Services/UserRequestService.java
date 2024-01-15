@@ -14,6 +14,5 @@ public interface UserRequestService {
     TopItemsDTO getUsersItems() throws IOException, ParseException, SpotifyWebApiException;
     Artist[] getUsersArtistsForTimeframe(String timeframe) throws IOException, ParseException, SpotifyWebApiException;
     Track[] getUsersTracksForTimeframe(String timeframe) throws IOException, ParseException, SpotifyWebApiException;
-
     SpotifyUserDataDTO getUserSpotifyInfo() throws IOException, ParseException, SpotifyWebApiException;
 }
