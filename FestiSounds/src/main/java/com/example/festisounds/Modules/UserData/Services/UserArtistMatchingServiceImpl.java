@@ -30,14 +30,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
     public HashMap<ArtistDTO, Double> getArtistRankingFromFestival(UUID festivalId)
             throws IOException, ParseException, SpotifyWebApiException {
 
-        HashMap<String, Double> genreData;
-
-        Cache cachedGenres = cacheManager.getCache("user-genre-data");
-        if (cachedGenres != null) {
-            genreData = cachedGenres.get("rankUsersFavouriteGenres", HashMap.class);
-        } else {
-            genreData = userProcessingService.rankUsersFavouriteGenres();
-        }
+        HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
         FestivalDTO festival = festivalService.getFestivalById(festivalId);
 
         return matchGenreDataToFestivalArtists(genreData, festival.artists());

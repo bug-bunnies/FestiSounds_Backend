@@ -96,6 +96,9 @@ public class AuthController {
 
 //            TODO: Finish comparing data.
             HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
+            HashMap<String, Double> genreData2 = userProcessingService.rankUsersFavouriteGenres();
+            System.out.println(genreData + " genre hashmap");
+            System.out.println(genreData2 + " genre hashmap @@@");
             System.out.println("I am here 1");
 //            SpotifyUserDataDTO profileData = userRequestService.getUserSpotifyInfo();
             Cache cachedArtists = cacheManager.getCache("user-top-artists");
@@ -109,7 +112,7 @@ public class AuthController {
             System.out.println(cachedGenre.getNativeCache());
             System.out.println(cachedArtists.getNativeCache());
 
-            System.out.println(genre.get("madchester") + " genre cache!");
+            System.out.println(genreData.get("madchester") + " genre cache!");
 //            System.out.println(user.display_name() + " user cache!");
             System.out.println("The cached artist list is: " + artistData);
 

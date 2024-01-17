@@ -41,6 +41,7 @@ public class UserProcessingServiceImpl implements UserProcessingService {
     @Cacheable(value="user-genre-data", key = "#root.method.name")
     @Override
     public HashMap<String, Double> rankUsersFavouriteGenres() throws IOException, ParseException, SpotifyWebApiException {
+        System.out.println("Processing this method");
         TopItemsDTO usersTopArtistsAndTracks = UserRequestService.getUsersItems();
         HashMap<String, Double> genreRankingFromArtists = getGenreRankingFromArtists(usersTopArtistsAndTracks.topArtists());
         //HashMap<String, Double> genreRankingFromTracks = getGenreRankingFromTracks(usersTopArtistsAndTracks.topTracks());
