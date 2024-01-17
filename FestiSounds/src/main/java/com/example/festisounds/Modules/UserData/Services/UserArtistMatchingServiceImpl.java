@@ -56,7 +56,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
         return artistScoresMap
                 .entrySet()
                 .stream()
-                .sorted(Comparator.comparing(Map.Entry::getValue))
+                .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
                 .collect(Collectors
                         .toMap(Map.Entry::getKey,
                                 Map.Entry::getValue,

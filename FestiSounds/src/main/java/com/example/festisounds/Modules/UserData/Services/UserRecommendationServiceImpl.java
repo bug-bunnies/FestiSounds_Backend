@@ -34,8 +34,18 @@ public class UserRecommendationServiceImpl implements UserRecommendationService 
         ArrayList<ArtistDTO> knownArtistList = new ArrayList<>();
         ArrayList<ArtistDTO> newArtistList = new ArrayList<>();
 
-//        for ()
+        for (ArtistDTO artist : rankedFestivalArtists.keySet()) {
+            fullArtistList.add(artist);
 
-        return null;
+            for (String spotifyArtistId : artistData) {
+                if (artist.spotifyId().equals(spotifyArtistId)) {
+                    knownArtistList.add(artist);
+                } else {
+                    newArtistList.add(artist);
+                }
+            }
+        }
+
+        return new RecommendedArtistsDTO(fullArtistList, knownArtistList, newArtistList);
     }
 }
