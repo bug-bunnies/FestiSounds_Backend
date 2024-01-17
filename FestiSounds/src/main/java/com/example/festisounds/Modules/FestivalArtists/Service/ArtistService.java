@@ -106,12 +106,14 @@ public class ArtistService {
 
             String[] genres = Arrays
                     .stream(spotifyArtistData)
+                    .peek(System.out::println)
                     .map(x -> x.getGenres())
                     .findFirst()
                     .orElse(new String[]{"no!"});
 
             for (String genre : genres) {
                 existingArtist.getGenres().add(genre);
+                System.out.println(genre + " here is genre in loop");
             }
 
             repository.save(existingArtist);

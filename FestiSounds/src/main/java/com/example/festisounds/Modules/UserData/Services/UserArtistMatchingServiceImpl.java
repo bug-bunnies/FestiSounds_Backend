@@ -71,7 +71,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
                 genreScores.add(genreData.get(artistGenre.trim()));
             }
         }
-        Collections.sort(genreScores);
+        genreScores.sort(Collections.reverseOrder());
         return genreScores;
     }
 
