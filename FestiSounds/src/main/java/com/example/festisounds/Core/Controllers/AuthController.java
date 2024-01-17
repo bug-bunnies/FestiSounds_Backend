@@ -41,13 +41,13 @@ public class AuthController {
 
     public static Integer expirationToken;
 
-    private static UUID festivalId = UUID.fromString("e8741204-a416-4863-90b0-2db827cd0bb2");
+    private static UUID festivalId = UUID.fromString("8c14106e-a85c-4b7b-bcec-4803db825175");
 
     @Autowired
     private UserProcessingServiceImpl userProcessingService;
 
-//    @Autowired
-//    private UserArtistMatchingServiceImpl matchingService;
+    @Autowired
+    private UserArtistMatchingServiceImpl matchingService;
 
     @Autowired
     private UserRequestServiceImpl userRequestService;
@@ -106,8 +106,8 @@ public class AuthController {
 //            TODO: Finish comparing data.
             HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
             HashMap<String, Double> genreData2 = userProcessingService.rankUsersFavouriteGenres();
-//            LinkedHashMap<ArtistDTO, Double> festivalArtists = matchingService.getArtistRankingFromFestival(festivalId);
-//            System.out.println(festivalArtists + " genre hashmap");
+            LinkedHashMap<ArtistDTO, Double> festivalArtists = matchingService.getArtistRankingFromFestival(festivalId);
+            System.out.println(festivalArtists + " festival artists hopefully ordered");
             System.out.println(genreData2 + " genre hashmap @@@");
             System.out.println("I am here 1");
 //            SpotifyUserDataDTO profileData = userRequestService.getUserSpotifyInfo();
