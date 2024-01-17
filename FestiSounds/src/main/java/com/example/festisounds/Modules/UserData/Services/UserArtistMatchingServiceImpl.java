@@ -27,8 +27,9 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
     private UserProcessingServiceImpl userProcessingService;
     @Autowired
     private FestivalService festivalService;
+
     @Override
-    public HashMap<ArtistDTO, Double> getArtistRankingFromFestival(UUID festivalId)
+    public LinkedHashMap<ArtistDTO, Double> getArtistRankingFromFestival(UUID festivalId)
             throws IOException, ParseException, SpotifyWebApiException {
 
         HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
@@ -38,7 +39,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
     }
 
     @Override
-    public HashMap<ArtistDTO, Double> matchGenreDataToFestivalArtists(HashMap<String, Double> genreData, Set<ArtistDTO> artists)
+    public LinkedHashMap<ArtistDTO, Double> matchGenreDataToFestivalArtists(HashMap<String, Double> genreData, Set<ArtistDTO> artists)
             throws IOException, ParseException, SpotifyWebApiException {
 
         HashMap<ArtistDTO, Double> artistScoresMap = new HashMap<>();
@@ -62,8 +63,8 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
                                 (a1, a2) -> a1, LinkedHashMap::new));
     }
 
-
-     static ArrayList<Double> getGenreScore(HashMap<String, Double> genreData, Set<String> artistGenres) {
+    @Override
+    public ArrayList<Double> getGenreScore(HashMap<String, Double> genreData, Set<String> artistGenres) {
         ArrayList<Double> genreScores = new ArrayList<>();
         for (String artistGenre : artistGenres) {
             if (genreData.containsKey(artistGenre.trim())) {
@@ -74,7 +75,8 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
         return genreScores;
     }
 
-     static double getArtistScore(ArrayList<Double> genreScores) {
+    @Override
+    public double getArtistScore(ArrayList<Double> genreScores) {
         double artistScore = 0;
         for (Double score : genreScores) {
             double remainder = 100 - artistScore;

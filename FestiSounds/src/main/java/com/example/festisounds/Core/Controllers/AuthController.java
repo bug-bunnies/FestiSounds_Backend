@@ -1,6 +1,8 @@
 package com.example.festisounds.Core.Controllers;
 
+import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistDTO;
 import com.example.festisounds.Modules.UserData.DTOs.SpotifyUserDataDTO;
+import com.example.festisounds.Modules.UserData.Services.UserArtistMatchingServiceImpl;
 import com.example.festisounds.Modules.UserData.Services.UserCachingServiceImpl;
 import com.example.festisounds.Modules.UserData.Services.UserProcessingServiceImpl;
 import com.example.festisounds.Modules.UserData.Services.UserRequestServiceImpl;
@@ -24,6 +26,8 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.UUID;
 
 
 @RestController
@@ -37,8 +41,13 @@ public class AuthController {
 
     public static Integer expirationToken;
 
+    private static UUID festivalId = UUID.fromString("e8741204-a416-4863-90b0-2db827cd0bb2");
+
     @Autowired
     private UserProcessingServiceImpl userProcessingService;
+
+//    @Autowired
+//    private UserArtistMatchingServiceImpl matchingService;
 
     @Autowired
     private UserRequestServiceImpl userRequestService;
@@ -97,7 +106,8 @@ public class AuthController {
 //            TODO: Finish comparing data.
             HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
             HashMap<String, Double> genreData2 = userProcessingService.rankUsersFavouriteGenres();
-            System.out.println(genreData + " genre hashmap");
+//            LinkedHashMap<ArtistDTO, Double> festivalArtists = matchingService.getArtistRankingFromFestival(festivalId);
+//            System.out.println(festivalArtists + " genre hashmap");
             System.out.println(genreData2 + " genre hashmap @@@");
             System.out.println("I am here 1");
 //            SpotifyUserDataDTO profileData = userRequestService.getUserSpotifyInfo();

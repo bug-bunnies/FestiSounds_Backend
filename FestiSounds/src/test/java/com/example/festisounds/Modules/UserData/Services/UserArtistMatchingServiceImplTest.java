@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,11 +18,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserArtistMatchingServiceImplTest {
 
+    UserArtistMatchingServiceImpl userArtistMatchingService = new UserArtistMatchingServiceImpl();
+
     @ParameterizedTest
     @MethodSource("artistScoreParameters")
     void testGetArtistScore_WhenProvidedValidScores_ReturnsCorrectResult(Double expectedResult, ArrayList<Double> genreScores) {
 
-        Double actualResult = UserArtistMatchingServiceImpl.getArtistScore(genreScores);
+        Double actualResult = userArtistMatchingService.getArtistScore(genreScores);
 
         assertEquals(expectedResult, (double) Math.round(actualResult * 100) /100,
                 "Artist score of " + actualResult + " was returned instead of " + expectedResult);

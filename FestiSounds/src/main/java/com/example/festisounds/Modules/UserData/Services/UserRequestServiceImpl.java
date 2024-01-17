@@ -28,7 +28,7 @@ import static com.example.festisounds.Core.Controllers.AuthController.spotifyApi
 public class UserRequestServiceImpl implements UserRequestService {
 
     @Autowired
-    private UserRecommendationServiceImpl userRecommendationService;
+    private UserCachingService cachingService;
 
     public static final int resultLimit = 50;
 
@@ -43,7 +43,7 @@ public class UserRequestServiceImpl implements UserRequestService {
         Artist[] topLongTermArtists = getUsersArtistsForTimeframe("long_term");
         TopArtistsDTO topArtists = new TopArtistsDTO(topShortTermArtists, topMediumTermArtists, topLongTermArtists);
 
-        userRecommendationService.cacheUserArtistData(topShortTermArtists, topMediumTermArtists, topLongTermArtists);
+        cachingService.cacheUserArtistData(topShortTermArtists, topMediumTermArtists, topLongTermArtists);
 
         Track[] topShortTermTracks = getUsersTracksForTimeframe("short_term");
         Track[] topMediumTermTracks = getUsersTracksForTimeframe("medium_term");
