@@ -16,6 +16,7 @@ import org.springframework.cache.interceptor.SimpleKey;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserArtistMatchingServiceImpl implements UserArtistMatchingService {
@@ -50,7 +51,15 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
 
             artistScoresMap.put(artist, artistScore);
         }
-        return artistScoresMap;
+
+        return artistScoresMap
+                .entrySet()
+                .stream()
+                .sorted(Comparator.comparing(Map.Entry::getValue))
+                .collect(Collectors
+                        .toMap(Map.Entry::getKey,
+                                Map.Entry::getValue,
+                                (a1, a2) -> a1, LinkedHashMap::new));
     }
 
 
