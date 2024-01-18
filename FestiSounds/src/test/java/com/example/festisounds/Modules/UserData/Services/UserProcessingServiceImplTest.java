@@ -18,9 +18,6 @@ class UserProcessingServiceImplTest {
 
     UserRequestServiceImpl dataService = new UserRequestServiceImpl();
     UserProcessingServiceImpl service = new UserProcessingServiceImpl(dataService);
-//    public UserProcessingServiceImplTest(UserProcessingServiceImpl spotifyDataProcessingServiceImpl) {
-//        this.spotifyDataProcessingServiceImpl = spotifyDataProcessingServiceImpl;
-//    }
 
     ObjectMapper mapper = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
