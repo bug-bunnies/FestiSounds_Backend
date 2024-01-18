@@ -10,6 +10,8 @@ import org.webjars.NotFoundException;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
 
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -49,12 +51,14 @@ public class ArtistController {
     }
 
     @PutMapping("genres")
-    public ResponseEntity.BodyBuilder updateGenres(@RequestBody String artistName) throws Exception {
+    public ResponseEntity<Set<String>> updateGenres(@RequestBody String artistName) throws Exception {
         String[] artists = artistName.split(",");
+        Set<String> artistGenres = new HashSet<>();
         for (String name : artists) {
-           service.updateArtistGenres(name.trim());
+           artistGenres = service.updateArtistGenres(name.trim());
+        System.out.println(name + " artist name~asz");
         }
-        return ResponseEntity.status(200);
+        return ResponseEntity.status(200).body(artistGenres);
     }
 
     @DeleteMapping("{artistId}")

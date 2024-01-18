@@ -1,10 +1,13 @@
-package com.example.festisounds.Modules.SpotifyData.Services;
+package com.example.festisounds.Modules.UserData.Services;
 
 import com.example.festisounds.Core.Controllers.AuthController;
-import com.example.festisounds.Modules.SpotifyData.DTOs.TopArtistsDTO;
-import com.example.festisounds.Modules.SpotifyData.DTOs.TopItemsDTO;
-import com.example.festisounds.Modules.SpotifyData.DTOs.TopTracksDTO;
+import com.example.festisounds.Modules.UserData.DTOs.SpotifyUserDataDTO;
+import com.example.festisounds.Modules.UserData.DTOs.TopArtistsDTO;
+import com.example.festisounds.Modules.UserData.DTOs.TopItemsDTO;
+import com.example.festisounds.Modules.UserData.DTOs.TopTracksDTO;
 import org.apache.hc.core5.http.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
@@ -12,16 +15,23 @@ import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopArtistsRequest;
 import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopTracksRequest;
+import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static com.example.festisounds.Core.Controllers.AuthController.spotifyApi;
 
 @Service
-public class SpotifyDataServiceImpl implements SpotifyDataService {
+public class UserRequestServiceImpl implements UserRequestService {
+
+    @Autowired
+    private UserCachingService cachingService;
 
     public static final int resultLimit = 50;
+
     @Override
     public TopItemsDTO getUsersItems() throws IOException, ParseException, SpotifyWebApiException {
         if (AuthController.expirationToken > LocalDateTime.now().getSecond()) {
@@ -32,6 +42,8 @@ public class SpotifyDataServiceImpl implements SpotifyDataService {
         Artist[] topMediumTermArtists = getUsersArtistsForTimeframe("medium_term");
         Artist[] topLongTermArtists = getUsersArtistsForTimeframe("long_term");
         TopArtistsDTO topArtists = new TopArtistsDTO(topShortTermArtists, topMediumTermArtists, topLongTermArtists);
+
+        cachingService.cacheUserArtistData(topShortTermArtists, topMediumTermArtists, topLongTermArtists);
 
         Track[] topShortTermTracks = getUsersTracksForTimeframe("short_term");
         Track[] topMediumTermTracks = getUsersTracksForTimeframe("medium_term");
@@ -80,4 +92,15 @@ public class SpotifyDataServiceImpl implements SpotifyDataService {
             throw new RuntimeException("Something went wrong getting top tracks!\n" + e.getMessage());
         }
     }
+
+    @Cacheable(value="user-profile-data", key = "#root.method.name")
+    @Override
+    public SpotifyUserDataDTO getUserSpotifyInfo() throws IOException, ParseException, SpotifyWebApiException {
+        GetCurrentUsersProfileRequest currentUsersProfileRequest = spotifyApi.getCurrentUsersProfile().build();
+        var userInfo = currentUsersProfileRequest.execute();
+
+        return new SpotifyUserDataDTO(userInfo.getId(), userInfo.getDisplayName(), Arrays.stream(userInfo.getImages()).findFirst().get().getUrl());
+    }
+
+
 }

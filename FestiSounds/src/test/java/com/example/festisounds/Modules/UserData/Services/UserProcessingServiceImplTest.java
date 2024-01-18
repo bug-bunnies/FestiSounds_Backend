@@ -1,18 +1,11 @@
-package com.example.festisounds.Modules.SpotifyData.Services;
+package com.example.festisounds.Modules.UserData.Services;
 
-import com.example.festisounds.Modules.SpotifyData.DTOs.TopItemsDTO;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.hc.core5.http.ParseException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
-import se.michaelthelin.spotify.model_objects.specification.Track;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -21,11 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Test processing of the spotify data")
 //@SpringBootTest
-class SpotifyDataProcessingServiceImplTest {
+class UserProcessingServiceImplTest {
 
-    SpotifyDataServiceImpl dataService = new SpotifyDataServiceImpl();
-    SpotifyDataProcessingServiceImpl service = new SpotifyDataProcessingServiceImpl(dataService);
-//    public SpotifyDataProcessingServiceImplTest(SpotifyDataProcessingServiceImpl spotifyDataProcessingServiceImpl) {
+    UserRequestServiceImpl dataService = new UserRequestServiceImpl();
+    UserProcessingServiceImpl service = new UserProcessingServiceImpl(dataService);
+//    public UserProcessingServiceImplTest(UserProcessingServiceImpl spotifyDataProcessingServiceImpl) {
 //        this.spotifyDataProcessingServiceImpl = spotifyDataProcessingServiceImpl;
 //    }
 

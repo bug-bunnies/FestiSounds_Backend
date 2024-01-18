@@ -1,11 +1,14 @@
-package com.example.festisounds.Modules.SpotifyData.Services;
+package com.example.festisounds.Modules.UserData.Services;
 
-import com.example.festisounds.Modules.SpotifyData.DTOs.TopArtistsDTO;
-import com.example.festisounds.Modules.SpotifyData.DTOs.TopItemsDTO;
-import com.example.festisounds.Modules.SpotifyData.DTOs.TopTracksDTO;
-import com.example.festisounds.Modules.SpotifyData.DTOs.WeightingsDTO;
+import com.example.festisounds.Modules.UserData.DTOs.TopArtistsDTO;
+import com.example.festisounds.Modules.UserData.DTOs.TopItemsDTO;
+import com.example.festisounds.Modules.UserData.DTOs.TopTracksDTO;
+import com.example.festisounds.Modules.UserData.DTOs.WeightingsDTO;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
@@ -14,37 +17,48 @@ import java.io.IOException;
 import java.util.HashMap;
 
 @Service
-public class SpotifyDataProcessingServiceImpl implements SpotifyDataProcessingService {
+public class UserProcessingServiceImpl implements UserProcessingService {
 
     private final float artistWeighting;
     private final float shortTermWeighting;
     private final float longTermWeighting;
-    private final SpotifyDataService SpotifyDataService;
+    private final UserRequestService UserRequestService;
 
     @Autowired
-    public SpotifyDataProcessingServiceImpl(SpotifyDataService SpotifyDataService) {
-        this.SpotifyDataService = SpotifyDataService;
+    public UserProcessingServiceImpl(UserRequestService UserRequestService) {
+        this.UserRequestService = UserRequestService;
         this.artistWeighting = 0.6F;
         this.shortTermWeighting = 0.1F;
         this.longTermWeighting = 0.1F;
     }
-    public SpotifyDataProcessingServiceImpl(@Autowired SpotifyDataService SpotifyDataService, WeightingsDTO weightings) {
-        this.SpotifyDataService = SpotifyDataService;
+    public UserProcessingServiceImpl(@Autowired UserRequestService UserRequestService, WeightingsDTO weightings) {
+        this.UserRequestService = UserRequestService;
         this.artistWeighting = weightings.longTermWeighting();
         this.shortTermWeighting = weightings.shortTermWeighting();
         this.longTermWeighting = weightings.longTermWeighting();
     }
+
+    @Cacheable(value="user-genre-data", key = "#root.method.name")
     @Override
     public HashMap<String, Double> rankUsersFavouriteGenres() throws IOException, ParseException, SpotifyWebApiException {
-        TopItemsDTO usersTopArtistsAndTracks = SpotifyDataService.getUsersItems();
+        System.out.println("Processing this method");
+        TopItemsDTO usersTopArtistsAndTracks = UserRequestService.getUsersItems();
         HashMap<String, Double> genreRankingFromArtists = getGenreRankingFromArtists(usersTopArtistsAndTracks.topArtists());
         //HashMap<String, Double> genreRankingFromTracks = getGenreRankingFromTracks(usersTopArtistsAndTracks.topTracks());
         return genreRankingFromArtists;
     }
 
+    @CacheEvict(value = "user-genre-data", allEntries = true)
+    @Scheduled(fixedRateString = "${caching.spring.genreDataRefreshTTL}")
+    public void emptyUserGenreDateCache() {
+        // TODO: Make sure as soon as the user uses the app they have fresh data (when stuff is clicked).
+    }
+
+
+
     @Override
     public HashMap<String, Double> getGenreRankingFromArtists(TopArtistsDTO topArtistsDTO) {
-        // Make these in parallel
+        // TODO: Make these in parallel
         HashMap<String, Double> shortTermGenreRating = generateGenreRanking(topArtistsDTO.shortTermArtists());
         HashMap<String, Double> mediumTermGenreRating = generateGenreRanking(topArtistsDTO.mediumTermArtists());
         HashMap<String, Double> longTermGenreRating = generateGenreRanking(topArtistsDTO.longTermArtists());
@@ -75,4 +89,6 @@ public class SpotifyDataProcessingServiceImpl implements SpotifyDataProcessingSe
     public HashMap<String, Double> getGenreRankingFromTracks(TopTracksDTO topTracksDTO) {
         return null;
     }
+
+
 }
