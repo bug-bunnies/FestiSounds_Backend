@@ -35,13 +35,13 @@ public class GenrePositionMapGenerator {
         return genrePositionMap;
     }
 
-    private static short[] getPosition(String[] row, short[] genreColour) {
+    private short[] getPosition(String[] row, short[] genreColour) {
         short xPosition = Short.parseShort(row[1]);
         short yPosition = Short.parseShort(row[2]);
         return new short[] {xPosition, yPosition, genreColour[0], genreColour[1], genreColour[2]};
     }
 
-    private static short[] convertHexColourToRGB(String hexColour) {
+    short[] convertHexColourToRGB(String hexColour) {
 
         short amountRed = Short.valueOf(hexColour.substring(1, 3), 16);
         short amountGreen = Short.valueOf(hexColour.substring(3, 5), 16);
