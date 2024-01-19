@@ -2,9 +2,14 @@ package com.example.festisounds.Core.Utils;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
 
 import java.io.IOException;
@@ -14,11 +19,17 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@SpringBootTest
+//@RunWith(SpringRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GenrePositionMapGeneratorTest {
     static GenrePositionMapGenerator genreMapGenerator;
     static HashMap<String, short[]> genrePositionMap;
 
+    static Cache cachedGenreMap;
+
+//    @Autowired
+//    private CacheManager cacheManager;
     @BeforeAll
     static void init() {
         genreMapGenerator = new GenrePositionMapGenerator();
@@ -53,6 +64,7 @@ class GenrePositionMapGeneratorTest {
         );
     }
 
+
     @ParameterizedTest
     @MethodSource("genrePositionQueryParameters")
     public void testMakeGenrePositionMap_whenQueried_GivesCorrectGenrePosition(String genre, short[] expectedPosition) {
@@ -61,6 +73,20 @@ class GenrePositionMapGeneratorTest {
         assertArrayEquals(expectedPosition, positionResult,
                 () -> "Position map returns position of " + Arrays.toString(positionResult) + " instead of " + Arrays.toString(expectedPosition));
     }
+
+//    @ParameterizedTest
+//    @MethodSource("genrePositionQueryParameters")
+//    public void testMakeGenrePositionMap_whenCacheQueried_GivesCorrectGenrePosition(String genre, short[] expectedPosition) {
+//        Cache cachedGenreMap = cacheManager.getCache("genre-position-data");
+//        HashMap<String, short[]> genrePositionMapCached = cachedGenreMap.get("makeGenrePositionMap", HashMap.class);
+//
+//        assertNotNull(genrePositionMapCached);
+//
+//        short[] positionResult = genrePositionMapCached.get(genre);
+//
+//        assertArrayEquals(expectedPosition, positionResult,
+//                () -> "Position map returns position of " + Arrays.toString(positionResult) + " instead of " + Arrays.toString(expectedPosition));
+//    }
 
 
     public static Stream<Arguments> genrePositionQueryParameters() {
