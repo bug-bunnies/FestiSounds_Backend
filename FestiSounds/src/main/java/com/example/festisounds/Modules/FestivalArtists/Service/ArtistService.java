@@ -8,6 +8,7 @@ import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistDTO;
 import com.example.festisounds.Modules.FestivalArtists.Entities.FestivalArtist;
 import com.example.festisounds.Modules.FestivalArtists.Repositories.FestivalArtistRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
@@ -19,17 +20,16 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.example.festisounds.Core.Controllers.AuthController.spotifyApi;
+
 @Service
 @RequiredArgsConstructor
 public class ArtistService {
     private final FestivalArtistRepository repository;
     private final FestivalRepo festivalRepo;
 
-    private final SpotifyClientCredentials spotify;
-
-
     public Artist[] getSpotifyArtistData(String name) {
-        SpotifyApi spotifyApi = spotify.checkForToken();
+        SpotifyClientCredentials.checkForToken();
 
         SearchArtistsRequest searchArtist = spotifyApi.searchArtists(name)
                .build();

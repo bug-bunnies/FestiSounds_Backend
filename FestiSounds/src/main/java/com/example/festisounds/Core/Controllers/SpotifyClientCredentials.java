@@ -9,7 +9,6 @@ import se.michaelthelin.spotify.requests.authorization.client_credentials.Client
 import java.io.IOException;
 import org.apache.hc.core5.http.ParseException;
 
-@Service
 public class SpotifyClientCredentials {
     private static final String clientId = System.getenv("clientId");
     private static final String clientSecret = System.getenv("clientSecret");
@@ -22,7 +21,7 @@ public class SpotifyClientCredentials {
             .build();
 
 
-    public static SpotifyApi clientCredentials_Sync() {
+    public static void clientCredentials_Sync() {
         try {
             final ClientCredentials clientCredentials = clientCredentialsRequest.execute();
 
@@ -33,17 +32,15 @@ public class SpotifyClientCredentials {
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
         }
-            return spotifyClientApi;
     }
 
-    public static SpotifyApi checkForToken() {
+    public static void checkForToken() {
             String token = spotifyClientApi.getAccessToken();
             if (token == null) {
                 clientCredentials_Sync();
             } else {
                 System.out.println(token);
             }
-        return spotifyClientApi;
     }
 
 
