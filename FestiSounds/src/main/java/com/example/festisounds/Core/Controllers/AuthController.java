@@ -105,27 +105,6 @@ public class AuthController {
 
 //            TODO: Finish comparing data.
             HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
-            HashMap<String, Double> genreData2 = userProcessingService.rankUsersFavouriteGenres();
-            LinkedHashMap<ArtistDTO, Double> festivalArtists = matchingService.getArtistRankingFromFestival(festivalId);
-            System.out.println(festivalArtists + " festival artists hopefully ordered");
-            System.out.println(genreData2 + " genre hashmap @@@");
-            System.out.println("I am here 1");
-//            SpotifyUserDataDTO profileData = userRequestService.getUserSpotifyInfo();
-            Cache cachedArtists = cacheManager.getCache("user-top-artists");
-            Cache cachedGenre = cacheManager.getCache("user-genre-data");
-//            Cache cachedUser = cacheManager.getCache("user-profile-data");
-            System.out.println("I am here 2");
-            HashMap<String, Double> genre = cachedGenre.get("rankUsersFavouriteGenres", HashMap.class);
-//            SpotifyUserDataDTO user = cachedUser.get("getUserSpotifyInfo", SpotifyUserDataDTO.class);
-            ArrayList<String> artistData = cachedArtists.get("cacheUserArtistData", ArrayList.class);
-            System.out.println("I am here 3");
-            System.out.println(cachedGenre.getNativeCache());
-            System.out.println(cachedArtists.getNativeCache());
-
-            System.out.println(genreData.get("madchester") + " genre cache!");
-//            System.out.println(user.display_name() + " user cache!");
-            System.out.println("The cached artist list is: " + artistData);
-
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
