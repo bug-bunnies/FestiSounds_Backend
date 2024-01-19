@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class CsvReaders {
+public class GenrePositionMapGenerator {
 
     @Cacheable(value = "genre-position-data", key = "#root.method.name")
     public HashMap<String, short[]> makeGenrePositionMap(String fileName) {
@@ -22,6 +22,7 @@ public class CsvReaders {
             CsvMapper mapper = new CsvMapper();
             mapper.enable(CsvParser.Feature.WRAP_AS_ARRAY);
             MappingIterator<String[]> iterator = mapper.readerFor(String[].class).readValues(csvFile);
+            iterator.next();
             while (iterator.hasNext()) {
                 String[] row = iterator.next();
                 short[] genreColour = convertHexColourToRGB(row[3]);
@@ -42,9 +43,9 @@ public class CsvReaders {
 
     private static short[] convertHexColourToRGB(String hexColour) {
 
-        short amountRed = Short.valueOf(hexColour.substring(0, 2), 16);
-        short amountGreen = Short.valueOf(hexColour.substring(2, 4), 16);
-        short amountBlue = Short.valueOf(hexColour.substring(4, 6), 16);
+        short amountRed = Short.valueOf(hexColour.substring(1, 3), 16);
+        short amountGreen = Short.valueOf(hexColour.substring(3, 5), 16);
+        short amountBlue = Short.valueOf(hexColour.substring(5, 7), 16);
 
         return new short[]{amountRed, amountGreen, amountBlue};
     }
