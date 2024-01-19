@@ -67,6 +67,7 @@ public class UserProcessingServiceImpl implements UserProcessingService {
     @Override
     public HashMap<String, Double> generateGenreRanking(Artist[] artists) {
         HashMap<String, Double> genreRanking = new HashMap<>();
+
         double maxValue = (double) ((artists.length) * (artists.length + 1)) / 2;
         for (int i = 0; i < artists.length; i++) {
             double score = artists.length - i;
