@@ -1,5 +1,6 @@
 package com.example.festisounds.Core.Controllers;
 
+import com.example.festisounds.Core.Utils.GenrePositionMapGenerator;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistDTO;
 import com.example.festisounds.Modules.UserData.DTOs.SpotifyUserDataDTO;
 import com.example.festisounds.Modules.UserData.Services.UserArtistMatchingServiceImpl;
@@ -53,6 +54,7 @@ public class AuthController {
     private UserRequestServiceImpl userRequestService;
     @Autowired
     private UserCachingServiceImpl userCachingService;
+    private GenrePositionMapGenerator mapGenerator = new GenrePositionMapGenerator();
 
     @Autowired
     CacheManager cacheManager;
@@ -104,7 +106,15 @@ public class AuthController {
             System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
 
 //            TODO: Finish comparing data.
-            HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
+//            HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
+
+            mapGenerator.makeGenrePositionMap("Genre3DMap2.csv");
+
+            Cache cachedGenreMap = cacheManager.getCache("genre-position-data");
+            HashMap<String, short[]> genrePositionMapCached = cachedGenreMap.get("makeGenrePositionMap", HashMap.class);
+
+            System.out.println(cachedGenreMap.getNativeCache());
+            System.out.println(genrePositionMapCached);
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());

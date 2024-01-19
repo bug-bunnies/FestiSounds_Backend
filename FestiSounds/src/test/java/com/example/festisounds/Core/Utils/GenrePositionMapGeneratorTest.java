@@ -20,7 +20,6 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-//@RunWith(SpringRunner.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GenrePositionMapGeneratorTest {
     static GenrePositionMapGenerator genreMapGenerator;
@@ -28,8 +27,7 @@ class GenrePositionMapGeneratorTest {
 
     static Cache cachedGenreMap;
 
-//    @Autowired
-//    private CacheManager cacheManager;
+
     @BeforeAll
     static void init() {
         genreMapGenerator = new GenrePositionMapGenerator();
@@ -73,21 +71,6 @@ class GenrePositionMapGeneratorTest {
         assertArrayEquals(expectedPosition, positionResult,
                 () -> "Position map returns position of " + Arrays.toString(positionResult) + " instead of " + Arrays.toString(expectedPosition));
     }
-
-//    @ParameterizedTest
-//    @MethodSource("genrePositionQueryParameters")
-//    public void testMakeGenrePositionMap_whenCacheQueried_GivesCorrectGenrePosition(String genre, short[] expectedPosition) {
-//        Cache cachedGenreMap = cacheManager.getCache("genre-position-data");
-//        HashMap<String, short[]> genrePositionMapCached = cachedGenreMap.get("makeGenrePositionMap", HashMap.class);
-//
-//        assertNotNull(genrePositionMapCached);
-//
-//        short[] positionResult = genrePositionMapCached.get(genre);
-//
-//        assertArrayEquals(expectedPosition, positionResult,
-//                () -> "Position map returns position of " + Arrays.toString(positionResult) + " instead of " + Arrays.toString(expectedPosition));
-//    }
-
 
     public static Stream<Arguments> genrePositionQueryParameters() {
         return Stream.of(

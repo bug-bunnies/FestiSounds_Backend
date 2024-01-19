@@ -32,6 +32,7 @@ public class GenrePositionMapGenerator {
         } catch (IOException e) {
             System.out.println("ffs");
         }
+        System.out.println(genrePositionMap.toString());
         return genrePositionMap;
     }
 
