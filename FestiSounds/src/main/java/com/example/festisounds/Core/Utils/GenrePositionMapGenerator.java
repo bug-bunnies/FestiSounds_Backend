@@ -3,8 +3,10 @@ package com.example.festisounds.Core.Utils;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +14,7 @@ import java.util.*;
 
 public class GenrePositionMapGenerator {
 
-    @Cacheable(value = "genre-position-data", key = "#fileName")
+
     public HashMap<String, short[]> makeGenrePositionMap(String fileName) {
         HashMap<String, short[]> genrePositionMap = new HashMap<>();
 
@@ -27,6 +29,7 @@ public class GenrePositionMapGenerator {
 
         return genrePositionMap;
     }
+
 
     private static MappingIterator<String[]> getMappingIterator(String fileName) {
         try {
