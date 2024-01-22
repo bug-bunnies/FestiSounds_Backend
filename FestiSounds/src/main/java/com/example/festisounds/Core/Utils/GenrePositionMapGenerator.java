@@ -25,7 +25,7 @@ public class GenrePositionMapGenerator {
                 short[] position = getPosition(row, genreColour);
                 genrePositionMap.put(row[0], position);
             }
-        System.out.println("In method:" + genrePositionMap);
+        System.out.println("In method");
         return genrePositionMap;
     }
 
