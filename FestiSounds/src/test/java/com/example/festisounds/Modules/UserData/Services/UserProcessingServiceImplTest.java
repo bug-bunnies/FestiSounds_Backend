@@ -22,6 +22,7 @@ class UserProcessingServiceImplTest {
     ObjectMapper mapper = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
+    // TODO: Max make these tests not shit.
     @Test
     public void correctGenreRankingCreatedFor6ArtistDataset() throws IOException {
 

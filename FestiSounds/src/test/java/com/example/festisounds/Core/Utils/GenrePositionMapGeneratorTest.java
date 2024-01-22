@@ -19,14 +19,11 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+//@SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GenrePositionMapGeneratorTest {
     static GenrePositionMapGenerator genreMapGenerator;
     static HashMap<String, short[]> genrePositionMap;
-
-    static Cache cachedGenreMap;
-
 
     @BeforeAll
     static void init() {
