@@ -14,7 +14,6 @@ import java.util.*;
 
 public class GenrePositionMapGenerator {
 
-
     public HashMap<String, short[]> makeGenrePositionMap(String fileName) {
         HashMap<String, short[]> genrePositionMap = new HashMap<>();
 
@@ -26,7 +25,7 @@ public class GenrePositionMapGenerator {
                 short[] position = getPosition(row, genreColour);
                 genrePositionMap.put(row[0], position);
             }
-
+        System.out.println("In method:" + genrePositionMap);
         return genrePositionMap;
     }
 
@@ -42,7 +41,6 @@ public class GenrePositionMapGenerator {
             System.out.println("ffs");
         }
         return null;
-
     }
 
 

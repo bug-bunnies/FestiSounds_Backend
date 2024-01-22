@@ -106,10 +106,10 @@ public class AuthController {
             System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
 
 //            TODO: Finish comparing data.
-            HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
+//            HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
             Cache cachedGenreData = cacheManager.getCache("user-genre-data");
             System.out.println(cachedGenreData.getNativeCache() + " CACHE USER GENRE");
-            HashMap<String, short[]> genrePositionMap = userCachingService.makeTheMap("Genre3DMap2.csv");
+            HashMap<String, short[]> genrePositionMap = userCachingService.buildAndCacheGenrePositionMap("Genre3DMap2.csv");
 
             Cache cachedGenreMap = cacheManager.getCache("genre-position-data");
             HashMap<String, short[]> genrePositionMapCached = cachedGenreMap.get("Genre3DMap2.csv", HashMap.class);

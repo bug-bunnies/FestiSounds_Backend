@@ -38,7 +38,7 @@ public class UserCachingServiceImpl implements UserCachingService {
     }
 
     @Cacheable(value = "genre-position-data", key = "#fileName")
-    public HashMap<String, short[]> makeTheMap(String fileName) {
+    public HashMap<String, short[]> buildAndCacheGenrePositionMap(String fileName) {
         return new GenrePositionMapGenerator().makeGenrePositionMap(fileName);
     }
 }
