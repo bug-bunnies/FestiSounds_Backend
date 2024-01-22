@@ -34,7 +34,7 @@ class PositionMapFromCacheTest {
     @MethodSource("genrePositionQueryParameters")
     public void testMakeGenrePositionMap_whenCacheQueried_GivesCorrectGenrePosition(String genre, short[] expectedPosition) {
         Cache cachedGenreMap = cacheManager.getCache("genre-position-data");
-        HashMap<String, short[]> genrePositionMapCached = cachedGenreMap.get("makeGenrePositionMap", HashMap.class);
+        HashMap<String, short[]> genrePositionMapCached = cachedGenreMap.get("Genre3DMap.csv", HashMap.class);
 
         System.out.println(cachedGenreMap.getNativeCache());
 

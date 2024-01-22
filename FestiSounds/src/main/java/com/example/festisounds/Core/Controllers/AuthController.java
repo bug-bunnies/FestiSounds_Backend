@@ -108,13 +108,13 @@ public class AuthController {
 //            TODO: Finish comparing data.
 //            HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
 
-            mapGenerator.makeGenrePositionMap("Genre3DMap2.csv");
+            HashMap<String, short[]> genrePositionMap = mapGenerator.makeGenrePositionMap("Genre3DMap.csv");
 
             Cache cachedGenreMap = cacheManager.getCache("genre-position-data");
-            HashMap<String, short[]> genrePositionMapCached = cachedGenreMap.get("makeGenrePositionMap", HashMap.class);
-
-            System.out.println(cachedGenreMap.getNativeCache());
-            System.out.println(genrePositionMapCached);
+            HashMap<String, short[]> genrePositionMapCached = cachedGenreMap.get("Genre3DMap.csv", HashMap.class);
+            System.out.println(genrePositionMap + " OBJECT");
+            System.out.println(cachedGenreMap.getNativeCache() + " native cache");
+            System.out.println(genrePositionMapCached + " CACHE");
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());

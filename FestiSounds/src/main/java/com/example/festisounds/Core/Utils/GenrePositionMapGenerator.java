@@ -12,16 +12,11 @@ import java.util.*;
 
 public class GenrePositionMapGenerator {
 
-    @Cacheable(value = "genre-position-data", key = "#root.method.name")
+    @Cacheable(value = "genre-position-data", key = "#fileName")
     public HashMap<String, short[]> makeGenrePositionMap(String fileName) {
         HashMap<String, short[]> genrePositionMap = new HashMap<>();
 
-        try {
-            ClassPathResource resource = new ClassPathResource(fileName);
-            File csvFile = resource.getFile();
-            CsvMapper mapper = new CsvMapper();
-            mapper.enable(CsvParser.Feature.WRAP_AS_ARRAY);
-            MappingIterator<String[]> iterator = mapper.readerFor(String[].class).readValues(csvFile);
+            MappingIterator<String[]> iterator = getMappingIterator(fileName);
             iterator.next();
             while (iterator.hasNext()) {
                 String[] row = iterator.next();
@@ -29,14 +24,26 @@ public class GenrePositionMapGenerator {
                 short[] position = getPosition(row, genreColour);
                 genrePositionMap.put(row[0], position);
             }
-        } catch (IOException e) {
-            System.out.println("ffs");
-        }
-        System.out.println(genrePositionMap.toString());
+
         return genrePositionMap;
     }
 
-    private short[] getPosition(String[] row, short[] genreColour) {
+    private static MappingIterator<String[]> getMappingIterator(String fileName) {
+        try {
+            ClassPathResource resource = new ClassPathResource(fileName);
+            File csvFile = resource.getFile();
+            CsvMapper mapper = new CsvMapper();
+            mapper.enable(CsvParser.Feature.WRAP_AS_ARRAY);
+            return mapper.readerFor(String[].class).readValues(csvFile);
+        } catch (IOException e) {
+            System.out.println("ffs");
+        }
+        return null;
+
+    }
+
+
+    short[] getPosition(String[] row, short[] genreColour) {
         short xPosition = Short.parseShort(row[1]);
         short yPosition = Short.parseShort(row[2]);
         return new short[] {xPosition, yPosition, genreColour[0], genreColour[1], genreColour[2]};
