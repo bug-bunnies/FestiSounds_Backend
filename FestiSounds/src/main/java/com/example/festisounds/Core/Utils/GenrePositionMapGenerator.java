@@ -15,18 +15,22 @@ import java.util.*;
 public class GenrePositionMapGenerator {
 
     public HashMap<String, short[]> makeGenrePositionMap(String fileName) {
-        System.out.println(fileName+"leave me alone Ili");
         HashMap<String, short[]> genrePositionMap = new HashMap<>();
 
-            MappingIterator<String[]> iterator = getMappingIterator(fileName);
-            iterator.next();
-            while (iterator.hasNext()) {
-                String[] row = iterator.next();
-                short[] genreColour = convertHexColourToRGB(row[3]);
-                short[] position = getPosition(row, genreColour);
-                genrePositionMap.put(row[0], position);
-            }
+        MappingIterator<String[]> iterator = getMappingIterator(fileName);
+        iterator.next();
+        short xMax = 0;
+        short yMax = 0;
+        while (iterator.hasNext()) {
+            String[] row = iterator.next();
+            short[] genreColour = convertHexColourToRGB(row[3]);
+            short[] position = getPosition(row, genreColour);
+            genrePositionMap.put(row[0], position);
+            xMax = Short.parseShort(row[1]) > xMax ? Short.parseShort(row[1]) : xMax;
+            yMax = Short.parseShort(row[2]) > yMax ? Short.parseShort(row[2]) : yMax;
+        }
         System.out.println("In method");
+        genrePositionMap.put("Max values", new short[]{xMax, yMax});
         return genrePositionMap;
     }
 

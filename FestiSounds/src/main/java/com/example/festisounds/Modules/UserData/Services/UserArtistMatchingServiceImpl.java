@@ -44,13 +44,17 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
         FestivalDTO festival = festivalService.getFestivalById(festivalId);
 
         // Get genre map from cache
-        cachingService.buildAndCacheGenrePositionMap(genrePositionMapFile);
+        HashMap<String, short[]> genrePositionMap = cachingService.buildAndCacheGenrePositionMap(genrePositionMapFile);
 
-        return matchGenreDataToFestivalArtists(genreData, festival.artists());
+        return matchGenreDataToFestivalArtists(genreData, festival.artists(), genrePositionMap);
     }
 
+
+
     @Override
-    public LinkedHashMap<ArtistDTO, Double> matchGenreDataToFestivalArtists(HashMap<String, Double> genreData, Set<ArtistDTO> artists)
+    public LinkedHashMap<ArtistDTO, Double> matchGenreDataToFestivalArtists(HashMap<String, Double> genreData,
+                                                                            Set<ArtistDTO> artists,
+                                                                            HashMap<String, short[]> genrePositions)
             throws IOException, ParseException, SpotifyWebApiException {
 
         HashMap<ArtistDTO, Double> artistScoresMap = new HashMap<>();
@@ -58,7 +62,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
         for (ArtistDTO artist : artists) {
             Set<String> artistGenres = artist.genres();
 
-            ArrayList<Double> genreScores = getGenreScore(genreData, artistGenres);
+            ArrayList<Double> genreScores = getGenreScore(genreData, artistGenres, genrePositions);
             Double artistScore = getArtistScore(genreScores);
 
             artistScoresMap.put(artist, artistScore);
@@ -75,7 +79,10 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
     }
 
     @Override
-    public ArrayList<Double> getGenreScore(HashMap<String, Double> genreData, Set<String> artistGenres) {
+    public ArrayList<Double> getGenreScore(HashMap<String, Double> genreData, Set<String> artistGenres, HashMap<String, short[]> genrePositions) {
+
+
+
         ArrayList<Double> genreScores = new ArrayList<>();
         for (String artistGenre : artistGenres) {
             if (genreData.containsKey(artistGenre.trim())) {

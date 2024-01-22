@@ -33,7 +33,7 @@ class GenrePositionMapGeneratorTest {
 
     @Test
     public void testMakeGenrePositionMap_whenCalled_buildsMapOfCorrectSize() {
-        int expectedMapLength = 5453;
+        int expectedMapLength = 5454;
 
         assertNotNull(genrePositionMap);
         assertEquals(expectedMapLength, genrePositionMap.size());
@@ -78,6 +78,17 @@ class GenrePositionMapGeneratorTest {
                 Arguments.of("kentucky indie", new short[]{533, 9673, 148, 137, 27}),
                 Arguments.of("j-core", new short[]{571, 17542, 218, 109, 98})
         );
+    }
+
+    @Test
+    public void testMakeGenrePositionMap_whenMaxValuesQueried_GivesCorrectValues() {
+        short[] maxValues = genrePositionMap.get("Max values");
+
+        short xMaxValue = 1500;
+        short yMaxValue = 19666;
+
+        assertEquals(xMaxValue, maxValues[0]);
+        assertEquals(yMaxValue, maxValues[1]);
     }
 
 }
