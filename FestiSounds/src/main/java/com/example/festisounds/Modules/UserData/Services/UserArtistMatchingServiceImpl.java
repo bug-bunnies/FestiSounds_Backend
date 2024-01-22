@@ -109,8 +109,8 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
         short xAxisNormaliser = maxValues[0];
         short yAxisNormaliser = maxValues[1];
 
-        double xDistanceSquared = xAxisNormaliser*xAxisWeighting*Math.pow((artistGenrePosition[0] - userGenrePosition[0]), 2);
-        double yDistanceSquared = yAxisNormaliser*yAxisWeighting*Math.pow((artistGenrePosition[1] - userGenrePosition[1]), 2);
+        double xDistanceSquared = (1/Math.pow(xAxisNormaliser, 2))*xAxisWeighting*Math.pow((artistGenrePosition[0] - userGenrePosition[0]), 2);
+        double yDistanceSquared = (1/Math.pow(yAxisNormaliser, 2))*yAxisWeighting*Math.pow((artistGenrePosition[1] - userGenrePosition[1]), 2);
         double colourDistanceSquared = calculateColourDistanceSquared(artistGenrePosition, userGenrePosition);
 
         return Math.sqrt(xDistanceSquared + yDistanceSquared + colourDistanceSquared);
@@ -120,7 +120,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
         double rawDistance = Math.pow((artistGenrePosition[2] - userGenrePosition[2]), 2)
                 + Math.pow((artistGenrePosition[3] - userGenrePosition[3]), 2)
                 + Math.pow((artistGenrePosition[4] - userGenrePosition[4]), 2);
-        return rawDistance*colourNormaliser*colourWeighting;
+        return rawDistance*(1/Math.pow(colourNormaliser, 2))*colourWeighting;
     }
 
 
