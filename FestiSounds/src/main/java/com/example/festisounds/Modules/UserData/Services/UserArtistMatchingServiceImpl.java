@@ -32,6 +32,11 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
     private UserCachingServiceImpl cachingService;
     @Value("${positionMap.location}")
     private String genrePositionMapFile;
+    private final short colourNormaliser = 443;
+    private final short colourWeighting = 1;
+    private final short xAxisWeighting = 1;
+    private final short yAxisWeighting = 3;
+
 
     @Override
     public LinkedHashMap<ArtistDTO, Double> getArtistRankingFromFestival(UUID festivalId)
@@ -45,6 +50,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
 
         // Get genre map from cache
         HashMap<String, short[]> genrePositionMap = cachingService.buildAndCacheGenrePositionMap(genrePositionMapFile);
+
 
         return matchGenreDataToFestivalArtists(genreData, festival.artists(), genrePositionMap);
     }
@@ -80,18 +86,43 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
 
     @Override
     public ArrayList<Double> getGenreScore(HashMap<String, Double> genreData, Set<String> artistGenres, HashMap<String, short[]> genrePositions) {
-
-
-
         ArrayList<Double> genreScores = new ArrayList<>();
+
         for (String artistGenre : artistGenres) {
-            if (genreData.containsKey(artistGenre.trim())) {
-                genreScores.add(genreData.get(artistGenre.trim()));
+            for (Map.Entry<String, Double> userGenre : genreData.entrySet()) {
+                double distanceBetweenGenres = getDistanceBetweenGenres(artistGenre, userGenre.getKey(), genrePositions);
+
+                        // score times (1 - distance) aka closeness
+
             }
         }
-        genreScores.sort(Collections.reverseOrder());
+
+
         return genreScores;
     }
+
+    private double getDistanceBetweenGenres(String artistGenre, String userGenre, HashMap<String, short[]> genrePositions) {
+        short[] artistGenrePosition = genrePositions.get(artistGenre);
+        short[] userGenrePosition = genrePositions.get(userGenre);
+
+        short[] maxValues = genrePositions.get("Max values");
+        short xAxisNormaliser = maxValues[0];
+        short yAxisNormaliser = maxValues[1];
+
+        double xDistanceSquared = xAxisNormaliser*xAxisWeighting*Math.pow((artistGenrePosition[0] - userGenrePosition[0]), 2);
+        double yDistanceSquared = yAxisNormaliser*yAxisWeighting*Math.pow((artistGenrePosition[1] - userGenrePosition[1]), 2);
+        double colourDistanceSquared = calculateColourDistanceSquared(artistGenrePosition, userGenrePosition);
+
+        return Math.sqrt(xDistanceSquared + yDistanceSquared + colourDistanceSquared);
+    }
+
+    private double calculateColourDistanceSquared(short[] artistGenrePosition, short[] userGenrePosition) {
+        double rawDistance = Math.pow((artistGenrePosition[2] - userGenrePosition[2]), 2)
+                + Math.pow((artistGenrePosition[3] - userGenrePosition[3]), 2)
+                + Math.pow((artistGenrePosition[4] - userGenrePosition[4]), 2);
+        return rawDistance*colourNormaliser*colourWeighting;
+    }
+
 
     @Override
     public double getArtistScore(ArrayList<Double> genreScores) {

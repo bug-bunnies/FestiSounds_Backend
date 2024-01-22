@@ -26,10 +26,10 @@ public class GenrePositionMapGenerator {
             short[] genreColour = convertHexColourToRGB(row[3]);
             short[] position = getPosition(row, genreColour);
             genrePositionMap.put(row[0], position);
+
             xMax = Short.parseShort(row[1]) > xMax ? Short.parseShort(row[1]) : xMax;
             yMax = Short.parseShort(row[2]) > yMax ? Short.parseShort(row[2]) : yMax;
         }
-        System.out.println("In method");
         genrePositionMap.put("Max values", new short[]{xMax, yMax});
         return genrePositionMap;
     }
