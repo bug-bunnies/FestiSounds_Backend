@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public interface UserRequestService {
 
-    TopArtistsDTO getUsersItems() throws IOException, ParseException, SpotifyWebApiException;
+    TopArtistsDTO getUsersTopArtists() throws IOException, ParseException, SpotifyWebApiException;
     Artist[] getUsersArtistsForTimeframe(String timeframe) throws IOException, ParseException, SpotifyWebApiException;
     SpotifyUserDataDTO getUserSpotifyInfo() throws IOException, ParseException, SpotifyWebApiException;
 }

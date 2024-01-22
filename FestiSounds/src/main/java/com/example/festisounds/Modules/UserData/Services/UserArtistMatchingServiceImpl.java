@@ -5,6 +5,7 @@ import com.example.festisounds.Modules.Festival.Service.FestivalService;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistDTO;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.interceptor.SimpleKey;
@@ -27,13 +28,23 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
     private UserProcessingServiceImpl userProcessingService;
     @Autowired
     private FestivalService festivalService;
+    @Autowired
+    private UserCachingServiceImpl cachingService;
+    @Value("${positionMap.location}")
+    private String genrePositionMapFile;
 
     @Override
     public LinkedHashMap<ArtistDTO, Double> getArtistRankingFromFestival(UUID festivalId)
             throws IOException, ParseException, SpotifyWebApiException {
 
+        // Get user genre data
         HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
+
+        // Retrieve festival data
         FestivalDTO festival = festivalService.getFestivalById(festivalId);
+
+        // Get genre map from cache
+        cachingService.buildAndCacheGenrePositionMap(genrePositionMapFile);
 
         return matchGenreDataToFestivalArtists(genreData, festival.artists());
     }

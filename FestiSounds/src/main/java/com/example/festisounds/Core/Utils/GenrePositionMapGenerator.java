@@ -15,6 +15,7 @@ import java.util.*;
 public class GenrePositionMapGenerator {
 
     public HashMap<String, short[]> makeGenrePositionMap(String fileName) {
+        System.out.println(fileName+"leave me alone Ili");
         HashMap<String, short[]> genrePositionMap = new HashMap<>();
 
             MappingIterator<String[]> iterator = getMappingIterator(fileName);

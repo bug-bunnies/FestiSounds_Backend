@@ -30,7 +30,7 @@ public class UserRequestServiceImpl implements UserRequestService {
     public static final int resultLimit = 50;
 
     @Override
-    public TopArtistsDTO getUsersItems() throws IOException, ParseException, SpotifyWebApiException {
+    public TopArtistsDTO getUsersTopArtists() throws IOException, ParseException, SpotifyWebApiException {
         if (AuthController.expirationToken > LocalDateTime.now().getSecond()) {
             AuthController.refreshAccessToken();
         }

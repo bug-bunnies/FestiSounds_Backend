@@ -10,6 +10,7 @@ import com.example.festisounds.Modules.UserData.Services.UserRequestServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.interceptor.SimpleKey;
@@ -59,6 +60,9 @@ public class AuthController {
     @Autowired
     CacheManager cacheManager;
 
+    @Value("${positionMap.location}")
+    private String genrePositionMapFile;
+
 
     public static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setClientId(clientId)
@@ -107,12 +111,13 @@ public class AuthController {
 
 //            TODO: Finish comparing data.
 //            HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
+            System.out.println(genrePositionMapFile);
             Cache cachedGenreData = cacheManager.getCache("user-genre-data");
             System.out.println(cachedGenreData.getNativeCache() + " CACHE USER GENRE");
-            HashMap<String, short[]> genrePositionMap = userCachingService.buildAndCacheGenrePositionMap("Genre3DMap2.csv");
+            HashMap<String, short[]> genrePositionMap = userCachingService.buildAndCacheGenrePositionMap(genrePositionMapFile);
 
             Cache cachedGenreMap = cacheManager.getCache("genre-position-data");
-            HashMap<String, short[]> genrePositionMapCached = cachedGenreMap.get("Genre3DMap2.csv", HashMap.class);
+            HashMap<String, short[]> genrePositionMapCached = cachedGenreMap.get(genrePositionMapFile, HashMap.class);
             System.out.println(genrePositionMap + " OBJECT");
             System.out.println(cachedGenreMap.getNativeCache() + " native cache");
             System.out.println(genrePositionMapCached + " CACHE");
