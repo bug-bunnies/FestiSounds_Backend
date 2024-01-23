@@ -36,8 +36,7 @@ public class ArtistService {
                .build();
 
         try {
-            Artist[] artist = searchArtist.execute().getItems();
-            return artist;
+            return searchArtist.execute().getItems();
         } catch (Exception e) {
             throw new RuntimeException("Something went wrong getting top tracks!\n" + e.getMessage());
         }
@@ -56,13 +55,13 @@ public class ArtistService {
 
             String spotifyId = Arrays
                    .stream(art)
-                   .map(x -> x.getId())
+                   .map(Artist::getId)
                    .findFirst()
                    .orElse("Could not find a spotifyId for the Artist");
 
             String[] genres = Arrays
                    .stream(art)
-                   .map(x -> x.getGenres())
+                   .map(Artist::getGenres)
                    .findFirst()
                    .orElse(new String[]{"Could not find a genres for the Artist"});
 
@@ -98,6 +97,7 @@ public class ArtistService {
             artist.getFestivals().add(festival);
             return FestivalDTOBuilder.artistDTOBuilder(artistRepository.save(artist));
         }
+        System.out.println(createArtist(name, festivalId));
         return createArtist(name, festivalId);
     }
 

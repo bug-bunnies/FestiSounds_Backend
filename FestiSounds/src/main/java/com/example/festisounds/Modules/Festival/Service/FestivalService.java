@@ -22,16 +22,16 @@ public class FestivalService {
     private final ArtistService artistService;
 
 
+//    TODO: Check closing of stream
     public FestivalResponseDTO createFestival(FestivalRequestDTO festival) {
         Festival storedFestival = festivalRepo.save(festivalEntityBuilder(festival));
         FestivalResponseDTO convertedNewFestival = FestivalDTOBuilder.festivalDTOBuilder(storedFestival);
         if (!festival.artists().isEmpty()) {
             festival.artists().stream()
-                    .map(name ->
-                        artistService.addArtistToFestival(name, storedFestival.getId())
-                    )
+                    .peek(System.out::println)
+                    .map(name -> artistService.addArtistToFestival(name, storedFestival.getId()))
                     .map(artistResponseDTO -> convertedNewFestival.artists().add(artistResponseDTO))
-                    .close();
+                    .forEach(System.out::println);
         }
         return convertedNewFestival;
     }
@@ -56,6 +56,7 @@ public class FestivalService {
                 .collect(Collectors.toList()).toArray(new FestivalResponseDTO[0]);
     }
 
+//    TODO: Cannot currently delete if artists are linked.
     public void delete(UUID id) {
         if (festivalRepo.findById(id).isPresent()) {
             festivalRepo.deleteById(id);
