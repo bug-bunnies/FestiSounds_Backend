@@ -15,13 +15,13 @@ import java.io.IOException;
 public class GlobalErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({RuntimeException.class})
-        protected ResponseEntity<String> handleError(RuntimeException ex) {
-            String errorMessage = ex.getMessage();
+    protected ResponseEntity<String> handleError(RuntimeException ex) {
+        String errorMessage = ex.getMessage();
 
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(errorMessage);
-        }
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(errorMessage);
+    }
 
     @ExceptionHandler({SpotifyWebApiException.class})
     protected void handleSpotifyUnauthorized(SpotifyWebApiException ex) throws IOException, ParseException, SpotifyWebApiException {
