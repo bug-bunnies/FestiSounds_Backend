@@ -55,8 +55,8 @@ public class ArtistController {
         String[] artists = artistName.split(",");
         Set<String> artistGenres = new HashSet<>();
         for (String name : artists) {
-           artistGenres = service.updateArtistGenres(name.trim());
-        System.out.println(name + " artist name~asz");
+            artistGenres = service.updateArtistGenres(name.trim());
+            System.out.println(name + " artist name~asz");
         }
         return ResponseEntity.status(200).body(artistGenres);
     }

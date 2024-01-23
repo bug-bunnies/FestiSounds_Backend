@@ -25,7 +25,7 @@ public class FestivalArtist {
     @GenericGenerator(name = "uuid-hibernate-generator", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @Column(name = "spotify_id", nullable = false, length=100, unique = true)
+    @Column(name = "spotify_id", nullable = false, length = 100, unique = true)
     private String spotifyId;
 
     @Column(name = "artist_name", nullable = false, length = 100, unique = true)

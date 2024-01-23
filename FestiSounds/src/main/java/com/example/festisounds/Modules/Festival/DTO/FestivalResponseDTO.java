@@ -17,5 +17,5 @@ public record FestivalResponseDTO(
         String country,
         String organizer,
         String website
-        ) {
+) {
 }

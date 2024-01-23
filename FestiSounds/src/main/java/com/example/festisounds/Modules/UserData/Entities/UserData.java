@@ -11,8 +11,8 @@ import java.util.UUID;
 @Setter
 public class UserData {
 
-        private UUID userId;
+    private UUID userId;
 
-        private String spotifyUserId;
+    private String spotifyUserId;
 
 }

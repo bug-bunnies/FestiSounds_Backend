@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.UUID;
 
 @Service
 public class UserRecommendationServiceImpl implements UserRecommendationService {

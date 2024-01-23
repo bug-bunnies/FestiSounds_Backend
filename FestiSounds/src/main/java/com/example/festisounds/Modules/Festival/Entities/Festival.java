@@ -22,7 +22,7 @@ public class Festival {
     @Id
     @Column(name = "uuid")
     @GeneratedValue(generator = "uuid-hibernate-generator")
-    @GenericGenerator(name="UUID",
+    @GenericGenerator(name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 

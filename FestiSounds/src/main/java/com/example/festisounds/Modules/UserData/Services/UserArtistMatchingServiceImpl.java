@@ -9,7 +9,6 @@ import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
-
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -76,7 +75,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
         double artistScore = 0;
         for (Double score : genreScores) {
             double remainder = 100 - artistScore;
-            artistScore += (remainder/100)*score;
+            artistScore += (remainder / 100) * score;
         }
         return artistScore;
     }

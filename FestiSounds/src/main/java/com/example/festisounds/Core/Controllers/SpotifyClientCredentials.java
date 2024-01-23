@@ -1,5 +1,6 @@
 package com.example.festisounds.Core.Controllers;
 
+import org.apache.hc.core5.http.ParseException;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -7,7 +8,6 @@ import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
 import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
 
 import java.io.IOException;
-import org.apache.hc.core5.http.ParseException;
 
 @Service
 public class SpotifyClientCredentials {
@@ -33,16 +33,16 @@ public class SpotifyClientCredentials {
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
         }
-            return spotifyClientApi;
+        return spotifyClientApi;
     }
 
     public static SpotifyApi checkForToken() {
-            String token = spotifyClientApi.getAccessToken();
-            if (token == null) {
-                clientCredentials_Sync();
-            } else {
-                System.out.println(token);
-            }
+        String token = spotifyClientApi.getAccessToken();
+        if (token == null) {
+            clientCredentials_Sync();
+        } else {
+            System.out.println(token);
+        }
         return spotifyClientApi;
     }
 

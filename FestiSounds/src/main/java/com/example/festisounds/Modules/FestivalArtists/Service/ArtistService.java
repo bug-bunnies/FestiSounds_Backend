@@ -30,10 +30,10 @@ public class ArtistService {
 
 
     public Artist[] getSpotifyArtistData(String name) {
-        SpotifyApi spotifyApi = spotify.checkForToken();
+        SpotifyApi spotifyApi = SpotifyClientCredentials.checkForToken();
 
         SearchArtistsRequest searchArtist = spotifyApi.searchArtists(name)
-               .build();
+                .build();
 
         try {
             return searchArtist.execute().getItems();
@@ -54,16 +54,16 @@ public class ArtistService {
             Artist[] art = getSpotifyArtistData(name);
 
             String spotifyId = Arrays
-                   .stream(art)
-                   .map(Artist::getId)
-                   .findFirst()
-                   .orElse("Could not find a spotifyId for the Artist");
+                    .stream(art)
+                    .map(Artist::getId)
+                    .findFirst()
+                    .orElse("Could not find a spotifyId for the Artist");
 
             String[] genres = Arrays
-                   .stream(art)
-                   .map(Artist::getGenres)
-                   .findFirst()
-                   .orElse(new String[]{"Could not find a genres for the Artist"});
+                    .stream(art)
+                    .map(Artist::getGenres)
+                    .findFirst()
+                    .orElse(new String[]{"Could not find a genres for the Artist"});
 
             FestivalArtist newArtist = artistRepository.save(new FestivalArtist(spotifyId, name, festival, genres));
             return FestivalDTOBuilder.artistDTOBuilder(newArtist);
@@ -73,27 +73,28 @@ public class ArtistService {
         return null;
     }
 
+
+    //    TODO: Possibly change return to builder()
     public ArtistResponseDTO getArtist(UUID artistId) {
         FestivalArtist artist = artistRepository.findById(artistId).orElseThrow();
-        ArtistResponseDTO result = new ArtistResponseDTO(artistId, artist.getSpotifyId(),
+        return new ArtistResponseDTO(artistId, artist.getSpotifyId(),
                 artist.getArtistName(),
                 artist.getGenres(),
                 artist.getFestivals().stream()
                         .map(Festival::getId)
                         .collect(Collectors.toSet()));
-        return result;
     }
 
+    //    TODO: Change return type to DTO.
     public FestivalArtist findArtist(String name) {
         name = name.toUpperCase().strip();
-        FestivalArtist artist = artistRepository.findFestivalArtistByArtistName(name);
-        return artist;
+        return artistRepository.findFestivalArtistByArtistName(name);
     }
 
     public ArtistResponseDTO addArtistToFestival(String name, UUID festivalId) {
         Festival festival = festivalRepo.findById(festivalId).orElseThrow();
         FestivalArtist artist = findArtist(name);
-        if(artist != null) {
+        if (artist != null) {
             artist.getFestivals().add(festival);
             return FestivalDTOBuilder.artistDTOBuilder(artistRepository.save(artist));
         }
@@ -110,7 +111,7 @@ public class ArtistService {
             String[] genres = Arrays
                     .stream(spotifyArtistData)
                     .peek(System.out::println)
-                    .map(x -> x.getGenres())
+                    .map(Artist::getGenres)
                     .findFirst()
                     .orElse(new String[]{"no!"});
 

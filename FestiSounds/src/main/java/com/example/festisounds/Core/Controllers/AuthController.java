@@ -35,32 +35,24 @@ public class AuthController {
     private static final String clientId = System.getenv("clientId");
     private static final String clientSecret = System.getenv("clientSecret");
     private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/api/get-user-code");
-    private static String code = "";
-
-    public static Integer expirationToken;
-
-    private static UUID festivalId = UUID.fromString("8c14106e-a85c-4b7b-bcec-4803db825175");
-
-    @Autowired
-    private UserProcessingServiceImpl userProcessingService;
-
-    @Autowired
-    private UserArtistMatchingServiceImpl matchingService;
-
-    @Autowired
-    private UserRequestServiceImpl userRequestService;
-    @Autowired
-    private UserCachingServiceImpl userCachingService;
-
-    @Autowired
-    CacheManager cacheManager;
-
-
     public static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setClientId(clientId)
             .setClientSecret(clientSecret)
             .setRedirectUri(redirectUri)
             .build();
+    public static Integer expirationToken;
+    private static String code = "";
+    private static final UUID festivalId = UUID.fromString("8c14106e-a85c-4b7b-bcec-4803db825175");
+    @Autowired
+    CacheManager cacheManager;
+    @Autowired
+    private UserProcessingServiceImpl userProcessingService;
+    @Autowired
+    private UserArtistMatchingServiceImpl matchingService;
+    @Autowired
+    private UserRequestServiceImpl userRequestService;
+    @Autowired
+    private UserCachingServiceImpl userCachingService;
 
     public static void refreshAccessToken() throws IOException, SpotifyWebApiException, ParseException {
         AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh().build();
