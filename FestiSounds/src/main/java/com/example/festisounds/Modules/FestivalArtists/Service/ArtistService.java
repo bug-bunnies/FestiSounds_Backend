@@ -47,25 +47,25 @@ public class ArtistService {
             name = name.toUpperCase().strip();
             FestivalArtist artist = findArtist(name);
             if (artist != null) {
-                throw new SQLException("artist already exist!");
+                throw new SQLException("Artist already exists in the database!");
             }
 
             Festival festival = festivalRepo.findById(festivalId).orElseThrow();
             Artist[] art = getSpotifyArtistData(name);
 
-            String spotyId = Arrays
+            String spotifyId = Arrays
                    .stream(art)
                    .map(x -> x.getId())
                    .findFirst()
-                   .orElse("not there");
+                   .orElse("Could not find a spotifyId for the Artist");
 
             String[] genres = Arrays
                    .stream(art)
                    .map(x -> x.getGenres())
                    .findFirst()
-                   .orElse(new String[]{"no!"});
+                   .orElse(new String[]{"Could not find a genres for the Artist"});
 
-            FestivalArtist newArtist = repository.save(new FestivalArtist(spotyId, name, festival, genres));
+            FestivalArtist newArtist = repository.save(new FestivalArtist(spotifyId, name, festival, genres));
             return FestivalDTOBuilder.artistDataBuilder(newArtist);
         } catch (SQLException e) {
             addArtistToFestival(name, festivalId);
