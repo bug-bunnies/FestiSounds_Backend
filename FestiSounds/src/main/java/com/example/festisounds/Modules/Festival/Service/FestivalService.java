@@ -1,8 +1,10 @@
 package com.example.festisounds.Modules.Festival.Service;
 
-import com.example.festisounds.Modules.Festival.DTO.FestivalDTO;
+import com.example.festisounds.Modules.Festival.DTO.FestivalRequestDTO;
+import com.example.festisounds.Modules.Festival.DTO.FestivalResponseDTO;
 import com.example.festisounds.Modules.Festival.Entities.Festival;
 import com.example.festisounds.Modules.Festival.Repository.FestivalRepo;
+import com.example.festisounds.Modules.FestivalArtists.Service.ArtistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
@@ -11,33 +13,47 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.example.festisounds.Modules.Festival.Service.FestivalDTOBuilder.festivalEntityBuilder;
+
 @Service
 @RequiredArgsConstructor
 public class FestivalService {
     private final FestivalRepo festivalRepo;
+    private final ArtistService artistService;
 
-    public Festival createFestival(Festival festival) {
-        return festivalRepo.save(festival);
+
+    public FestivalResponseDTO createFestival(FestivalRequestDTO festival) {
+        Festival storedFestival = festivalRepo.save(festivalEntityBuilder(festival));
+        FestivalResponseDTO convertedNewFestival = FestivalDTOBuilder.festivalDTOBuilder(storedFestival);
+        if (!festival.artists().isEmpty()) {
+            festival.artists().stream()
+                    .map(name ->
+                        artistService.addArtistToFestival(name, storedFestival.getId())
+                    )
+                    .map(artistResponseDTO -> convertedNewFestival.artists().add(artistResponseDTO))
+                    .close();
+        }
+        return convertedNewFestival;
     }
 
-    public FestivalDTO[] getAllFestivals() {
+    public FestivalResponseDTO[] getAllFestivals() {
         List<Festival> festivals = festivalRepo.findAll();
         return festivals.stream()
-                .map(FestivalDTOBuilder::festivalDataBuilder)
-                .collect(Collectors.toList()).toArray(new FestivalDTO[0]);
+                .map(FestivalDTOBuilder::festivalDTOBuilder)
+                .collect(Collectors.toList()).toArray(new FestivalResponseDTO[0]);
     }
 
-    public FestivalDTO getFestivalById(UUID id) {
+    public FestivalResponseDTO getFestivalById(UUID id) {
         Festival festivalById = festivalRepo.findById(id).orElseThrow();
-        return FestivalDTOBuilder.festivalDataBuilder(festivalById);
+        return FestivalDTOBuilder.festivalDTOBuilder(festivalById);
     }
 
     // needs to check for not matching names
-    public FestivalDTO[] getFestivalsByName(String name) {
+    public FestivalResponseDTO[] getFestivalsByName(String name) {
         List<Festival> festivalsByName = festivalRepo.findByNameContainingIgnoreCase(name);
         return festivalsByName.stream()
-                .map(FestivalDTOBuilder::festivalDataBuilder)
-                .collect(Collectors.toList()).toArray(new FestivalDTO[0]);
+                .map(FestivalDTOBuilder::festivalDTOBuilder)
+                .collect(Collectors.toList()).toArray(new FestivalResponseDTO[0]);
     }
 
     public void delete(UUID id) {

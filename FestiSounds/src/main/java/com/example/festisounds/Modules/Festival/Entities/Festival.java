@@ -47,20 +47,6 @@ public class Festival {
     @Column(name = "country", nullable = false, length = 100)
     private String country;
 
-//    @Column(name = "is_robbie_invited")
-//    private boolean isRobbieInvited;
-//
-//    @Column(name = "image", nullable = true, length = 500)
-//    private String image;
-//
-//    @Column(name = "created_on")
-//    @CreationTimestamp(source = SourceType.DB)
-//    private Instant createdOn;
-//
-//    @Column(name = "last_updated_on")
-//    @UpdateTimestamp(source = SourceType.DB)
-//    private Instant lastUpdatedOn;
-
     @Column(name = "organizer", nullable = false, length = 100)
     private String organizer;
 

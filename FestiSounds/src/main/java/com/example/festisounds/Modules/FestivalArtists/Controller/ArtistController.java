@@ -1,6 +1,6 @@
 package com.example.festisounds.Modules.FestivalArtists.Controller;
 
-import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistDTO;
+import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.example.festisounds.Modules.FestivalArtists.Service.ArtistService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class ArtistController {
 
     @GetMapping("{artistId}")
     @Operation(description = "get artist by id", summary = "Returns artist's data from festiSounds DB")
-    public ResponseEntity<ArtistDTO> findArtist(@PathVariable UUID artistId) {
+    public ResponseEntity<ArtistResponseDTO> findArtist(@PathVariable UUID artistId) {
         try {
             return ResponseEntity.ok(service.getArtist(artistId));
         } catch (NotFoundException e) {
@@ -46,7 +46,7 @@ public class ArtistController {
     }
 
     @PutMapping("festival")
-    public ResponseEntity<String> updateFestival(@RequestParam String artistName, @RequestParam UUID festivalId) {
+    public ResponseEntity<ArtistResponseDTO> updateFestivalArtist(@RequestParam String artistName, @RequestParam UUID festivalId) throws SQLException {
         return ResponseEntity.ok(service.addArtistToFestival(artistName, festivalId));
     }
 
@@ -64,7 +64,7 @@ public class ArtistController {
     @DeleteMapping("{artistId}")
     public ResponseEntity.HeadersBuilder deleteArtist(@PathVariable UUID artistId) {
         try {
-            ArtistDTO artist = service.getArtist(artistId);
+            ArtistResponseDTO artist = service.getArtist(artistId);
             if (artist != null)
                 service.deleteArtist(artistId);
             return ResponseEntity.status(200);

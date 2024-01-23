@@ -1,12 +1,10 @@
 package com.example.festisounds.Modules.FestivalArtists.Entities;
 
 import com.example.festisounds.Modules.Festival.Entities.Festival;
-import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;

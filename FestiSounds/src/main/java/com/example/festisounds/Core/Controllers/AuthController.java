@@ -1,7 +1,6 @@
 package com.example.festisounds.Core.Controllers;
 
-import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistDTO;
-import com.example.festisounds.Modules.UserData.DTOs.SpotifyUserDataDTO;
+import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.example.festisounds.Modules.UserData.Services.UserArtistMatchingServiceImpl;
 import com.example.festisounds.Modules.UserData.Services.UserCachingServiceImpl;
 import com.example.festisounds.Modules.UserData.Services.UserProcessingServiceImpl;
@@ -11,7 +10,6 @@ import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.interceptor.SimpleKey;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
@@ -106,7 +104,7 @@ public class AuthController {
 //            TODO: Finish comparing data.
             HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
             HashMap<String, Double> genreData2 = userProcessingService.rankUsersFavouriteGenres();
-            LinkedHashMap<ArtistDTO, Double> festivalArtists = matchingService.getArtistRankingFromFestival(festivalId);
+            LinkedHashMap<ArtistResponseDTO, Double> festivalArtists = matchingService.getArtistRankingFromFestival(festivalId);
             System.out.println(festivalArtists + " festival artists hopefully ordered");
             System.out.println(genreData2 + " genre hashmap @@@");
             System.out.println("I am here 1");
