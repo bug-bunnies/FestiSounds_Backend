@@ -54,8 +54,8 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
 
 
     @Override
-    public LinkedHashMap<ArtistDTO, Double> matchGenreDataToFestivalArtists(HashMap<String, Double> genreData,
-                                                                            Set<ArtistDTO> artists,
+    public LinkedHashMap<ArtistResponseDTO, Double> matchGenreDataToFestivalArtists(HashMap<String, Double> genreData,
+                                                                            Set<ArtistResponseDTO> artists,
                                                                             HashMap<String, short[]> genrePositions)
             throws IOException, ParseException, SpotifyWebApiException {
 

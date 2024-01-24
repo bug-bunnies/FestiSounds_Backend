@@ -58,18 +58,8 @@ public class AuthController {
     private UserCachingServiceImpl userCachingService;
     private GenrePositionMapGenerator mapGenerator = new GenrePositionMapGenerator();
 
-    @Autowired
-    CacheManager cacheManager;
-
     @Value("${positionMap.location}")
     private String genrePositionMapFile;
-
-
-    public static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
-            .setClientId(clientId)
-            .setClientSecret(clientSecret)
-            .setRedirectUri(redirectUri)
-            .build();
 
     public static void refreshAccessToken() throws IOException, SpotifyWebApiException, ParseException {
         AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh().build();
