@@ -43,6 +43,8 @@ public class FestivalServiceTest {
     Festival festival2;
     List<Festival> festivals;
 
+    UUID festivalId1;
+
     @BeforeEach
     void setup() {
         festivalRequestData = FestivalRequestDTO.builder()
@@ -57,7 +59,9 @@ public class FestivalServiceTest {
                 .website("www.testWebsite.com")
                 .build();
 
+        festivalId1 = UUID.randomUUID();
         festival1 = new Festival();
+        festival1.setId(festivalId1);
         festival1.setName("TestFestival1");
         festival2 = new Festival();
         festival2.setName("TestFestival2");
@@ -90,17 +94,15 @@ public class FestivalServiceTest {
     @DisplayName("Get festival by ID")
     public void testGetFestivalById_whenGivenValidId_returnsFestivalResponse() {
         // Arrange
-        UUID id = UUID.randomUUID();
-        festival1.setId(id);
 
-        when(festivalRepo.findById(id)).thenReturn(Optional.of(festival1));
+        when(festivalRepo.findById(festivalId1)).thenReturn(Optional.of(festival1));
 
         // Act
-        FestivalResponseDTO result = festivalService.getFestivalById(id);
+        FestivalResponseDTO result = festivalService.getFestivalById(festivalId1);
 
         // Assert
-        assertEquals(id, result.id());
-        verify(festivalRepo).findById(id);
+        assertEquals(festivalId1, result.id());
+        verify(festivalRepo).findById(festivalId1);
     }
 
 
@@ -118,5 +120,19 @@ public class FestivalServiceTest {
         assertEquals(1, result.length, "result should have a size of 1, but instead was: " + result.length);
         assertEquals(searchQuery, result[0].name(), "The first festival should have the name TestFestival1 but instead was: " + result[0].name());
         verify(festivalRepo).findByNameContainingIgnoreCase(searchQuery);
+    }
+
+    @Test
+    @DisplayName("Delete festival")
+    public void testDeleteFestival_whenValidUUIDProvided_deletesFestival() {
+        // Arrange
+        when(festivalRepo.findById(festivalId1)).thenReturn(Optional.of(festival1));
+
+        // Act
+        festivalService.delete(festivalId1);
+
+        // Assert
+        verify(festivalRepo).deleteById(festivalId1);
+        verify(festivalRepo).findById(festivalId1);
     }
 }
