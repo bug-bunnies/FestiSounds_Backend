@@ -5,8 +5,6 @@ import com.example.festisounds.Modules.Festival.DTO.FestivalResponseDTO;
 import com.example.festisounds.Modules.Festival.Entities.Festival;
 import com.example.festisounds.Modules.Festival.Repository.FestivalRepo;
 import com.example.festisounds.Modules.Festival.Service.FestivalService;
-import com.example.festisounds.Modules.FestivalArtists.Repositories.FestivalArtistRepository;
-import com.example.festisounds.Modules.FestivalArtists.Service.ArtistService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -27,12 +25,6 @@ public class FestivalServiceTest {
 
     @Mock
     FestivalRepo festivalRepo;
-
-    @Mock
-    FestivalArtistRepository artistRepository;
-
-    @Mock
-    ArtistService artistService;
 
     @InjectMocks
     FestivalService festivalService;
@@ -73,6 +65,7 @@ public class FestivalServiceTest {
     @Disabled
     @DisplayName("Create festival with artist")
     public void testCreateFestival_whenGivenCorrectDetailsWithArtist_ReturnsCorrectResponse() {
+
     }
 
     @Test
