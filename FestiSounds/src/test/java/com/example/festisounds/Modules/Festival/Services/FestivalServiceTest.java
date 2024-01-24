@@ -16,10 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -42,6 +39,10 @@ public class FestivalServiceTest {
 
     FestivalRequestDTO festivalRequestData;
 
+    Festival festival1;
+    Festival festival2;
+    List<Festival> festivals;
+
     @BeforeEach
     void setup() {
         festivalRequestData = FestivalRequestDTO.builder()
@@ -55,6 +56,12 @@ public class FestivalServiceTest {
                 .organizer("TestOrganizer")
                 .website("www.testWebsite.com")
                 .build();
+
+        festival1 = new Festival();
+        festival1.setName("TestFestival1");
+        festival2 = new Festival();
+        festival2.setName("TestFestival2");
+        festivals = Arrays.asList(festival1, festival2);
     }
 
 
@@ -62,26 +69,37 @@ public class FestivalServiceTest {
     @Disabled
     @DisplayName("Create festival with artist")
     public void testCreateFestival_whenGivenCorrectDetailsWithArtist_ReturnsCorrectResponse() {
-
     }
 
     @Test
-    @DisplayName("Returns all festivals")
+    @DisplayName("Get all festivals")
     public void testGetAllFestivals_whenTwoFestivalsExists_returnsAnArrayOfFestivals() {
         // Arrange
-        Festival festival1 = new Festival();
-        festival1.setName("TestFestival");
-        Festival festival2 = new Festival();
-        List<Festival> festivals = Arrays.asList(festival1, festival2);
-
         when(festivalRepo.findAll()).thenReturn(festivals);
 
         // Act
-        FestivalResponseDTO[] result = festivalService.getAllFestivals();
+        FestivalResponseDTO[] festivalsFromService = festivalService.getAllFestivals();
 
         // Assert
-        assertEquals(2, result.length, "result should have a size of 2, but instead was: " + result.length);
-        assertEquals("TestFestival", result[0].name(), "The first festival should have the name TestFestival but instead was: " + result[0].name());
+        assertEquals(2, festivalsFromService.length, "festivalsFromService should have a size of 2, but instead was: " + festivalsFromService.length);
+        assertEquals("TestFestival1", festivalsFromService[0].name(), "The first festival should have the name TestFestival1 but instead was: " + festivalsFromService[0].name());
         verify(festivalRepo).findAll();
+    }
+
+    @Test
+    @DisplayName("Get festival by ID")
+    public void testGetFestivalById_whenGivenValidId_returnsFestivalResponse() {
+        // Arrange
+        UUID id = UUID.randomUUID();
+        festival1.setId(id);
+
+        when(festivalRepo.findById(id)).thenReturn(Optional.of(festival1));
+
+        // Act
+        FestivalResponseDTO result = festivalService.getFestivalById(id);
+
+        // Assert
+        assertEquals(id, result.id());
+        verify(festivalRepo).findById(id);
     }
 }
