@@ -98,7 +98,7 @@ public class ArtistService {
             artist.getFestivals().add(festival);
             return FestivalDTOBuilder.artistDTOBuilder(artistRepository.save(artist));
         }
-        System.out.println(createArtist(name, festivalId));
+//        System.out.println(createArtist(name, festivalId));
         return createArtist(name, festivalId);
     }
 

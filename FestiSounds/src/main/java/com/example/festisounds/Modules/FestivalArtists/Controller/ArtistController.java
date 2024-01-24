@@ -37,6 +37,7 @@ public class ArtistController {
     }
 
     @PostMapping("new")
+    // TODO: This is fucking wank
     public ResponseEntity.HeadersBuilder createArtist(@RequestParam String artistName, @RequestParam UUID festivalId) throws SQLException {
         String[] artists = artistName.split(",");
         for (String name : artists) {

@@ -6,6 +6,7 @@ import com.example.festisounds.Modules.Festival.Entities.Festival;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.example.festisounds.Modules.FestivalArtists.Entities.FestivalArtist;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -21,6 +22,20 @@ public class FestivalDTOBuilder {
                         .stream()
                         .map(FestivalDTOBuilder::artistDTOBuilder)
                         .collect(Collectors.toSet()),
+                festival.getCity(),
+                festival.getCountry(),
+                festival.getOrganizer(),
+                festival.getWebsite());
+    }
+
+    public static FestivalResponseDTO festivalDTOBuilder(Festival festival, Set<ArtistResponseDTO> artists) {
+        return new FestivalResponseDTO(
+                festival.getId(),
+                festival.getName(),
+                festival.getStartDate(),
+                festival.getEndDate(),
+                festival.getDetails(),
+                artists,
                 festival.getCity(),
                 festival.getCountry(),
                 festival.getOrganizer(),
