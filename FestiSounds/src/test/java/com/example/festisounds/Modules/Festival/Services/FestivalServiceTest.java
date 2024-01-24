@@ -102,4 +102,21 @@ public class FestivalServiceTest {
         assertEquals(id, result.id());
         verify(festivalRepo).findById(id);
     }
+
+
+    @Test
+    @DisplayName("Get festival by name")
+    public void testGetFestivalById_whenGivenValidName_returnsFestivalResponse() {
+        // Arrange
+        String searchQuery = "TestFestival1";
+        when(festivalRepo.findByNameContainingIgnoreCase(searchQuery)).thenReturn(List.of(festival1));
+
+        // Act
+        FestivalResponseDTO[] result = festivalService.getFestivalsByName(searchQuery);
+
+        // Assert
+        assertEquals(1, result.length, "result should have a size of 1, but instead was: " + result.length);
+        assertEquals(searchQuery, result[0].name(), "The first festival should have the name TestFestival1 but instead was: " + result[0].name());
+        verify(festivalRepo).findByNameContainingIgnoreCase(searchQuery);
+    }
 }
