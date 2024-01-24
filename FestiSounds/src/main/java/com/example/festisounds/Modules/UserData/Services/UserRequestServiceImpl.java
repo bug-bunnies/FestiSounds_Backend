@@ -27,7 +27,7 @@ public class UserRequestServiceImpl implements UserRequestService {
     private UserCachingService cachingService;
 
     @Override
-    public TopArtistsDTO getUsersItems() throws IOException, ParseException, SpotifyWebApiException {
+    public TopArtistsDTO getUsersTopArtists() throws IOException, ParseException, SpotifyWebApiException {
         if (AuthController.expirationToken > LocalDateTime.now().getSecond()) {
             AuthController.refreshAccessToken();
         }

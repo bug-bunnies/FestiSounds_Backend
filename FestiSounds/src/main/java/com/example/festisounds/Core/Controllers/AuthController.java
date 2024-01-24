@@ -1,5 +1,7 @@
 package com.example.festisounds.Core.Controllers;
 
+import com.example.festisounds.Core.Utils.GenrePositionMapGenerator;
+import com.example.festisounds.Modules.UserData.DTOs.SpotifyUserDataDTO;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.example.festisounds.Modules.UserData.Services.UserArtistMatchingServiceImpl;
 import com.example.festisounds.Modules.UserData.Services.UserCachingServiceImpl;
@@ -8,6 +10,7 @@ import com.example.festisounds.Modules.UserData.Services.UserRequestServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +56,20 @@ public class AuthController {
     private UserRequestServiceImpl userRequestService;
     @Autowired
     private UserCachingServiceImpl userCachingService;
+    private GenrePositionMapGenerator mapGenerator = new GenrePositionMapGenerator();
+
+    @Autowired
+    CacheManager cacheManager;
+
+    @Value("${positionMap.location}")
+    private String genrePositionMapFile;
+
+
+    public static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
+            .setClientId(clientId)
+            .setClientSecret(clientSecret)
+            .setRedirectUri(redirectUri)
+            .build();
 
     public static void refreshAccessToken() throws IOException, SpotifyWebApiException, ParseException {
         AuthorizationCodeRefreshRequest authorizationCodeRefreshRequest = spotifyApi.authorizationCodeRefresh().build();
@@ -93,29 +110,9 @@ public class AuthController {
             System.out.println("Spotify refresh token: " + spotifyApi.getRefreshToken());
             System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
 
-//            TODO: Finish comparing data.
-            HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
-            HashMap<String, Double> genreData2 = userProcessingService.rankUsersFavouriteGenres();
-            LinkedHashMap<ArtistResponseDTO, Double> festivalArtists = matchingService.getArtistRankingFromFestival(festivalId);
-            System.out.println(festivalArtists + " festival artists hopefully ordered");
-            System.out.println(genreData2 + " genre hashmap @@@");
-            System.out.println("I am here 1");
-//            SpotifyUserDataDTO profileData = userRequestService.getUserSpotifyInfo();
-            Cache cachedArtists = cacheManager.getCache("user-top-artists");
-            Cache cachedGenre = cacheManager.getCache("user-genre-data");
-//            Cache cachedUser = cacheManager.getCache("user-profile-data");
-            System.out.println("I am here 2");
-            HashMap<String, Double> genre = cachedGenre.get("rankUsersFavouriteGenres", HashMap.class);
-//            SpotifyUserDataDTO user = cachedUser.get("getUserSpotifyInfo", SpotifyUserDataDTO.class);
-            ArrayList<String> artistData = cachedArtists.get("cacheUserArtistData", ArrayList.class);
-            System.out.println("I am here 3");
-            System.out.println(cachedGenre.getNativeCache());
-            System.out.println(cachedArtists.getNativeCache());
-
-            System.out.println(genreData.get("madchester") + " genre cache!");
-//            System.out.println(user.display_name() + " user cache!");
-            System.out.println("The cached artist list is: " + artistData);
-
+            userProcessingService.rankUsersFavouriteGenres(); 
+            userRequestService.getUserSpotifyInfo();
+            userCachingService.buildAndCacheGenrePositionMap(genrePositionMapFile);
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
