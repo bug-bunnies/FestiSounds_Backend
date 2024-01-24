@@ -1,8 +1,7 @@
 package com.example.festisounds.Modules.Festival.Controller;
 
-import com.example.festisounds.Modules.Festival.DTO.FestivalDTO;
-import com.example.festisounds.Modules.Festival.Entities.Festival;
-import com.example.festisounds.Modules.Festival.Repository.FestivalRepo;
+import com.example.festisounds.Modules.Festival.DTO.FestivalRequestDTO;
+import com.example.festisounds.Modules.Festival.DTO.FestivalResponseDTO;
 import com.example.festisounds.Modules.Festival.Service.FestivalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +21,12 @@ public class FestivalController {
     private final FestivalService festivalService;
 
     @GetMapping(BASE_PATH)
-    public ResponseEntity<FestivalDTO[]> getAllFestivals() {
+    public ResponseEntity<FestivalResponseDTO[]> getAllFestivals() {
         return ResponseEntity.ok(festivalService.getAllFestivals());
     }
 
     @GetMapping(BASE_PATH_ID)
-    public ResponseEntity<FestivalDTO> getFestivalById(@PathVariable("festivalId") UUID festivalId) {
+    public ResponseEntity<FestivalResponseDTO> getFestivalById(@PathVariable("festivalId") UUID festivalId) {
         try {
             return ResponseEntity.ok(festivalService.getFestivalById(festivalId));
         } catch (NoSuchElementException e) {
@@ -36,7 +35,7 @@ public class FestivalController {
     }
 
     @GetMapping(BASE_PATH_SEARCH)
-    public ResponseEntity<FestivalDTO[]> searchFestivalsByName(@RequestParam("festivalName") String festivalName) {
+    public ResponseEntity<FestivalResponseDTO[]> searchFestivalsByName(@RequestParam("festivalName") String festivalName) {
         try {
             return ResponseEntity.ok(festivalService.getFestivalsByName(festivalName));
         } catch (NoSuchElementException e) {
@@ -45,7 +44,7 @@ public class FestivalController {
     }
 
     @PostMapping(BASE_PATH)
-    public ResponseEntity<Festival> createFestival(@RequestBody Festival festival) {
+    public ResponseEntity<FestivalResponseDTO> createFestival(@RequestBody FestivalRequestDTO festival) {
         System.out.println(festival);
         return ResponseEntity.ok(festivalService.createFestival(festival));
     }

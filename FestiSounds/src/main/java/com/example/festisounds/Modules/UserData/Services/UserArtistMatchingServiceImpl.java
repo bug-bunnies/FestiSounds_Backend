@@ -1,19 +1,15 @@
 package com.example.festisounds.Modules.UserData.Services;
 
-import com.example.festisounds.Modules.Festival.DTO.FestivalDTO;
+import com.example.festisounds.Modules.Festival.DTO.FestivalResponseDTO;
 import com.example.festisounds.Modules.Festival.Service.FestivalService;
-import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistDTO;
+import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.interceptor.SimpleKey;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
-import org.springframework.cache.Cache;
-import org.springframework.cache.interceptor.SimpleKey;
-
 
 import java.io.IOException;
 import java.util.*;
@@ -39,14 +35,14 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
 
 
     @Override
-    public LinkedHashMap<ArtistDTO, Double> getArtistRankingFromFestival(UUID festivalId)
+    public LinkedHashMap<ArtistResponseDTO, Double> getArtistRankingFromFestival(UUID festivalId)
             throws IOException, ParseException, SpotifyWebApiException {
 
         // Get user genre data
         HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
 
-        // Retrieve festival data
-        FestivalDTO festival = festivalService.getFestivalById(festivalId);
+        FestivalResponseDTO festival = festivalService.getFestivalById(festivalId);
+
 
         // Get genre map from cache
         HashMap<String, short[]> genrePositionMap = cachingService.buildAndCacheGenrePositionMap(genrePositionMapFile);
@@ -63,9 +59,9 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
                                                                             HashMap<String, short[]> genrePositions)
             throws IOException, ParseException, SpotifyWebApiException {
 
-        HashMap<ArtistDTO, Double> artistScoresMap = new HashMap<>();
+        HashMap<ArtistResponseDTO, Double> artistScoresMap = new HashMap<>();
 
-        for (ArtistDTO artist : artists) {
+        for (ArtistResponseDTO artist : artists) {
             Set<String> artistGenres = artist.genres();
 
             ArrayList<Double> genreScores = getGenreScore(genreData, artistGenres, genrePositions);
@@ -129,7 +125,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
         double artistScore = 0;
         for (Double score : genreScores) {
             double remainder = 100 - artistScore;
-            artistScore += (remainder/100)*score;
+            artistScore += (remainder / 100) * score;
         }
         return artistScore;
     }

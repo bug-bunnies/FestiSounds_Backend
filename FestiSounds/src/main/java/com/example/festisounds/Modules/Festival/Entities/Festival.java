@@ -3,12 +3,8 @@ package com.example.festisounds.Modules.Festival.Entities;
 import com.example.festisounds.Modules.FestivalArtists.Entities.FestivalArtist;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.SourceType;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.Instant;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +22,8 @@ public class Festival {
     @Id
     @Column(name = "uuid")
     @GeneratedValue(generator = "uuid-hibernate-generator")
-    @GenericGenerator(name = "uuid-hibernate-generator", strategy = "org.hibernate.id.UUIDGenerator")
+    @GenericGenerator(name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
     @Column(name = "name", nullable = false, length = 100)
@@ -50,20 +47,6 @@ public class Festival {
 
     @Column(name = "country", nullable = false, length = 100)
     private String country;
-
-    @Column(name = "is_robbie_invited")
-    private boolean isRobbieInvited;
-
-    @Column(name = "image", nullable = true, length = 500)
-    private String image;
-
-    @Column(name = "created_on")
-    @CreationTimestamp(source = SourceType.DB)
-    private Instant createdOn;
-
-    @Column(name = "last_updated_on")
-    @UpdateTimestamp(source = SourceType.DB)
-    private Instant lastUpdatedOn;
 
     @Column(name = "organizer", nullable = false, length = 100)
     private String organizer;

@@ -4,7 +4,7 @@ import com.example.festisounds.Core.Controllers.SpotifyClientCredentials;
 import com.example.festisounds.Modules.Festival.Entities.Festival;
 import com.example.festisounds.Modules.Festival.Repository.FestivalRepo;
 import com.example.festisounds.Modules.Festival.Service.FestivalDTOBuilder;
-import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistDTO;
+import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.example.festisounds.Modules.FestivalArtists.Entities.FestivalArtist;
 import com.example.festisounds.Modules.FestivalArtists.Repositories.FestivalArtistRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,77 +25,65 @@ import static com.example.festisounds.Core.Controllers.AuthController.spotifyApi
 @Service
 @RequiredArgsConstructor
 public class ArtistService {
-    private final FestivalArtistRepository repository;
+
+    private final FestivalArtistRepository artistRepository;
     private final FestivalRepo festivalRepo;
 
     public Artist[] getSpotifyArtistData(String name) {
-        SpotifyClientCredentials.checkForToken();
+
+        SpotifyApi spotifyApi = SpotifyClientCredentials.checkForToken();
 
         SearchArtistsRequest searchArtist = spotifyApi.searchArtists(name)
-               .build();
+                .build();
 
         try {
-            Artist[] artist = searchArtist.execute().getItems();
-            return artist;
+            return searchArtist.execute().getItems();
         } catch (Exception e) {
             throw new RuntimeException("Something went wrong getting top tracks!\n" + e.getMessage());
         }
     }
 
-    public ArtistDTO createArtist(String name, UUID festivalId) throws SQLException {
-        try {
-            name = name.toUpperCase().strip();
-            FestivalArtist artist = findArtist(name);
-            if (artist != null) {
-                throw new SQLException("artist already exist!");
-            }
+    public ArtistResponseDTO createArtist(String name, Festival festival) {
+        Artist[] artist = getSpotifyArtistData(name);
 
-            Festival festival = festivalRepo.findById(festivalId).orElseThrow();
-            Artist[] art = getSpotifyArtistData(name);
+        String spotifyId = Arrays
+                .stream(artist)
+                .map(Artist::getId)
+                .findFirst()
+                .orElse("Could not find a spotifyId for the Artist");
 
-            String spotyId = Arrays
-                   .stream(art)
-                   .map(x -> x.getId())
-                   .findFirst()
-                   .orElse("not there");
+        String[] genres = Arrays
+                .stream(artist)
+                .map(Artist::getGenres)
+                .findFirst()
+                .orElse(new String[]{"Could not find a genres for the Artist"});
 
-            String[] genres = Arrays
-                   .stream(art)
-                   .map(x -> x.getGenres())
-                   .findFirst()
-                   .orElse(new String[]{"no!"});
+        FestivalArtist newArtist = artistRepository.save(new FestivalArtist(spotifyId, name, festival, genres));
+        return FestivalDTOBuilder.artistDTOBuilder(newArtist);
+}
 
-            FestivalArtist newArtist = repository.save(new FestivalArtist(spotyId, name, festival, genres));
-            return FestivalDTOBuilder.artistDataBuilder(newArtist);
-        } catch (SQLException e) {
-            addArtistToFestival(name, festivalId);
+    public ArtistResponseDTO createOrAddArtistRouter(String name, UUID festivalId) {
+        Festival festival = festivalRepo.findById(festivalId).orElseThrow();
+        name = name.toUpperCase().strip();   // may cause issues if artist name is case-sensitive
+        FestivalArtist artist = findArtist(name);
+        if (artist == null) {
+            return createArtist(name, festival);
         }
-        return null;
+        return addArtistToFestival(artist, festival);
     }
 
-    public ArtistDTO getArtist(UUID artistId) {
-        FestivalArtist artist = repository.findById(artistId).orElseThrow();
-        ArtistDTO result = new ArtistDTO(artistId, artist.getSpotifyId(),
-                artist.getArtistName(),
-                artist.getGenres(),
-                artist.getFestivals().stream()
-                        .map(f -> f.getName())
-                        .collect(Collectors.toSet()));
-        return result;
+    public ArtistResponseDTO getArtist(UUID artistId) {
+        FestivalArtist artist = artistRepository.findById(artistId).orElseThrow();
+        return FestivalDTOBuilder.artistDTOBuilder(artist);
     }
-
     public FestivalArtist findArtist(String name) {
         name = name.toUpperCase().strip();
-        FestivalArtist artist = repository.findFestivalArtistByArtistName(name);
-        return artist;
+        return artistRepository.findFestivalArtistByArtistName(name);
     }
 
-    public String addArtistToFestival(String name, UUID festivalId) {
-        Festival festival = festivalRepo.findById(festivalId).orElseThrow();
-        FestivalArtist artist = findArtist(name);
-        artist.getFestivals().add(festival);
-        repository.save(artist);
-        return festival.getName();
+    public ArtistResponseDTO addArtistToFestival(FestivalArtist artist, Festival festival) {
+            artist.getFestivals().add(festival);
+            return FestivalDTOBuilder.artistDTOBuilder(artistRepository.save(artist));
     }
 
     public Set<String> updateArtistGenres(String name) throws Exception {
@@ -107,7 +95,7 @@ public class ArtistService {
             String[] genres = Arrays
                     .stream(spotifyArtistData)
                     .peek(System.out::println)
-                    .map(x -> x.getGenres())
+                    .map(Artist::getGenres)
                     .findFirst()
                     .orElse(new String[]{"no!"});
 
@@ -116,7 +104,7 @@ public class ArtistService {
                 System.out.println(genre + " here is genre in loop");
             }
 
-            repository.save(existingArtist);
+            artistRepository.save(existingArtist);
             return existingArtist.getGenres();
 
         } catch (Exception e) {
@@ -125,7 +113,7 @@ public class ArtistService {
     }
 
     public void deleteArtist(UUID id) {
-        repository.deleteById(id);
+        artistRepository.deleteById(id);
     }
 
 }

@@ -1,12 +1,10 @@
 package com.example.festisounds.Modules.FestivalArtists.Entities;
 
 import com.example.festisounds.Modules.Festival.Entities.Festival;
-import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -27,7 +25,7 @@ public class FestivalArtist {
     @GenericGenerator(name = "uuid-hibernate-generator", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @Column(name = "spotify_id", nullable = false, length=100, unique = true)
+    @Column(name = "spotify_id", nullable = false, length = 100, unique = true)
     private String spotifyId;
 
     @Column(name = "artist_name", nullable = false, length = 100, unique = true)

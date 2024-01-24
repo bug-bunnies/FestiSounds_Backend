@@ -4,6 +4,7 @@ import com.example.festisounds.Core.Utils.GenrePositionMapGenerator;
 import org.springframework.cache.CacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
@@ -19,16 +20,17 @@ public class UserCachingServiceImpl implements UserCachingService {
 
     @Autowired
     CacheManager cacheManager;
+
     @Override
     public void evictAllCaches() {
-            cacheManager.getCacheNames()
-                    .forEach(cacheName -> Objects.requireNonNull(cacheManager.getCache(cacheName))
-                            .clear());
+        cacheManager.getCacheNames()
+                .forEach(cacheName -> Objects.requireNonNull(cacheManager.getCache(cacheName))
+                        .clear());
     }
 
     @Cacheable(value = "user-top-artists", key = "#root.method.name")
     @Override
-    public ArrayList<String> cacheUserArtistData(Artist[]... artistArrayData){
+    public ArrayList<String> cacheUserArtistData(Artist[]... artistArrayData) {
         return Arrays
                 .stream(artistArrayData)
                 .flatMap(Arrays::stream)

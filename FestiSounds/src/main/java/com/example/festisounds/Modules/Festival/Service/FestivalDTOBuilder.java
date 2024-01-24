@@ -1,23 +1,26 @@
 package com.example.festisounds.Modules.Festival.Service;
 
-import com.example.festisounds.Modules.Festival.DTO.FestivalDTO;
+import com.example.festisounds.Modules.Festival.DTO.FestivalRequestDTO;
+import com.example.festisounds.Modules.Festival.DTO.FestivalResponseDTO;
 import com.example.festisounds.Modules.Festival.Entities.Festival;
-import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistDTO;
+import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.example.festisounds.Modules.FestivalArtists.Entities.FestivalArtist;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
 public class FestivalDTOBuilder {
-    public static FestivalDTO festivalDataBuilder(Festival festival) {
-        return new FestivalDTO(festival.getId(),
+    public static FestivalResponseDTO festivalDTOBuilder(Festival festival) {
+        return new FestivalResponseDTO(
+                festival.getId(),
                 festival.getName(),
                 festival.getStartDate(),
                 festival.getEndDate(),
                 festival.getDetails(),
                 festival.getArtists()
                         .stream()
-                        .map(FestivalDTOBuilder::artistDataBuilder)
+                        .map(FestivalDTOBuilder::artistDTOBuilder)
                         .collect(Collectors.toSet()),
                 festival.getCity(),
                 festival.getCountry(),
@@ -25,14 +28,49 @@ public class FestivalDTOBuilder {
                 festival.getWebsite());
     }
 
-    public static ArtistDTO artistDataBuilder(FestivalArtist artist) {
-        return new ArtistDTO(artist.getId(),
+    public static FestivalResponseDTO festivalDTOBuilder(Festival festival, Set<ArtistResponseDTO> artists) {
+        return new FestivalResponseDTO(
+                festival.getId(),
+                festival.getName(),
+                festival.getStartDate(),
+                festival.getEndDate(),
+                festival.getDetails(),
+                artists,
+                festival.getCity(),
+                festival.getCountry(),
+                festival.getOrganizer(),
+                festival.getWebsite());
+    }
+
+    public static ArtistResponseDTO artistDTOBuilder(FestivalArtist artist) {
+        return new ArtistResponseDTO(
+                artist.getId(),
                 artist.getSpotifyId(),
                 artist.getArtistName(),
                 artist.getGenres(),
                 artist.getFestivals()
                         .stream()
-                        .map(f -> f.getName())
+                        .map(Festival::getId)
                         .collect(Collectors.toSet()));
+    }
+
+    public static Festival festivalEntityBuilder(FestivalRequestDTO festival) {
+        return Festival.builder()
+                .name(festival.name())
+                .startDate(festival.startDate())
+                .endDate(festival.endDate())
+                .details(festival.details())
+                .city(festival.city())
+                .country(festival.country())
+                .organizer(festival.organizer())
+                .website(festival.website())
+                .build();
+    }
+
+    private static FestivalArtist artistEntityBuilder(String spotifyId, String artistName) {
+        return FestivalArtist.builder()
+                .spotifyId(spotifyId)
+                .artistName(artistName)
+                .build();
     }
 }

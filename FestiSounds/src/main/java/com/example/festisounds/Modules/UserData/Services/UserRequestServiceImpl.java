@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
 import se.michaelthelin.spotify.model_objects.specification.Paging;
-import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopArtistsRequest;
-import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopTracksRequest;
 import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
 
 import java.io.IOException;
@@ -24,10 +22,9 @@ import static com.example.festisounds.Core.Controllers.AuthController.spotifyApi
 @Service
 public class UserRequestServiceImpl implements UserRequestService {
 
+    public static final int resultLimit = 50;
     @Autowired
     private UserCachingService cachingService;
-
-    public static final int resultLimit = 50;
 
     @Override
     public TopArtistsDTO getUsersTopArtists() throws IOException, ParseException, SpotifyWebApiException {
