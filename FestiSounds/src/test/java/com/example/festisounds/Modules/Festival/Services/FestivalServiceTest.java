@@ -45,16 +45,16 @@ public class FestivalServiceTest {
     @BeforeEach
     void setup() {
         festivalRequestData = FestivalRequestDTO.builder()
-            .name("TestFestivalName")
-            .startDate(new Date())
-            .endDate(new Date())
-            .details("TestDetails")
-            .artists(Set.of("TestArtist1"))
-            .city("TestCity")
-            .country("TestCountry")
-            .organizer("TestOrganizer")
-            .website("www.testWebsite.com")
-            .build();
+                .name("TestFestivalName")
+                .startDate(new Date())
+                .endDate(new Date())
+                .details("TestDetails")
+                .artists(Set.of("TestArtist1"))
+                .city("TestCity")
+                .country("TestCountry")
+                .organizer("TestOrganizer")
+                .website("www.testWebsite.com")
+                .build();
     }
 
 
@@ -81,7 +81,7 @@ public class FestivalServiceTest {
 
         // Assert
         assertEquals(2, result.length, "result should have a size of 2, but instead was: " + result.length);
-        assertEquals("TestFestival", result[0].name(), "The first festival should have the name TestFestival but instead was: " + result[0].name);
+        assertEquals("TestFestival", result[0].name(), "The first festival should have the name TestFestival but instead was: " + result[0].name());
         verify(festivalRepo).findAll();
     }
 }
