@@ -31,8 +31,7 @@ public class FestivalService {
         if (!festival.artists().isEmpty()) {
              newArtists = festival.artists().stream()
                     .peek(System.out::println)
-                    .map(name -> artistService.addArtistToFestival(name, storedFestival.getId()))
-//                    .map(artistResponseDTO -> convertedNewFestival.artists().add(artistResponseDTO))
+                    .map(name -> artistService.createOrAddArtistRouter(name, storedFestival.getId()))
                     .collect(Collectors.toSet());
              return FestivalDTOBuilder.festivalDTOBuilder(storedFestival, newArtists);
         }

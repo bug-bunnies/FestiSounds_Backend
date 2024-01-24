@@ -42,64 +42,47 @@ public class ArtistService {
         }
     }
 
-    public ArtistResponseDTO createArtist(String name, UUID festivalId) {
-        try {
-            name = name.toUpperCase().strip();
-            FestivalArtist artist = findArtist(name);
-            if (artist != null) {
-                throw new SQLException("Artist already exists in the database!");
-            }
+    public ArtistResponseDTO createArtist(String name, Festival festival) {
+        Artist[] artist = getSpotifyArtistData(name);
 
-            Festival festival = festivalRepo.findById(festivalId).orElseThrow();
-            Artist[] art = getSpotifyArtistData(name);
+        String spotifyId = Arrays
+                .stream(artist)
+                .map(Artist::getId)
+                .findFirst()
+                .orElse("Could not find a spotifyId for the Artist");
 
-            String spotifyId = Arrays
-                    .stream(art)
-                    .map(Artist::getId)
-                    .findFirst()
-                    .orElse("Could not find a spotifyId for the Artist");
+        String[] genres = Arrays
+                .stream(artist)
+                .map(Artist::getGenres)
+                .findFirst()
+                .orElse(new String[]{"Could not find a genres for the Artist"});
 
-            String[] genres = Arrays
-                    .stream(art)
-                    .map(Artist::getGenres)
-                    .findFirst()
-                    .orElse(new String[]{"Could not find a genres for the Artist"});
+        FestivalArtist newArtist = artistRepository.save(new FestivalArtist(spotifyId, name, festival, genres));
+        return FestivalDTOBuilder.artistDTOBuilder(newArtist);
+}
 
-            FestivalArtist newArtist = artistRepository.save(new FestivalArtist(spotifyId, name, festival, genres));
-            return FestivalDTOBuilder.artistDTOBuilder(newArtist);
-        } catch (SQLException e) {
-            addArtistToFestival(name, festivalId);
+    public ArtistResponseDTO createOrAddArtistRouter(String name, UUID festivalId) {
+        Festival festival = festivalRepo.findById(festivalId).orElseThrow();
+        name = name.toUpperCase().strip();   // may cause issues if artist name is case-sensitive
+        FestivalArtist artist = findArtist(name);
+        if (artist == null) {
+            return createArtist(name, festival);
         }
-        return null;
+        return addArtistToFestival(artist, festival);
     }
 
-
-    //    TODO: Possibly change return to builder()
     public ArtistResponseDTO getArtist(UUID artistId) {
         FestivalArtist artist = artistRepository.findById(artistId).orElseThrow();
-        return new ArtistResponseDTO(artistId, artist.getSpotifyId(),
-                artist.getArtistName(),
-                artist.getGenres(),
-                artist.getFestivals().stream()
-                        .map(Festival::getId)
-                        .collect(Collectors.toSet()));
+        return FestivalDTOBuilder.artistDTOBuilder(artist);
     }
-
-    //    TODO: Change return type to DTO.
     public FestivalArtist findArtist(String name) {
         name = name.toUpperCase().strip();
         return artistRepository.findFestivalArtistByArtistName(name);
     }
 
-    public ArtistResponseDTO addArtistToFestival(String name, UUID festivalId) {
-        Festival festival = festivalRepo.findById(festivalId).orElseThrow();
-        FestivalArtist artist = findArtist(name);
-        if (artist != null) {
+    public ArtistResponseDTO addArtistToFestival(FestivalArtist artist, Festival festival) {
             artist.getFestivals().add(festival);
             return FestivalDTOBuilder.artistDTOBuilder(artistRepository.save(artist));
-        }
-//        System.out.println(createArtist(name, festivalId));
-        return createArtist(name, festivalId);
     }
 
     public Set<String> updateArtistGenres(String name) throws Exception {
