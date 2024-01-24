@@ -4,15 +4,17 @@ import com.example.festisounds.Modules.Festival.DTO.FestivalRequestDTO;
 import com.example.festisounds.Modules.Festival.DTO.FestivalResponseDTO;
 import com.example.festisounds.Modules.Festival.Entities.Festival;
 import com.example.festisounds.Modules.Festival.Repository.FestivalRepo;
+import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.example.festisounds.Modules.FestivalArtists.Service.ArtistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
-import java.util.List;
+import java.util.*;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.example.festisounds.Modules.Festival.Service.FestivalDTOBuilder.artistDTOBuilder;
 import static com.example.festisounds.Modules.Festival.Service.FestivalDTOBuilder.festivalEntityBuilder;
 
 @Service
@@ -25,15 +27,15 @@ public class FestivalService {
     //    TODO: Check closing of stream
     public FestivalResponseDTO createFestival(FestivalRequestDTO festival) {
         Festival storedFestival = festivalRepo.save(festivalEntityBuilder(festival));
-        FestivalResponseDTO convertedNewFestival = FestivalDTOBuilder.festivalDTOBuilder(storedFestival);
+        Set<ArtistResponseDTO> newArtists = new HashSet<>();
         if (!festival.artists().isEmpty()) {
-            festival.artists().stream()
+             newArtists = festival.artists().stream()
                     .peek(System.out::println)
-                    .map(name -> artistService.addArtistToFestival(name, storedFestival.getId()))
-                    .map(artistResponseDTO -> convertedNewFestival.artists().add(artistResponseDTO))
-                    .forEach(System.out::println);
+                    .map(name -> artistService.createOrAddArtistRouter(name, storedFestival.getId()))
+                    .collect(Collectors.toSet());
+             return FestivalDTOBuilder.festivalDTOBuilder(storedFestival, newArtists);
         }
-        return convertedNewFestival;
+        return FestivalDTOBuilder.festivalDTOBuilder(storedFestival);
     }
 
     public FestivalResponseDTO[] getAllFestivals() {

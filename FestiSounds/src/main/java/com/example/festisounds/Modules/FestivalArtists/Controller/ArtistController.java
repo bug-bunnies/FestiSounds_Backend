@@ -37,17 +37,18 @@ public class ArtistController {
     }
 
     @PostMapping("new")
+    // TODO: Return a body
     public ResponseEntity.HeadersBuilder createArtist(@RequestParam String artistName, @RequestParam UUID festivalId) throws SQLException {
         String[] artists = artistName.split(",");
         for (String name : artists) {
-            service.createArtist(name, festivalId);
+            service.createOrAddArtistRouter(name, festivalId);
         }
         return ResponseEntity.status(200);
     }
 
     @PutMapping("festival")
     public ResponseEntity<ArtistResponseDTO> updateFestivalArtist(@RequestParam String artistName, @RequestParam UUID festivalId) throws SQLException {
-        return ResponseEntity.ok(service.addArtistToFestival(artistName, festivalId));
+        return ResponseEntity.ok(service.createOrAddArtistRouter(artistName, festivalId));
     }
 
     @PutMapping("genres")
