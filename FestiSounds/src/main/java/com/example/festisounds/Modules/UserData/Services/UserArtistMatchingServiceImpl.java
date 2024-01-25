@@ -104,7 +104,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
                 .orElseThrow();
     }
 
-    private double getDistanceBetweenGenres(String artistGenre, String userGenre, HashMap<String, short[]> genrePositions) {
+    public double getDistanceBetweenGenres(String artistGenre, String userGenre, HashMap<String, short[]> genrePositions) {
         short[] artistGenrePosition = genrePositions.get(artistGenre);
         short[] userGenrePosition = genrePositions.get(userGenre);
         if (userGenrePosition == null || artistGenrePosition == null) {
@@ -123,7 +123,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
         return Math.sqrt(xAxisWeighting + yAxisWeighting + colourWeighting)*(100/rawDistance);
     }
 
-    private double calculateColourDistanceSquared(short[] artistGenrePosition, short[] userGenrePosition) {
+    public double calculateColourDistanceSquared(short[] artistGenrePosition, short[] userGenrePosition) {
         double rawDistance = Math.pow((artistGenrePosition[2] - userGenrePosition[2]), 2)
                 + Math.pow((artistGenrePosition[3] - userGenrePosition[3]), 2)
                 + Math.pow((artistGenrePosition[4] - userGenrePosition[4]), 2);
