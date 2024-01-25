@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
 @MockBean({FestivalService.class})
 public class FestivalControllerTest {
 
-    private final String REQUEST_BUILDER_ENDPOINT = "/api/festivals/";
+    private final String REQUEST_BUILDER_ENDPOINT = "/api/festivals";
     @Autowired
     FestivalService festivalService;
     @Autowired
@@ -153,12 +153,32 @@ public class FestivalControllerTest {
         };
 
 //        Act
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(REQUEST_BUILDER_ENDPOINT + festivalUUID)).andReturn();
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(REQUEST_BUILDER_ENDPOINT + "/search/id/" + festivalUUID)).andReturn();
 
         FestivalResponseDTO resultFestival = new ObjectMapper().readValue(mvcResult.getResponse().getContentAsString(), typeRef);
 
 //        Assert
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus(), "Incorrect Response Status");
         assertEquals(festivalUUID, resultFestival.id(), "Incorrect UUID for the returned festival");
+    }
+
+    @Test
+    @DisplayName("Festival can be found by valid name.")
+    public void testGetFestivalByName_whenFestivalExists_returnsFestivalDetails() throws Exception {
+//        Arrange
+        String searchQuery = "TestFestival";
+
+        FestivalResponseDTO[] savedFestivals = new FestivalResponseDTO[]{festivalResponseDTO, festivalResponseDTO};
+        when(festivalService.getFestivalsByName(searchQuery)).thenReturn(savedFestivals);
+        TypeReference<FestivalResponseDTO[]> typeRef = new TypeReference<>() {};
+
+//        Act
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(REQUEST_BUILDER_ENDPOINT + "/search/name/" + searchQuery)).andReturn();
+
+        FestivalResponseDTO[] resultFestivals = new ObjectMapper().readValue(mvcResult.getResponse().getContentAsString(), typeRef);
+
+//        Assert
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus(), "Incorrect response status.");
+        assertEquals(savedFestivals.length, resultFestivals.length, "Should return a length of 2, but instead it was: " + savedFestivals.length);
     }
 }

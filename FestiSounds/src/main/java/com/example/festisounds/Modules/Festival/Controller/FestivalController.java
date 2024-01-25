@@ -15,8 +15,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FestivalController {
     public final static String BASE_PATH = "/api/festivals";
-    public final static String BASE_PATH_ID = BASE_PATH + "/{festivalId}";
-    public final static String BASE_PATH_SEARCH = BASE_PATH + "/search";
+    public final static String BASE_PATH_SEARCH = BASE_PATH + "/search/";
 
     private final FestivalService festivalService;
 
@@ -25,7 +24,7 @@ public class FestivalController {
         return ResponseEntity.ok(festivalService.getAllFestivals());
     }
 
-    @GetMapping(BASE_PATH_ID)
+    @GetMapping(BASE_PATH_SEARCH + "id/{festivalId}")
     public ResponseEntity<FestivalResponseDTO> getFestivalById(@PathVariable("festivalId") UUID festivalId) {
         try {
             return ResponseEntity.ok(festivalService.getFestivalById(festivalId));
@@ -34,8 +33,8 @@ public class FestivalController {
         }
     }
 
-    @GetMapping(BASE_PATH_SEARCH)
-    public ResponseEntity<FestivalResponseDTO[]> searchFestivalsByName(@RequestParam("festivalName") String festivalName) {
+    @GetMapping(BASE_PATH_SEARCH + "name/{festivalName}")
+    public ResponseEntity<FestivalResponseDTO[]> searchFestivalsByName(@PathVariable("festivalName") String festivalName) {
         try {
             return ResponseEntity.ok(festivalService.getFestivalsByName(festivalName));
         } catch (NoSuchElementException e) {
@@ -48,7 +47,7 @@ public class FestivalController {
         return ResponseEntity.ok(festivalService.createFestival(festival));
     }
 
-    @DeleteMapping(BASE_PATH_ID)
+    @DeleteMapping(BASE_PATH + "{festivalId}")
     public ResponseEntity<String> deleteFestival(@PathVariable("festivalId") UUID festivalId) {
         try {
             festivalService.delete(festivalId);
