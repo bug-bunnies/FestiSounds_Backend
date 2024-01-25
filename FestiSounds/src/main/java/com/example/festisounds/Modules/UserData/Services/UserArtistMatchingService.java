@@ -12,6 +12,6 @@ public interface UserArtistMatchingService {
             throws IOException, ParseException, SpotifyWebApiException;
     LinkedHashMap<ArtistResponseDTO, Double> matchGenreDataToFestivalArtists(HashMap<String, Double> genreData, Set<ArtistResponseDTO> artists, HashMap<String, short[]> genrePositions)
             throws IOException, ParseException, SpotifyWebApiException;
-    ArrayList<Double> getGenreScore(HashMap<String, Double> genreData, Set<String> artistGenres, HashMap<String, short[]> genrePositions);
-    double getArtistScore(ArrayList<Double> genreScores);
+//    ArrayList<Double> getGenreScore(HashMap<String, Double> genreData, Set<String> artistGenres, HashMap<String, short[]> genrePositions);
+    double getArtistScore(HashMap<String, Double> genreData, Set<String> artistGenres, HashMap<String, short[]> genrePositions);
 }

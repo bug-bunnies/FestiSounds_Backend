@@ -40,18 +40,16 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
 
         // Get user genre data
         HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
-
+        System.out.println("getting user genre data");
+        // Get festival artists
         FestivalResponseDTO festival = festivalService.getFestivalById(festivalId);
-
-
+        System.out.println("getting festival dto");
         // Get genre map from cache
         HashMap<String, short[]> genrePositionMap = cachingService.buildAndCacheGenrePositionMap(genrePositionMapFile);
-
+        System.out.println("getting x y z map");
 
         return matchGenreDataToFestivalArtists(genreData, festival.artists(), genrePositionMap);
     }
-
-
 
     @Override
     public LinkedHashMap<ArtistResponseDTO, Double> matchGenreDataToFestivalArtists(HashMap<String, Double> genreData,
@@ -60,12 +58,16 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
             throws IOException, ParseException, SpotifyWebApiException {
 
         HashMap<ArtistResponseDTO, Double> artistScoresMap = new HashMap<>();
-
+        System.out.println("MATCHING VALUES START");
         for (ArtistResponseDTO artist : artists) {
-            Set<String> artistGenres = artist.genres();
+        System.out.println("MATCHING VALUES artist " + artist.artistName());
 
-            ArrayList<Double> genreScores = getGenreScore(genreData, artistGenres, genrePositions);
-            Double artistScore = getArtistScore(genreScores);
+            Set<String> artistGenres = artist.genres();
+            if (artistGenres.isEmpty()) continue;
+        System.out.println("MATCHING VALUES genres " + artistGenres);
+
+            Double artistScore = getArtistScore(genreData, artistGenres, genrePositions);
+        System.out.println("MATCHING VALUES Score " + artistScore);
 
             artistScoresMap.put(artist, artistScore);
         }
@@ -81,20 +83,25 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
     }
 
     @Override
-    public ArrayList<Double> getGenreScore(HashMap<String, Double> genreData, Set<String> artistGenres, HashMap<String, short[]> genrePositions) {
+    public double getArtistScore(HashMap<String, Double> genreData, Set<String> artistGenres, HashMap<String, short[]> genrePositions) {
         ArrayList<Double> genreScores = new ArrayList<>();
 
         for (String artistGenre : artistGenres) {
+            double genresRatingSum = 0;
             for (Map.Entry<String, Double> userGenre : genreData.entrySet()) {
                 double distanceBetweenGenres = getDistanceBetweenGenres(artistGenre, userGenre.getKey(), genrePositions);
 
-                        // score times (1 - distance) aka closeness
-
+                double distanceRating = userGenre.getValue()*(100/distanceBetweenGenres);
+                genresRatingSum += distanceRating;
             }
+            genreScores.add(genresRatingSum);
         }
 
-
-        return genreScores;
+        return genreScores
+                .stream()
+                .mapToDouble(x-> x)
+                .average()
+                .orElseThrow();
     }
 
     private double getDistanceBetweenGenres(String artistGenre, String userGenre, HashMap<String, short[]> genrePositions) {
@@ -109,7 +116,8 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
         double yDistanceSquared = (1/Math.pow(yAxisNormaliser, 2))*yAxisWeighting*Math.pow((artistGenrePosition[1] - userGenrePosition[1]), 2);
         double colourDistanceSquared = calculateColourDistanceSquared(artistGenrePosition, userGenrePosition);
 
-        return Math.sqrt(xDistanceSquared + yDistanceSquared + colourDistanceSquared);
+        double rawDistance = Math.sqrt(xDistanceSquared + yDistanceSquared + colourDistanceSquared);
+        return (100/Math.sqrt(colourWeighting + yAxisWeighting + xAxisWeighting))*rawDistance;
     }
 
     private double calculateColourDistanceSquared(short[] artistGenrePosition, short[] userGenrePosition) {
@@ -117,16 +125,5 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
                 + Math.pow((artistGenrePosition[3] - userGenrePosition[3]), 2)
                 + Math.pow((artistGenrePosition[4] - userGenrePosition[4]), 2);
         return rawDistance*(1/Math.pow(colourNormaliser, 2))*colourWeighting;
-    }
-
-
-    @Override
-    public double getArtistScore(ArrayList<Double> genreScores) {
-        double artistScore = 0;
-        for (Double score : genreScores) {
-            double remainder = 100 - artistScore;
-            artistScore += (remainder / 100) * score;
-        }
-        return artistScore;
     }
 }
