@@ -21,7 +21,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,7 +33,7 @@ import static org.mockito.Mockito.when;
 @MockBean({FestivalService.class})
 public class FestivalControllerTest {
 
-    private final String REQUEST_BUILDER_ENDPOINT = "/api/festivals";
+    private final String REQUEST_BUILDER_ENDPOINT = "/api/festivals/";
     @Autowired
     FestivalService festivalService;
     @Autowired
@@ -70,7 +72,6 @@ public class FestivalControllerTest {
                 .organizer(festivalRequestDTO.organizer())
                 .website(festivalRequestDTO.website())
                 .build();
-
     }
 
     @Test
@@ -111,9 +112,9 @@ public class FestivalControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
 
         MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
+
         TypeReference<FestivalResponseDTO[]> typeRef = new TypeReference<>() {
         };
-
         FestivalResponseDTO[] resultFestivals = new ObjectMapper().readValue(mvcResult.getResponse().getContentAsString(), typeRef);
 
 //        Assert
@@ -121,7 +122,7 @@ public class FestivalControllerTest {
         assertEquals(savedFestivalsSize, resultFestivals.length, "Should return a length of 2, but instead it was: " + savedFestivalsSize);
     }
 
-//    todo: Disabled until error handler and Http codes are updated/implemented
+    //    todo: Disabled until error handler and Http codes are updated/implemented
     @Disabled
     @Test
     @DisplayName("Festivals returns 404 when not existing.")
@@ -138,16 +139,26 @@ public class FestivalControllerTest {
         String resultCocktails = mvcResult.getResponse().getContentAsString();
 
 //        Assert
-        assertEquals(
-                HttpStatus.NOT_FOUND.value(),
-                mvcResult.getResponse().getStatus(),
-                "Incorrect Response Status"
-        );
+        assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus(), "Incorrect Response Status");
 
-        assertTrue(
-                resultCocktails.isEmpty(),
-                "Incorrect list size");
+        assertTrue(resultCocktails.isEmpty(), "Incorrect list size");
     }
 
+    @Test
+    @DisplayName("Festival can be found by valid ID.")
+    public void testGetFestivalById_whenFestivalExists_returnsFestivalDetails() throws Exception {
+//        Arrange
+        when(festivalService.getFestivalById(festivalUUID)).thenReturn(festivalResponseDTO);
+        TypeReference<FestivalResponseDTO> typeRef = new TypeReference<>() {
+        };
 
+//        Act
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(REQUEST_BUILDER_ENDPOINT + festivalUUID)).andReturn();
+
+        FestivalResponseDTO resultFestival = new ObjectMapper().readValue(mvcResult.getResponse().getContentAsString(), typeRef);
+
+//        Assert
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus(), "Incorrect Response Status");
+        assertEquals(festivalUUID, resultFestival.id(), "Incorrect UUID for the returned festival");
+    }
 }
