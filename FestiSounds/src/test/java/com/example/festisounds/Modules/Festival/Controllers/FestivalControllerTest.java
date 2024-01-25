@@ -32,6 +32,72 @@ import static org.mockito.Mockito.when;
 @MockBean({FestivalService.class})
 public class FestivalControllerTest {
 
+    @Autowired
+    FestivalService festivalService;
 
+    @Autowired
+    MockMvc mockMvc;
+
+    private final String REQUEST_BUILDER_ENDPOINT = "/api/festivals";
+
+    UUID festivalUUID = UUID.randomUUID();
+
+    ArtistResponseDTO artistResponseDTO;
+    FestivalRequestDTO festivalRequestDTO;
+    FestivalResponseDTO festivalResponseDTO;
+
+    @BeforeEach
+    void setup() {
+        artistResponseDTO = new ArtistResponseDTO(UUID.randomUUID(), "ArtistSpotifyId", "ArtistName", Set.of("Genre1", "Genre2"), Set.of(festivalUUID));
+
+        festivalRequestDTO = FestivalRequestDTO.builder()
+                .name("TestFestival1")
+                .startDate(new Date())
+                .endDate(new Date())
+                .details("TestDetails")
+                .artists(Set.of("ArtistName"))
+                .city("TestCity")
+                .country("TestCountry")
+                .organizer("TestOrganizer")
+                .website("www.testWebsite.com")
+                .build();
+
+        festivalResponseDTO = FestivalResponseDTO.builder()
+                .id(festivalUUID)
+                .name(festivalRequestDTO.name())
+                .startDate(festivalRequestDTO.startDate())
+                .endDate(festivalRequestDTO.endDate())
+                .details(festivalRequestDTO.details())
+                .artists(Set.of(artistResponseDTO))
+                .city(festivalRequestDTO.city())
+                .country(festivalRequestDTO.country())
+                .organizer(festivalRequestDTO.organizer())
+                .website(festivalRequestDTO.website())
+                .build();
+
+    }
+
+    @Test
+    @DisplayName("Festival can be created.")
+    public void testCreateFestival_whenValidFestivalDetailsProvided_returnsCreatedFestivalDetails() throws Exception {
+//        Arrange
+        when(festivalService.createFestival(any(FestivalRequestDTO.class))).thenReturn(festivalResponseDTO);
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(REQUEST_BUILDER_ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(festivalRequestDTO));
+
+//        Act
+        MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
+        String responseBodyAsString = mvcResult.getResponse().getContentAsString();
+
+        FestivalResponseDTO createdFestival = new ObjectMapper().readValue(responseBodyAsString, FestivalResponseDTO.class);
+
+//        Assert
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus(), "Incorrect response status.");
+        assertEquals(festivalRequestDTO.name(), createdFestival.name(), "The created festival's name is incorrect.");
+        assertNotNull(createdFestival.id(), "The created festival's UUID should not be null");
+    }
 
 }
