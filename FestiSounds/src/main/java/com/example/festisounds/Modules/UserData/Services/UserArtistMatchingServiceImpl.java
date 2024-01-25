@@ -107,6 +107,9 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
     private double getDistanceBetweenGenres(String artistGenre, String userGenre, HashMap<String, short[]> genrePositions) {
         short[] artistGenrePosition = genrePositions.get(artistGenre);
         short[] userGenrePosition = genrePositions.get(userGenre);
+        if (userGenrePosition == null || artistGenrePosition == null) {
+            return 100;
+        }
 
         short[] maxValues = genrePositions.get("Max values");
         short xAxisNormaliser = maxValues[0];
