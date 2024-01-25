@@ -97,8 +97,8 @@ class UserArtistMatchingServiceImplTest {
         ArrayList<Set<String>> genreSets = readSetCsv("ArtistGenreSet.csv");
 
         return userMaps.stream()
-                .flatMap(userMap -> IntStream.range(0, 4)
-                        .mapToObj(i -> Arguments.of(userMap, genreSets.get(i))));
+                .flatMap(userMap -> genreSets.stream()
+                        .map(genreSet -> Arguments.of(userMap, genreSet)));
     }
 
     public static Stream<Arguments> genrePositionParametersWithResult() {
