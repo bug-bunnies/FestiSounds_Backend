@@ -25,7 +25,7 @@ public class FestivalController {
     public ResponseEntity<FestivalResponseDTO[]> getAllFestivals() {
         return ResponseEntity.ok(festivalService.getAllFestivals());
     }
-
+// TODO: Validate path variable
     @GetMapping(BASE_PATH_ID)
     public ResponseEntity<FestivalResponseDTO> getFestivalById(@PathVariable("festivalId") UUID festivalId) {
         try {
@@ -50,6 +50,8 @@ public class FestivalController {
         return ResponseEntity.ok(festivalService.createFestival(festival));
     }
 
+
+// TODO: Validate path variable
     @DeleteMapping(BASE_PATH_ID)
     public ResponseEntity<String> deleteFestival(@PathVariable("festivalId") UUID festivalId) {
         try {
