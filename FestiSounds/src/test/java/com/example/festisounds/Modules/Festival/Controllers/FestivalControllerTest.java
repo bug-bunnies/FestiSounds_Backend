@@ -33,14 +33,11 @@ import static org.mockito.Mockito.when;
 @MockBean({FestivalService.class})
 public class FestivalControllerTest {
 
+    private final String REQUEST_BUILDER_ENDPOINT = "/api/festivals";
     @Autowired
     FestivalService festivalService;
-
     @Autowired
     MockMvc mockMvc;
-
-    private final String REQUEST_BUILDER_ENDPOINT = "/api/festivals";
-
     UUID festivalUUID = UUID.randomUUID();
 
     ArtistResponseDTO artistResponseDTO;
@@ -116,12 +113,13 @@ public class FestivalControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
 
         MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
-        TypeReference<FestivalResponseDTO[]> typeRef = new TypeReference<>() {};
+        TypeReference<FestivalResponseDTO[]> typeRef = new TypeReference<>() {
+        };
 
         FestivalResponseDTO[] resultFestivals = new ObjectMapper().readValue(mvcResult.getResponse().getContentAsString(), typeRef);
 
 //        Assert
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus(), "Incorrect response status.");
-        assertEquals(savedFestivalsSize, resultFestivals.length, "Should return a lenght of 2, but instead it was: " + savedFestivalsSize);;
+        assertEquals(savedFestivalsSize, resultFestivals.length, "Should return a length of 2, but instead it was: " + savedFestivalsSize);
     }
 }
