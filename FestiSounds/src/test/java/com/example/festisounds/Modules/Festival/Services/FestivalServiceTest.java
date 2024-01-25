@@ -5,8 +5,9 @@ import com.example.festisounds.Modules.Festival.DTO.FestivalResponseDTO;
 import com.example.festisounds.Modules.Festival.Entities.Festival;
 import com.example.festisounds.Modules.Festival.Repository.FestivalRepo;
 import com.example.festisounds.Modules.Festival.Service.FestivalService;
+import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
+import com.example.festisounds.Modules.FestivalArtists.Service.ArtistService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,9 +17,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;
 
+import static com.example.festisounds.Modules.Festival.Service.FestivalDTOBuilder.festivalEntityBuilder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class FestivalServiceTest {
@@ -26,46 +27,64 @@ public class FestivalServiceTest {
     @Mock
     FestivalRepo festivalRepo;
 
+    @Mock
+    ArtistService artistService;
+
     @InjectMocks
     FestivalService festivalService;
 
     FestivalRequestDTO festivalRequestData;
+    Festival storedFestival;
 
     Festival festival1;
     Festival festival2;
     List<Festival> festivals;
+    ArtistResponseDTO artistResponseDTO;
 
     UUID festivalId1;
 
     @BeforeEach
     void setup() {
         festivalRequestData = FestivalRequestDTO.builder()
-                .name("TestFestivalName")
+                .name("TestFestival1")
                 .startDate(new Date())
                 .endDate(new Date())
                 .details("TestDetails")
-                .artists(Set.of("TestArtist1"))
+                .artists(Set.of())
                 .city("TestCity")
                 .country("TestCountry")
                 .organizer("TestOrganizer")
                 .website("www.testWebsite.com")
                 .build();
 
+        storedFestival = festivalEntityBuilder(festivalRequestData);
+
         festivalId1 = UUID.randomUUID();
         festival1 = new Festival();
         festival1.setId(festivalId1);
         festival1.setName("TestFestival1");
+
         festival2 = new Festival();
         festival2.setName("TestFestival2");
+
         festivals = Arrays.asList(festival1, festival2);
+
+        artistResponseDTO = new ArtistResponseDTO(UUID.randomUUID(), "ArtistSpotifyId", "TestArtist1", Set.of("Genre1", "Genre2"), Set.of(festivalId1));
     }
 
 
     @Test
-    @Disabled
-    @DisplayName("Create festival with artist")
-    public void testCreateFestival_whenGivenCorrectDetailsWithArtist_ReturnsCorrectResponse() {
+    @DisplayName("Create festival without artist")
+    public void testCreateFestival_whenGivenCorrectDetailsWithoutArtist_ReturnsCorrectResponse() {
+//        Arrange
+        when(festivalRepo.save(any(Festival.class))).thenReturn(storedFestival);
 
+//        Act
+        FestivalResponseDTO result = festivalService.createFestival(festivalRequestData);
+
+//        Assert
+        verify(festivalRepo).save(any(Festival.class));
+        assertEquals(storedFestival.getName(), result.name());
     }
 
     @Test

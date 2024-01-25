@@ -10,11 +10,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.example.festisounds.Modules.Festival.Service.FestivalDTOBuilder.artistDTOBuilder;
 import static com.example.festisounds.Modules.Festival.Service.FestivalDTOBuilder.festivalEntityBuilder;
 
 @Service
@@ -24,7 +25,6 @@ public class FestivalService {
     private final ArtistService artistService;
 
 
-    //    TODO: Check closing of stream
     public FestivalResponseDTO createFestival(FestivalRequestDTO festival) {
         Festival storedFestival = festivalRepo.save(festivalEntityBuilder(festival));
         Set<ArtistResponseDTO> newArtists = new HashSet<>();
@@ -42,7 +42,7 @@ public class FestivalService {
         List<Festival> festivals = festivalRepo.findAll();
         return festivals.stream()
                 .map(FestivalDTOBuilder::festivalDTOBuilder)
-                .collect(Collectors.toList()).toArray(new FestivalResponseDTO[0]);
+                .toList().toArray(new FestivalResponseDTO[0]);
     }
 
     public FestivalResponseDTO getFestivalById(UUID id) {
@@ -55,7 +55,7 @@ public class FestivalService {
         List<Festival> festivalsByName = festivalRepo.findByNameContainingIgnoreCase(name);
         return festivalsByName.stream()
                 .map(FestivalDTOBuilder::festivalDTOBuilder)
-                .collect(Collectors.toList()).toArray(new FestivalResponseDTO[0]);
+                .toList().toArray(new FestivalResponseDTO[0]);
     }
 
     //    TODO: Cannot currently delete if artists are linked.
