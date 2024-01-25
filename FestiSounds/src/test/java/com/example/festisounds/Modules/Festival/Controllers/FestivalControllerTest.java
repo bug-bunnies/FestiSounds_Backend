@@ -5,6 +5,7 @@ import com.example.festisounds.Modules.Festival.DTO.FestivalRequestDTO;
 import com.example.festisounds.Modules.Festival.DTO.FestivalResponseDTO;
 import com.example.festisounds.Modules.Festival.Service.FestivalService;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -100,4 +101,27 @@ public class FestivalControllerTest {
         assertNotNull(createdFestival.id(), "The created festival's UUID should not be null");
     }
 
+
+    @Test
+    @DisplayName("Festivals can be found when existing")
+    public void testGetAllFestivals_whenFestivalsExist_returnsArrayOfFestivalDetails() throws Exception {
+//        Arrange
+        FestivalResponseDTO[] savedFestivals = new FestivalResponseDTO[]{festivalResponseDTO, festivalResponseDTO};
+        int savedFestivalsSize = savedFestivals.length;
+
+        when(festivalService.getAllFestivals()).thenReturn(savedFestivals);
+
+//        Act
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(REQUEST_BUILDER_ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
+        TypeReference<FestivalResponseDTO[]> typeRef = new TypeReference<>() {};
+
+        FestivalResponseDTO[] resultFestivals = new ObjectMapper().readValue(mvcResult.getResponse().getContentAsString(), typeRef);
+
+//        Assert
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus(), "Incorrect response status.");
+        assertEquals(savedFestivalsSize, resultFestivals.length, "Should return a lenght of 2, but instead it was: " + savedFestivalsSize);;
+    }
 }
