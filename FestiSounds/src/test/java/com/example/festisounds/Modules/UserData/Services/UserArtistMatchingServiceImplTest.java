@@ -31,6 +31,7 @@ class UserArtistMatchingServiceImplTest {
     static GenrePositionMapGenerator genreMapGenerator;
     static HashMap<String, short[]> genrePositionMap;
 
+    // TODO: Test getArtistRanking method
     @BeforeAll
     static void init() {
         genreMapGenerator = new GenrePositionMapGenerator();
