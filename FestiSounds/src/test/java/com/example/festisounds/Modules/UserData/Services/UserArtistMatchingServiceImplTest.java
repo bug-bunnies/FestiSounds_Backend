@@ -55,12 +55,12 @@ class UserArtistMatchingServiceImplTest {
     }
 
     @ParameterizedTest
-    @MethodSource("distanceBetweenGenresParameters")
-    void testGetDistanceBetweenGenres_whenProvidedInputs_returnsResultInCorrectRange(String artistGenre, String userGenre, HashMap<String, short[]> genrePositions) {
+    @MethodSource("genrePositionParameters")
+    void testGetDistanceBetweenGenres_whenProvidedInputs_returnsResultInCorrectRange(short[] artistGenrePosition, short[] userGenrePosition) {
         double minResult = 0.0;
         double maxResult = 100.0;
 
-        double actualResult = userArtistMatchingService.getDistanceBetweenGenres(artistGenre, userGenre, genrePositions);
+        double actualResult = userArtistMatchingService.getDistanceBetweenGenres(artistGenrePosition, userGenrePosition, genrePositionMap);
 
         System.out.println(actualResult);
 
@@ -113,8 +113,7 @@ class UserArtistMatchingServiceImplTest {
 
         return genreSets.stream()
                 .flatMap(Collection::stream)
-                .map(artistGenre -> Arguments.of(artistGenre, iliGenreMap.keySet().stream().findFirst().orElseThrow(), genrePositionMap));
-
+                .map(artistGenre -> Arguments.of(artistGenre, iliGenreMap.keySet().stream().findFirst().orElseThrow()));
     }
 
     public static Stream<Arguments> genrePositionParametersWithResult() {

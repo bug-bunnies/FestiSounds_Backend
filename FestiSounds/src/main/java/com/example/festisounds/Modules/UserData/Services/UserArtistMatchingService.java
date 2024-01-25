@@ -10,8 +10,8 @@ import java.util.*;
 public interface UserArtistMatchingService {
     LinkedHashMap<ArtistResponseDTO, Double> getArtistRankingFromFestival(UUID festivalId)
             throws IOException, ParseException, SpotifyWebApiException;
-    LinkedHashMap<ArtistResponseDTO, Double> matchGenreDataToFestivalArtists(HashMap<String, Double> genreData, Set<ArtistResponseDTO> artists, HashMap<String, short[]> genrePositions)
+    LinkedHashMap<ArtistResponseDTO, Double> matchGenreDataToFestivalArtists(HashMap<String, Double> genreData, Set<ArtistResponseDTO> artists, HashMap<String, short[]> genrePositionMap)
             throws IOException, ParseException, SpotifyWebApiException;
-//    ArrayList<Double> getGenreScore(HashMap<String, Double> genreData, Set<String> artistGenres, HashMap<String, short[]> genrePositions);
-    double getArtistScore(HashMap<String, Double> genreData, Set<String> artistGenres, HashMap<String, short[]> genrePositions);
+
+    double getArtistScore(HashMap<String, Double> genreData, Set<String> artistGenres, HashMap<String, short[]> genrePositionMap);
 }
