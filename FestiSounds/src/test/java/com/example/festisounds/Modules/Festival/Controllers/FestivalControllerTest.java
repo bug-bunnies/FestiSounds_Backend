@@ -8,6 +8,7 @@ import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.Date;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -122,4 +120,34 @@ public class FestivalControllerTest {
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus(), "Incorrect response status.");
         assertEquals(savedFestivalsSize, resultFestivals.length, "Should return a length of 2, but instead it was: " + savedFestivalsSize);
     }
+
+//    todo: Disabled until error handler and Http codes are updated/implemented
+    @Disabled
+    @Test
+    @DisplayName("Festivals returns 404 when not existing.")
+    void testGetAllFavouriteCocktails_whenValidCocktailDetailsDoNotExist_returnsNotFound() throws Exception {
+//        Arrange
+        FestivalResponseDTO[] savedFestivals = new FestivalResponseDTO[]{};
+
+        when(festivalService.getAllFestivals()).thenReturn(savedFestivals);
+
+//        Act
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(REQUEST_BUILDER_ENDPOINT);
+
+        MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
+        String resultCocktails = mvcResult.getResponse().getContentAsString();
+
+//        Assert
+        assertEquals(
+                HttpStatus.NOT_FOUND.value(),
+                mvcResult.getResponse().getStatus(),
+                "Incorrect Response Status"
+        );
+
+        assertTrue(
+                resultCocktails.isEmpty(),
+                "Incorrect list size");
+    }
+
+
 }
