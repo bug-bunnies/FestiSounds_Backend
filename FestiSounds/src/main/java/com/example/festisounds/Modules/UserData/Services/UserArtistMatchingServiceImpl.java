@@ -120,7 +120,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
         double colourDistanceSquared = calculateColourDistanceSquared(artistGenrePosition, userGenrePosition);
 
         double rawDistance = Math.sqrt(xDistanceSquared + yDistanceSquared + colourDistanceSquared);
-        return Math.sqrt(xAxisWeighting + yAxisWeighting + colourWeighting)*(100/rawDistance);
+        return (100/Math.sqrt(xAxisWeighting + yAxisWeighting + colourWeighting))*rawDistance;
     }
 
     public double calculateColourDistanceSquared(short[] artistGenrePosition, short[] userGenrePosition) {
