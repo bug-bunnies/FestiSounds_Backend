@@ -54,9 +54,21 @@ class UserArtistMatchingServiceImplTest {
 
     @ParameterizedTest
     @MethodSource("genrePositionParameters")
-    void testCalculateColourDistanceSquared_whenProvidedInputs_returnsResultInCorrectRange(short[] artistGenrePosition, short[] userGenrePosition) {
+    void testGetDistanceBetweenGenres_whenProvidedInputs_returnsResultInCorrectRange(String artistGenre, String userGenre, HashMap<String, short[]> genrePositions) {
         double minResult = 0.0;
         double maxResult = 100.0;
+
+        double actualResult = userArtistMatchingService.getDistanceBetweenGenres(artistGenre, userGenre, genrePositions);
+
+        assertTrue(actualResult >= minResult && actualResult <= maxResult,
+                () -> "Result should be in range " + minResult + "-" + maxResult + " but was " + actualResult);
+    }
+
+    @ParameterizedTest
+    @MethodSource("genrePositionParameters")
+    void testCalculateColourDistanceSquared_whenProvidedInputs_returnsResultInCorrectRange(short[] artistGenrePosition, short[] userGenrePosition) {
+        double minResult = 0.0;
+        double maxResult = 1.0;
 
         double actualResult = userArtistMatchingService.calculateColourDistanceSquared(artistGenrePosition, userGenrePosition);
 
@@ -90,6 +102,14 @@ class UserArtistMatchingServiceImplTest {
         );
     }
 
+    public static Stream<Arguments> genrePositionParametersWithResult() {
+        return Stream.of(
+                Arguments.of(1.00, new short[]{0, 0, 256, 256, 256}, new short[]{0, 0, 0, 0, 0}),
+                Arguments.of(0.00, new short[]{0, 0, 127, 127, 127}, new short[]{0, 0, 127, 127, 127}),
+                Arguments.of(0.15, new short[]{0, 0, 100, 100, 100}, new short[]{0, 0, 200, 200, 200})
+                );
+    }
+
     public static Stream<Arguments> genrePositionParameters() {
         int counter = 0;
         int numTests = 100;
@@ -102,15 +122,7 @@ class UserArtistMatchingServiceImplTest {
             counter++;
         }
         return IntStream.range(0, genrePositionArray.length/2)
-                        .mapToObj(i -> Arguments.of(genrePositionArray[i], genrePositionArray[++i]));
-    }
-
-    public static Stream<Arguments> genrePositionParametersWithResult() {
-        return Stream.of(
-                Arguments.of(1.00, new short[]{0, 0, 256, 256, 256}, new short[]{0, 0, 0, 0, 0}),
-                Arguments.of(0.00, new short[]{0, 0, 127, 127, 127}, new short[]{0, 0, 127, 127, 127}),
-                Arguments.of(0.15, new short[]{0, 0, 100, 100, 100}, new short[]{0, 0, 200, 200, 200})
-                );
+                .mapToObj(i -> Arguments.of(genrePositionArray[i], genrePositionArray[++i]));
     }
 
     @Test
