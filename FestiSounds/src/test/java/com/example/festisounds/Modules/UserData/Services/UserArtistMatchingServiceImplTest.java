@@ -93,27 +93,19 @@ class UserArtistMatchingServiceImplTest {
     public static Stream<Arguments> genrePositionParameters() {
         int counter = 0;
         int numTests = 100;
-        short[][] artistPositionArray = new short[numTests][];
-        short[][] userPositionArray = new short[numTests][];;
+        short[][] genrePositionArray = new short[numTests+1][];
         for (short[] position : genrePositionMap.values()) {
-            if (counter < numTests) {
-                artistPositionArray[counter] = position;
-            }
-            else if (counter < numTests*2) {
-                userPositionArray[counter-numTests] = position;
-            } else {
+            if (counter >= numTests) {
                 break;
             }
+            genrePositionArray[counter] = position;
             counter++;
         }
-
-        return IntStream.range(0, artistPositionArray.length)
-                        .mapToObj(i -> Arguments.of(artistPositionArray[i], userPositionArray[i]));
+        return IntStream.range(0, genrePositionArray.length/2)
+                        .mapToObj(i -> Arguments.of(genrePositionArray[i], genrePositionArray[++i]));
     }
 
     public static Stream<Arguments> genrePositionParametersWithResult() {
-
-
         return Stream.of(
                 Arguments.of(1.00, new short[]{0, 0, 256, 256, 256}, new short[]{0, 0, 0, 0, 0}),
                 Arguments.of(0.00, new short[]{0, 0, 127, 127, 127}, new short[]{0, 0, 127, 127, 127}),
