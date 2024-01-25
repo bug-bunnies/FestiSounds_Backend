@@ -92,28 +92,13 @@ class UserArtistMatchingServiceImplTest {
     public static Stream<Arguments> artistScoreParameters() {
         HashMap<String, Double> maxGenreMap = readMapCsv("maxFirstGenreData.csv");
         HashMap<String, Double> iliGenreMap = readMapCsv("ilianaGenreData.csv");
+        HashMap<String, Double> robbieGenreMap = readMapCsv("RobbieGenreData.csv");
+        List<HashMap<String, Double>> userMaps = Arrays.asList(maxGenreMap, iliGenreMap, robbieGenreMap);
         ArrayList<Set<String>> genreSets = readSetCsv("ArtistGenreSet.csv");
 
-        return Stream.of(
-                Arguments.of(maxGenreMap, genreSets.get(0)),
-                Arguments.of(maxGenreMap, genreSets.get(1)),
-                Arguments.of(maxGenreMap, genreSets.get(2)),
-                Arguments.of(maxGenreMap, genreSets.get(3)),
-                Arguments.of(iliGenreMap, genreSets.get(0)),
-                Arguments.of(iliGenreMap, genreSets.get(1)),
-                Arguments.of(iliGenreMap, genreSets.get(2)),
-                Arguments.of(iliGenreMap, genreSets.get(3))
-        );
-    }
-
-    public static Stream<Arguments> distanceBetweenGenresParameters() {
-        HashMap<String, Double> maxGenreMap = readMapCsv("maxFirstGenreData.csv");
-        HashMap<String, Double> iliGenreMap = readMapCsv("ilianaGenreData.csv");
-        ArrayList<Set<String>> genreSets = readSetCsv("ArtistGenreSet.csv");
-
-        return genreSets.stream()
-                .flatMap(Collection::stream)
-                .map(artistGenre -> Arguments.of(artistGenre, iliGenreMap.keySet().stream().findFirst().orElseThrow()));
+        return userMaps.stream()
+                .flatMap(userMap -> IntStream.range(0, 4)
+                        .mapToObj(i -> Arguments.of(userMap, genreSets.get(i))));
     }
 
     public static Stream<Arguments> genrePositionParametersWithResult() {
@@ -143,6 +128,7 @@ class UserArtistMatchingServiceImplTest {
     void testMapBuilding() {
         HashMap<String, Double> maxMap = readMapCsv("maxFirstGenreData.csv");
         HashMap<String, Double> iliMap = readMapCsv("ilianaGenreData.csv");
+        HashMap<String, Double> robbieMap = readMapCsv("RobbieGenreData.csv");
         ArrayList<Set<String>> genreSets = readSetCsv("ArtistGenreSet.csv");
 
         System.out.println(maxMap.toString());
