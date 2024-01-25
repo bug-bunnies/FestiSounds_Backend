@@ -45,7 +45,6 @@ public class FestivalController {
 
     @PostMapping(BASE_PATH)
     public ResponseEntity<FestivalResponseDTO> createFestival(@RequestBody FestivalRequestDTO festival) {
-        System.out.println(festival);
         return ResponseEntity.ok(festivalService.createFestival(festival));
     }
 
