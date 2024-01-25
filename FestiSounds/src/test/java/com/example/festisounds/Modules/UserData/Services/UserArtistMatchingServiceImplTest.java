@@ -47,6 +47,8 @@ class UserArtistMatchingServiceImplTest {
 
         Double actualResult = userArtistMatchingService.getArtistScore(genreData, artistGenres, genrePositionMap);
 
+        System.out.println(actualResult);
+
         assertNotNull(actualResult);
         assertTrue(actualResult >= minResult && actualResult <= maxResult,
                 () -> "Result should be in range " + minResult + "-" + maxResult + " but was " + actualResult);
@@ -59,6 +61,8 @@ class UserArtistMatchingServiceImplTest {
         double maxResult = 100.0;
 
         double actualResult = userArtistMatchingService.getDistanceBetweenGenres(artistGenre, userGenre, genrePositions);
+
+        System.out.println(actualResult);
 
         assertTrue(actualResult >= minResult && actualResult <= maxResult,
                 () -> "Result should be in range " + minResult + "-" + maxResult + " but was " + actualResult);

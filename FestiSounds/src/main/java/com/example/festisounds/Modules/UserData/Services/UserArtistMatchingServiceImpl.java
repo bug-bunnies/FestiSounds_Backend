@@ -105,8 +105,8 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
     }
 
     public double getDistanceBetweenGenres(String artistGenre, String userGenre, HashMap<String, short[]> genrePositions) {
-        short[] artistGenrePosition = genrePositions.get(artistGenre);
-        short[] userGenrePosition = genrePositions.get(userGenre);
+        short[] artistGenrePosition = genrePositions.get(artistGenre.trim());
+        short[] userGenrePosition = genrePositions.get(userGenre.trim());
         if (userGenrePosition == null || artistGenrePosition == null) {
             return 100;
         }
