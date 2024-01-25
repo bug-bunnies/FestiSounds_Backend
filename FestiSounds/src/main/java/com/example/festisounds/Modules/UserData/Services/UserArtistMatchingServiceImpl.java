@@ -41,7 +41,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
         // Get festival artists
         FestivalResponseDTO festival = festivalService.getFestivalById(festivalId);
         // Get genre map from cache
-        HashMap<String, short[]> genrePositionMap = cachingService.buildAndCacheGenrePositionMap(genrePositionMapFile);;
+        HashMap<String, short[]> genrePositionMap = cachingService.buildAndCacheGenrePositionMap(genrePositionMapFile);
 
         return matchGenreDataToFestivalArtists(genreData, festival.artists(), genrePositionMap);
     }
