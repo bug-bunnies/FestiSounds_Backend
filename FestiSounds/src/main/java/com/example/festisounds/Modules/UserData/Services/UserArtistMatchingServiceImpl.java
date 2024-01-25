@@ -91,10 +91,10 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
             for (Map.Entry<String, Double> userGenre : genreData.entrySet()) {
                 double distanceBetweenGenres = getDistanceBetweenGenres(artistGenre, userGenre.getKey(), genrePositions);
 
-                double distanceRating = userGenre.getValue()*(100/distanceBetweenGenres);
+                double distanceRating = userGenre.getValue()*(100-distanceBetweenGenres);
                 genresRatingSum += distanceRating;
             }
-            genreScores.add(genresRatingSum);
+            genreScores.add(genresRatingSum/(100*genreData.size()));
         }
 
         return genreScores
@@ -117,7 +117,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
         double colourDistanceSquared = calculateColourDistanceSquared(artistGenrePosition, userGenrePosition);
 
         double rawDistance = Math.sqrt(xDistanceSquared + yDistanceSquared + colourDistanceSquared);
-        return (100/Math.sqrt(colourWeighting + yAxisWeighting + xAxisWeighting))*rawDistance;
+        return Math.sqrt(xAxisWeighting + yAxisWeighting + colourWeighting)*(100/rawDistance);
     }
 
     private double calculateColourDistanceSquared(short[] artistGenrePosition, short[] userGenrePosition) {
