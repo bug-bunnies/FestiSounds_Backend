@@ -31,6 +31,7 @@ public class FestivalService {
         if (!festival.artists().isEmpty()) {
              newArtists = festival.artists().stream()
                     .peek(System.out::println)
+                     // TODO: Think about a more efficient way to do this. Multiple db calls for one update = poor performance.
                     .map(name -> artistService.createOrAddArtistRouter(name, storedFestival.getId()))
                     .collect(Collectors.toSet());
              return FestivalDTOBuilder.festivalDTOBuilder(storedFestival, newArtists);
