@@ -45,7 +45,7 @@ public class AuthController {
             .build();
     public static Integer expirationToken;
     private static String code = "";
-    private static final UUID festivalId = UUID.fromString("8c14106e-a85c-4b7b-bcec-4803db825175");
+    private static final UUID festivalId = UUID.fromString("833ffa35-e2cd-4fb1-a564-7e25a46e85c8");
     @Autowired
     CacheManager cacheManager;
     @Autowired
@@ -100,9 +100,15 @@ public class AuthController {
             System.out.println("Spotify refresh token: " + spotifyApi.getRefreshToken());
             System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
 
-            userProcessingService.rankUsersFavouriteGenres(); 
-            userRequestService.getUserSpotifyInfo();
+            System.out.println("here 1");
+            userProcessingService.rankUsersFavouriteGenres();
+            System.out.println("here 2");
+//            userRequestService.getUserSpotifyInfo();
+            System.out.println("here 3");
             userCachingService.buildAndCacheGenrePositionMap(genrePositionMapFile);
+
+            System.out.println("here 4");
+            System.out.println(matchingService.getArtistRankingFromFestival(festivalId) + " algo results!");
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
