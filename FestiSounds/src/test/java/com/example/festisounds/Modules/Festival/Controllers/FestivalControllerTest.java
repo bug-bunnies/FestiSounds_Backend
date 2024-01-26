@@ -122,8 +122,21 @@ public class FestivalControllerTest {
         assertEquals(savedFestivalsSize, resultFestivals.length, "Should return a length of 2, but instead it was: " + savedFestivalsSize);
     }
 
-    //    todo: Disabled until error handler and Http codes are updated/implemented
-//    @Disabled
+    @Test
+    @DisplayName("Get all festivals returns 404 when not existing.")
+    void testGetAllFavouriteCocktails_whenValidCocktailDetailsDoNotExist_returnsNotFound() throws Exception {
+//        Arrange
+        FestivalResponseDTO[] emptyFestivalResponseArray = new FestivalResponseDTO[]{};
+        when(festivalService.getAllFestivals()).thenReturn(emptyFestivalResponseArray);
+
+//        Act
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(REQUEST_BUILDER_ENDPOINT);
+        MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
+
+//        Assert
+        assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus());
+    }
+
     @Test
     @DisplayName("Festivals returns 404 when not existing.")
     void testGetAllFestivals_whenValidFestivalsDoNotExist_returnsNotFound() throws Exception {
