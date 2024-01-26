@@ -1,5 +1,6 @@
 package com.example.festisounds.Modules.Festival.Services;
 
+import com.example.festisounds.Core.Exceptions.Festival.FestivalNotFoundException;
 import com.example.festisounds.Modules.Festival.DTO.FestivalRequestDTO;
 import com.example.festisounds.Modules.Festival.DTO.FestivalResponseDTO;
 import com.example.festisounds.Modules.Festival.Entities.Festival;
@@ -18,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.*;
 
 import static com.example.festisounds.Modules.Festival.Service.FestivalDTOBuilder.festivalEntityBuilder;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,6 +35,7 @@ public class FestivalServiceTest {
     FestivalService festivalService;
 
     FestivalRequestDTO festivalRequestData;
+    List<Festival> emptyFestivalEntityList;
     Festival storedFestival;
 
     Festival festival1;
@@ -58,6 +60,8 @@ public class FestivalServiceTest {
                 .build();
 
         storedFestival = festivalEntityBuilder(festivalRequestData);
+
+        emptyFestivalEntityList = new ArrayList<>();
 
         festivalId1 = UUID.randomUUID();
         festival1 = new Festival();
@@ -100,6 +104,20 @@ public class FestivalServiceTest {
         assertEquals(2, festivalsFromService.length, "festivalsFromService should have a size of 2, but instead was: " + festivalsFromService.length);
         assertEquals("TestFestival1", festivalsFromService[0].name(), "The first festival should have the name TestFestival1 but instead was: " + festivalsFromService[0].name());
         verify(festivalRepo).findAll();
+    }
+
+    @Test
+    @DisplayName("getAllFestivals() throws exception.")
+    public void testGetAllFestivals_whenFestivalsDontExist_throwsException() {
+//        Arrange
+        when(festivalRepo.findAll()).thenReturn(emptyFestivalEntityList);
+
+//        Act
+        Exception exception = assertThrows(FestivalNotFoundException.class,
+                () -> festivalService.getAllFestivals());
+
+//        Assert
+        assertTrue(exception.getMessage().contains("No festivals found."));
     }
 
     @Test
