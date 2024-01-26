@@ -7,7 +7,6 @@ import com.example.festisounds.Modules.Festival.Entities.Festival;
 import com.example.festisounds.Modules.Festival.Repository.FestivalRepo;
 import com.example.festisounds.Modules.Festival.Service.FestivalService;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
-import com.example.festisounds.Modules.FestivalArtists.Service.ArtistService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,9 +26,6 @@ public class FestivalServiceTest {
 
     @Mock
     FestivalRepo festivalRepo;
-
-    @Mock
-    ArtistService artistService;
 
     @InjectMocks
     FestivalService festivalService;

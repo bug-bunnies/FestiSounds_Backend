@@ -46,7 +46,7 @@ public class FestivalController {
     public ResponseEntity<FestivalResponseDTO[]> searchFestivalsByName(@PathVariable("festivalName") String festivalName) {
         try {
             return ResponseEntity.ok(festivalService.getFestivalsByName(festivalName));
-        } catch (FestivalNotFoundException  e) {
+        } catch (FestivalNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }

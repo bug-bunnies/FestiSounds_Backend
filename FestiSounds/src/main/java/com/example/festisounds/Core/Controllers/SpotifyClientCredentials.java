@@ -1,7 +1,6 @@
 package com.example.festisounds.Core.Controllers;
 
 import org.apache.hc.core5.http.ParseException;
-import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;

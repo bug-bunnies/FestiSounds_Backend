@@ -1,8 +1,6 @@
 package com.example.festisounds.Core.Controllers;
 
 import com.example.festisounds.Core.Utils.GenrePositionMapGenerator;
-import com.example.festisounds.Modules.UserData.DTOs.SpotifyUserDataDTO;
-import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.example.festisounds.Modules.UserData.Services.UserArtistMatchingServiceImpl;
 import com.example.festisounds.Modules.UserData.Services.UserCachingServiceImpl;
 import com.example.festisounds.Modules.UserData.Services.UserProcessingServiceImpl;
@@ -11,7 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
@@ -25,9 +22,6 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.UUID;
 
 
@@ -43,9 +37,9 @@ public class AuthController {
             .setClientSecret(clientSecret)
             .setRedirectUri(redirectUri)
             .build();
+    private static final UUID festivalId = UUID.fromString("8c14106e-a85c-4b7b-bcec-4803db825175");
     public static Integer expirationToken;
     private static String code = "";
-    private static final UUID festivalId = UUID.fromString("8c14106e-a85c-4b7b-bcec-4803db825175");
     @Autowired
     CacheManager cacheManager;
     @Autowired
@@ -56,7 +50,7 @@ public class AuthController {
     private UserRequestServiceImpl userRequestService;
     @Autowired
     private UserCachingServiceImpl userCachingService;
-    private GenrePositionMapGenerator mapGenerator = new GenrePositionMapGenerator();
+    private final GenrePositionMapGenerator mapGenerator = new GenrePositionMapGenerator();
 
     @Value("${positionMap.location}")
     private String genrePositionMapFile;
@@ -100,7 +94,7 @@ public class AuthController {
             System.out.println("Spotify refresh token: " + spotifyApi.getRefreshToken());
             System.out.println("Expires in: " + authorizationCodeCredentials.getExpiresIn());
 
-            userProcessingService.rankUsersFavouriteGenres(); 
+            userProcessingService.rankUsersFavouriteGenres();
             userRequestService.getUserSpotifyInfo();
             userCachingService.buildAndCacheGenrePositionMap(genrePositionMapFile);
 

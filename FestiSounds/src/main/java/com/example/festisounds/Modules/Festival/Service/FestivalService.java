@@ -30,16 +30,16 @@ public class FestivalService {
         Set<ArtistResponseDTO> newArtists = new HashSet<>();
 //        TODO: Look at moving this artist logic to a check in the controller and pass workload to artistService to de-couple both layers.
         if (!festival.artists().isEmpty()) {
-             newArtists = festival.artists().stream()
+            newArtists = festival.artists().stream()
                     .peek(System.out::println)
                     .map(name -> artistService.createOrAddArtistRouter(name, storedFestival.getId()))
                     .collect(Collectors.toSet());
-             return FestivalDTOBuilder.festivalDTOBuilder(storedFestival, newArtists);
+            return FestivalDTOBuilder.festivalDTOBuilder(storedFestival, newArtists);
         }
         return FestivalDTOBuilder.festivalDTOBuilder(storedFestival);
     }
 
-    public FestivalResponseDTO[] getAllFestivals() throws FestivalNotFoundException{
+    public FestivalResponseDTO[] getAllFestivals() throws FestivalNotFoundException {
         List<Festival> festivals = festivalRepo.findAll();
         if (festivals.isEmpty()) {
             throw new FestivalNotFoundException("No festivals found.");

@@ -3,16 +3,26 @@ package com.example.festisounds.Core.Utils;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
 
 public class GenrePositionMapGenerator {
+
+    private static MappingIterator<String[]> getMappingIterator(String fileName) {
+        try {
+            ClassPathResource resource = new ClassPathResource(fileName);
+            File csvFile = resource.getFile();
+            CsvMapper mapper = new CsvMapper();
+            mapper.enable(CsvParser.Feature.WRAP_AS_ARRAY);
+            return mapper.readerFor(String[].class).readValues(csvFile);
+        } catch (IOException e) {
+            System.out.println("ffs");
+        }
+        return null;
+    }
 
     public HashMap<String, short[]> makeGenrePositionMap(String fileName) {
         HashMap<String, short[]> genrePositionMap = new HashMap<>();
@@ -34,25 +44,10 @@ public class GenrePositionMapGenerator {
         return genrePositionMap;
     }
 
-
-    private static MappingIterator<String[]> getMappingIterator(String fileName) {
-        try {
-            ClassPathResource resource = new ClassPathResource(fileName);
-            File csvFile = resource.getFile();
-            CsvMapper mapper = new CsvMapper();
-            mapper.enable(CsvParser.Feature.WRAP_AS_ARRAY);
-            return mapper.readerFor(String[].class).readValues(csvFile);
-        } catch (IOException e) {
-            System.out.println("ffs");
-        }
-        return null;
-    }
-
-
     short[] getPosition(String[] row, short[] genreColour) {
         short xPosition = Short.parseShort(row[1]);
         short yPosition = Short.parseShort(row[2]);
-        return new short[] {xPosition, yPosition, genreColour[0], genreColour[1], genreColour[2]};
+        return new short[]{xPosition, yPosition, genreColour[0], genreColour[1], genreColour[2]};
     }
 
     short[] convertHexColourToRGB(String hexColour) {
