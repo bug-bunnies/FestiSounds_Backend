@@ -32,37 +32,38 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
     @Value("${positionMap.location}")
     private String genrePositionMapFile;
 
+    private final short colourNormaliser = 443;
+    private final short colourWeighting = 1;
+    private final short xAxisWeighting = 1;
+    private final short yAxisWeighting = 3;
+
     @Override
     public LinkedHashMap<ArtistResponseDTO, Double> getArtistRankingFromFestival(UUID festivalId)
             throws IOException, ParseException, SpotifyWebApiException {
-
         // Get user genre data
         HashMap<String, Double> genreData = userProcessingService.rankUsersFavouriteGenres();
-
+        // Get festival artists
         FestivalResponseDTO festival = festivalService.getFestivalById(festivalId);
-
-
         // Get genre map from cache
         HashMap<String, short[]> genrePositionMap = cachingService.buildAndCacheGenrePositionMap(genrePositionMapFile);
-
 
         return matchGenreDataToFestivalArtists(genreData, festival.artists(), genrePositionMap);
     }
 
-
     @Override
     public LinkedHashMap<ArtistResponseDTO, Double> matchGenreDataToFestivalArtists(HashMap<String, Double> genreData,
                                                                                     Set<ArtistResponseDTO> artists,
-                                                                                    HashMap<String, short[]> genrePositions)
+                                                                                    HashMap<String, short[]> genrePositionMap)
             throws IOException, ParseException, SpotifyWebApiException {
 
         HashMap<ArtistResponseDTO, Double> artistScoresMap = new HashMap<>();
-
+        System.out.println("MATCHING VALUES START");
         for (ArtistResponseDTO artist : artists) {
-            Set<String> artistGenres = artist.genres();
 
-            ArrayList<Double> genreScores = getGenreScore(genreData, artistGenres, genrePositions);
-            Double artistScore = getArtistScore(genreScores);
+            Set<String> artistGenres = artist.genres();
+            if (artistGenres.isEmpty()) continue;
+
+            Double artistScore = getArtistScore(genreData, artistGenres, genrePositionMap);
 
             artistScoresMap.put(artist, artistScore);
         }
@@ -78,27 +79,42 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
     }
 
     @Override
-    public ArrayList<Double> getGenreScore(HashMap<String, Double> genreData, Set<String> artistGenres, HashMap<String, short[]> genrePositions) {
+    public double getArtistScore(HashMap<String, Double> genreData, Set<String> artistGenres, HashMap<String, short[]> genrePositionMap) {
         ArrayList<Double> genreScores = new ArrayList<>();
 
+        OUTER:
         for (String artistGenre : artistGenres) {
+            double genresRatingSum = 0;
+            int missingUserGenres = 0;
             for (Map.Entry<String, Double> userGenre : genreData.entrySet()) {
-                double distanceBetweenGenres = getDistanceBetweenGenres(artistGenre, userGenre.getKey(), genrePositions);
 
-                // score times (1 - distance) aka closeness
+                short[] artistGenrePosition = genrePositionMap.get(artistGenre.trim());
+                if (artistGenrePosition == null) {
+                    continue OUTER;
+                }
 
+                short[] userGenrePosition = genrePositionMap.get(userGenre.getKey().trim());
+                if (userGenrePosition == null) {
+                    missingUserGenres++;
+                    continue;
+                }
+
+                double distanceBetweenGenres = getDistanceBetweenGenres(artistGenrePosition, userGenrePosition, genrePositionMap);
+                double distanceRating = userGenre.getValue() * (100 - distanceBetweenGenres);
+                genresRatingSum += distanceRating;
             }
+            genreScores.add(genresRatingSum / (100 * (genreData.size() - missingUserGenres)));
         }
 
-
-        return genreScores;
+        return genreScores
+                .stream()
+                .mapToDouble(x -> x)
+                .average()
+                .orElseThrow();
     }
 
-    private double getDistanceBetweenGenres(String artistGenre, String userGenre, HashMap<String, short[]> genrePositions) {
-        short[] artistGenrePosition = genrePositions.get(artistGenre);
-        short[] userGenrePosition = genrePositions.get(userGenre);
-
-        short[] maxValues = genrePositions.get("Max values");
+    public double getDistanceBetweenGenres(short[] artistGenrePosition, short[] userGenrePosition, HashMap<String, short[]> genrePositionMap) {
+        short[] maxValues = genrePositionMap.get("Max values");
         short xAxisNormaliser = maxValues[0];
         short yAxisNormaliser = maxValues[1];
 
@@ -106,24 +122,14 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
         double yDistanceSquared = (1 / Math.pow(yAxisNormaliser, 2)) * yAxisWeighting * Math.pow((artistGenrePosition[1] - userGenrePosition[1]), 2);
         double colourDistanceSquared = calculateColourDistanceSquared(artistGenrePosition, userGenrePosition);
 
-        return Math.sqrt(xDistanceSquared + yDistanceSquared + colourDistanceSquared);
+        double rawDistance = Math.sqrt(xDistanceSquared + yDistanceSquared + colourDistanceSquared);
+        return (100 / Math.sqrt(xAxisWeighting + yAxisWeighting + colourWeighting)) * rawDistance;
     }
 
-    private double calculateColourDistanceSquared(short[] artistGenrePosition, short[] userGenrePosition) {
+    public double calculateColourDistanceSquared(short[] artistGenrePosition, short[] userGenrePosition) {
         double rawDistance = Math.pow((artistGenrePosition[2] - userGenrePosition[2]), 2)
                 + Math.pow((artistGenrePosition[3] - userGenrePosition[3]), 2)
                 + Math.pow((artistGenrePosition[4] - userGenrePosition[4]), 2);
         return rawDistance * (1 / Math.pow(colourNormaliser, 2)) * colourWeighting;
-    }
-
-
-    @Override
-    public double getArtistScore(ArrayList<Double> genreScores) {
-        double artistScore = 0;
-        for (Double score : genreScores) {
-            double remainder = 100 - artistScore;
-            artistScore += (remainder / 100) * score;
-        }
-        return artistScore;
     }
 }
