@@ -1,5 +1,7 @@
-package com.example.festisounds.Core.Controllers;
+package com.example.festisounds.Core.Exceptions;
 
+import com.example.festisounds.Core.Controllers.AuthController;
+import com.example.festisounds.Core.Exceptions.Festival.FestivalNotFoundException;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +18,9 @@ public class GlobalErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({RuntimeException.class})
     protected ResponseEntity<String> handleError(RuntimeException ex) {
-        String errorMessage = ex.getMessage();
-
         return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(errorMessage);
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ex.getMessage());
     }
 
     @ExceptionHandler({SpotifyWebApiException.class})
@@ -28,5 +28,12 @@ public class GlobalErrorHandler extends ResponseEntityExceptionHandler {
         if (ex instanceof UnauthorizedException) {
             AuthController.refreshAccessToken();
         }
+    }
+
+    @ExceptionHandler({FestivalNotFoundException.class})
+    public ResponseEntity<Object> handleFestivalNotFoundException(FestivalNotFoundException e) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(e.getMessage());
     }
 }

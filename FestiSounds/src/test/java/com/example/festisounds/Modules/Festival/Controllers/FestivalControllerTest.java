@@ -8,7 +8,6 @@ import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,10 +123,10 @@ public class FestivalControllerTest {
     }
 
     //    todo: Disabled until error handler and Http codes are updated/implemented
-    @Disabled
+//    @Disabled
     @Test
     @DisplayName("Festivals returns 404 when not existing.")
-    void testGetAllFavouriteCocktails_whenValidCocktailDetailsDoNotExist_returnsNotFound() throws Exception {
+    void testGetAllFestivals_whenValidFestivalsDoNotExist_returnsNotFound() throws Exception {
 //        Arrange
         FestivalResponseDTO[] savedFestivals = new FestivalResponseDTO[]{};
 
