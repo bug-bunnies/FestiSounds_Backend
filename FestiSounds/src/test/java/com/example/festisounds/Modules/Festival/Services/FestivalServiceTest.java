@@ -107,7 +107,7 @@ public class FestivalServiceTest {
     }
 
     @Test
-    @DisplayName("getAllFestivals() throws exception.")
+    @DisplayName("Get all festivals throws FestivalNotFoundException.")
     public void testGetAllFestivals_whenFestivalsDontExist_throwsException() {
 //        Arrange
         when(festivalRepo.findAll()).thenReturn(emptyFestivalEntityList);
@@ -124,7 +124,6 @@ public class FestivalServiceTest {
     @DisplayName("Get festival by ID")
     public void testGetFestivalById_whenGivenValidId_returnsFestivalResponse() {
         // Arrange
-
         when(festivalRepo.findById(festivalId1)).thenReturn(Optional.of(festival1));
 
         // Act
@@ -133,6 +132,21 @@ public class FestivalServiceTest {
         // Assert
         assertEquals(festivalId1, result.id());
         verify(festivalRepo).findById(festivalId1);
+    }
+
+    @Test
+    @DisplayName("Get festival by id throws FestivalNotFoundException.")
+    public void testGetFestivalById_whenFestivalsDontExist_throwsException() {
+//        Arrange
+        Festival emptyFestival;
+        when(festivalRepo.findById(festivalId1)).thenReturn(Optional.empty());
+
+//        Act
+        Exception exception = assertThrows(FestivalNotFoundException.class,
+                () -> festivalService.getFestivalById(festivalId1));
+
+//        Assert
+        assertTrue(exception.getMessage().contains("Could not find a festival by the id: " + festivalId1));
     }
 
 
