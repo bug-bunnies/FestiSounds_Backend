@@ -4,7 +4,6 @@ import com.example.festisounds.Core.Exceptions.Festival.FestivalNotFoundExceptio
 import com.example.festisounds.Modules.Festival.Controller.FestivalController;
 import com.example.festisounds.Modules.Festival.DTO.FestivalRequestDTO;
 import com.example.festisounds.Modules.Festival.DTO.FestivalResponseDTO;
-import com.example.festisounds.Modules.Festival.Repository.FestivalRepo;
 import com.example.festisounds.Modules.Festival.Service.FestivalService;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -12,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -40,8 +38,7 @@ public class FestivalControllerTest {
     private final String REQUEST_BUILDER_ENDPOINT = "/api/festivals";
     @Autowired
     FestivalService festivalService;
-    @Mock
-    FestivalRepo festivalRepo;
+
     @Autowired
     MockMvc mockMvc;
     UUID festivalUUID = UUID.randomUUID();
