@@ -27,6 +27,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest(controllers = FestivalController.class)
@@ -180,5 +181,20 @@ public class FestivalControllerTest {
 //        Assert
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus(), "Incorrect response status.");
         assertEquals(savedFestivals.length, resultFestivals.length, "Should return a length of 2, but instead it was: " + savedFestivals.length);
+    }
+
+    @Test
+    @DisplayName("Festival can be deleted.")
+    public void testDeleteFestival_whenFestivalIdExists_returnsOk() throws Exception {
+//        Arrange
+        doNothing().when(festivalService).deleteFestival(festivalResponseDTO.id());
+
+//        Act
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete(REQUEST_BUILDER_ENDPOINT + festivalResponseDTO.id());
+        MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
+
+//        Assert
+        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus(), "Incorrect Response Status");
+
     }
 }

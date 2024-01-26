@@ -59,7 +59,7 @@ public class FestivalService {
     }
 
     //    TODO: Cannot currently delete if artists are linked.
-    public void delete(UUID id) {
+    public void deleteFestival(UUID id) {
         if (festivalRepo.findById(id).isPresent()) {
             festivalRepo.deleteById(id);
         } else {

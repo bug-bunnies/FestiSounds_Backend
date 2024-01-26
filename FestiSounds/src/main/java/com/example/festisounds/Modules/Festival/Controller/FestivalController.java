@@ -50,7 +50,7 @@ public class FestivalController {
     @DeleteMapping(BASE_PATH + "{festivalId}")
     public ResponseEntity<String> deleteFestival(@PathVariable("festivalId") UUID festivalId) {
         try {
-            festivalService.delete(festivalId);
+            festivalService.deleteFestival(festivalId);
             return ResponseEntity.ok("Festival deleted successfully");
         } catch (NotFoundException e) {
             return ResponseEntity.notFound().header(e.getMessage()).build();

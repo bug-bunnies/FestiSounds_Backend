@@ -141,7 +141,7 @@ public class FestivalServiceTest {
         when(festivalRepo.findById(festivalId1)).thenReturn(Optional.of(festival1));
 
         // Act
-        festivalService.delete(festivalId1);
+        festivalService.deleteFestival(festivalId1);
 
         // Assert
         verify(festivalRepo).deleteById(festivalId1);
