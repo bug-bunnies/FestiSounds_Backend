@@ -197,6 +197,20 @@ public class FestivalControllerTest {
     }
 
     @Test
+    @DisplayName("Get festivals by name returns 404 when not existing.")
+    void testGetFestivalsByName_whenFestivalDoestExist_returnsNotFound() throws Exception {
+//        Arrange
+        when(festivalService.getFestivalsByName(festivalRequestDTO.name())).thenThrow(FestivalNotFoundException.class);
+
+//        Act
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(REQUEST_BUILDER_ENDPOINT + "/" + festivalRequestDTO.name());
+        MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
+
+//        Assert
+        assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus(), "Incorrect Response Status");
+    }
+
+    @Test
     @DisplayName("Festival can be deleted.")
     public void testDeleteFestival_whenFestivalIdExists_returnsOk() throws Exception {
 //        Arrange
