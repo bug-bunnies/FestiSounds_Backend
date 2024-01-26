@@ -4,6 +4,7 @@ import com.example.festisounds.Core.Exceptions.Festival.FestivalNotFoundExceptio
 import com.example.festisounds.Modules.Festival.Controller.FestivalController;
 import com.example.festisounds.Modules.Festival.DTO.FestivalRequestDTO;
 import com.example.festisounds.Modules.Festival.DTO.FestivalResponseDTO;
+import com.example.festisounds.Modules.Festival.Repository.FestivalRepo;
 import com.example.festisounds.Modules.Festival.Service.FestivalService;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -38,6 +40,8 @@ public class FestivalControllerTest {
     private final String REQUEST_BUILDER_ENDPOINT = "/api/festivals";
     @Autowired
     FestivalService festivalService;
+    @Mock
+    FestivalRepo festivalRepo;
     @Autowired
     MockMvc mockMvc;
     UUID festivalUUID = UUID.randomUUID();
@@ -222,6 +226,18 @@ public class FestivalControllerTest {
 
 //        Assert
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus(), "Incorrect Response Status");
+    }
 
+    @Test
+    @DisplayName("Delete returns 404 when not existing.")
+    public void testDeleteFestival_whenFestivalDoestExist_returnsNotFound() throws Exception {
+//        Arrange
+        doNothing().when(festivalService).deleteFestival(festivalUUID);
+//        Act
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(REQUEST_BUILDER_ENDPOINT + "/" + festivalUUID);
+        MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();
+
+//        Assert
+        assertEquals(HttpStatus.NOT_FOUND.value(), mvcResult.getResponse().getStatus(), "Incorrect Response Status");
     }
 }

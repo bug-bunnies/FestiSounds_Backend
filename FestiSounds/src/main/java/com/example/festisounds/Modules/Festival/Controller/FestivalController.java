@@ -7,7 +7,6 @@ import com.example.festisounds.Modules.Festival.Service.FestivalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.webjars.NotFoundException;
 
 import java.util.UUID;
 
@@ -58,8 +57,8 @@ public class FestivalController {
         try {
             festivalService.deleteFestival(festivalId);
             return ResponseEntity.ok("Festival deleted successfully");
-        } catch (NotFoundException e) {
-            return ResponseEntity.notFound().header(e.getMessage()).build();
+        } catch (FestivalNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 
