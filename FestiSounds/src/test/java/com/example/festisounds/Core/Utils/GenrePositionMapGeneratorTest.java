@@ -19,7 +19,6 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//@SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GenrePositionMapGeneratorTest {
     static GenrePositionMapGenerator genreMapGenerator;
