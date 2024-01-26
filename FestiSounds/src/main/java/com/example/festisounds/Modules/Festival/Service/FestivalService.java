@@ -28,6 +28,7 @@ public class FestivalService {
     public FestivalResponseDTO createFestival(FestivalRequestDTO festival) {
         Festival storedFestival = festivalRepo.save(festivalEntityBuilder(festival));
         Set<ArtistResponseDTO> newArtists = new HashSet<>();
+//        TODO: Look at moving this artist logic to a check in the controller and pass workload to artistService to de-couple both layers.
         if (!festival.artists().isEmpty()) {
              newArtists = festival.artists().stream()
                     .peek(System.out::println)

@@ -138,7 +138,7 @@ public class FestivalServiceTest {
 
     @Test
     @DisplayName("Get festival by id throws FestivalNotFoundException.")
-    public void testGetFestivalById_whenFestivalDoesntExist_throwsException() {
+    public void testGetFestivalById_whenFestivalIdDoesntExist_throwsException() {
 //        Arrange
         when(festivalRepo.findById(festivalId1)).thenReturn(Optional.empty());
 
@@ -169,7 +169,7 @@ public class FestivalServiceTest {
 
     @Test
     @DisplayName("Get festival by name throws FestivalNotFoundException.")
-    public void testGetFestivalByName_whenFestivalDoesntExist_throwsException() {
+    public void testGetFestivalByName_whenFestivalNameDoesntExist_throwsException() {
 //        Arrange
         when(festivalRepo.findByNameContainingIgnoreCase(nameSearchQuery)).thenReturn(emptyFestivalEntityList);
 
@@ -193,5 +193,19 @@ public class FestivalServiceTest {
         // Assert
         verify(festivalRepo).deleteById(festivalId1);
         verify(festivalRepo).findById(festivalId1);
+    }
+
+    @Test
+    @DisplayName("Delete festival throws FestivalNotFoundException.")
+    public void testDeleteFestival_whenFestivalIdDoesntExist_throwsException() {
+//        Arrange
+        when(festivalRepo.findById(festivalId1)).thenReturn(Optional.empty());
+
+//        Act
+        Exception exception = assertThrows(FestivalNotFoundException.class,
+                () -> festivalService.deleteFestival(festivalId1));
+
+//        Assert
+        assertTrue(exception.getMessage().contains("Could not delete, festivalId not found: " + festivalId1));
     }
 }
