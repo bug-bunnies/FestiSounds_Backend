@@ -170,7 +170,8 @@ public class FestivalControllerTest {
 
         FestivalResponseDTO[] savedFestivals = new FestivalResponseDTO[]{festivalResponseDTO, festivalResponseDTO};
         when(festivalService.getFestivalsByName(searchQuery)).thenReturn(savedFestivals);
-        TypeReference<FestivalResponseDTO[]> typeRef = new TypeReference<>() {};
+        TypeReference<FestivalResponseDTO[]> typeRef = new TypeReference<>() {
+        };
 
 //        Act
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(REQUEST_BUILDER_ENDPOINT + "/search/name/" + searchQuery)).andReturn();

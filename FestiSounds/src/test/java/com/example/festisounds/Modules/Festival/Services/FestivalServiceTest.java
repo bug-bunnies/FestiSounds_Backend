@@ -138,7 +138,6 @@ public class FestivalServiceTest {
     @DisplayName("Get festival by id throws FestivalNotFoundException.")
     public void testGetFestivalById_whenFestivalsDontExist_throwsException() {
 //        Arrange
-        Festival emptyFestival;
         when(festivalRepo.findById(festivalId1)).thenReturn(Optional.empty());
 
 //        Act
@@ -152,9 +151,9 @@ public class FestivalServiceTest {
 
     @Test
     @DisplayName("Get festival by name")
-    public void testGetFestivalById_whenGivenValidName_returnsFestivalResponse() {
+    public void testGetFestivalByName_whenGivenValidName_returnsFestivalResponse() {
         // Arrange
-        String searchQuery = "TestFestival1";
+        String searchQuery = festival1.getName();
         when(festivalRepo.findByNameContainingIgnoreCase(searchQuery)).thenReturn(List.of(festival1));
 
         // Act
