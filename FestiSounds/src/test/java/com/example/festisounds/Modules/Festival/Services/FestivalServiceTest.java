@@ -39,6 +39,7 @@ public class FestivalServiceTest {
     Festival storedFestival;
 
     Festival festival1;
+    String nameSearchQuery;
     Festival festival2;
     List<Festival> festivals;
     ArtistResponseDTO artistResponseDTO;
@@ -67,6 +68,7 @@ public class FestivalServiceTest {
         festival1 = new Festival();
         festival1.setId(festivalId1);
         festival1.setName("TestFestival1");
+        nameSearchQuery = festival1.getName();
 
         festival2 = new Festival();
         festival2.setName("TestFestival2");
@@ -136,7 +138,7 @@ public class FestivalServiceTest {
 
     @Test
     @DisplayName("Get festival by id throws FestivalNotFoundException.")
-    public void testGetFestivalById_whenFestivalsDontExist_throwsException() {
+    public void testGetFestivalById_whenFestivalDoesntExist_throwsException() {
 //        Arrange
         when(festivalRepo.findById(festivalId1)).thenReturn(Optional.empty());
 
@@ -163,6 +165,20 @@ public class FestivalServiceTest {
         assertEquals(1, result.length, "result should have a size of 1, but instead was: " + result.length);
         assertEquals(searchQuery, result[0].name(), "The first festival should have the name TestFestival1 but instead was: " + result[0].name());
         verify(festivalRepo).findByNameContainingIgnoreCase(searchQuery);
+    }
+
+    @Test
+    @DisplayName("Get festival by name throws FestivalNotFoundException.")
+    public void testGetFestivalByName_whenFestivalDoesntExist_throwsException() {
+//        Arrange
+        when(festivalRepo.findByNameContainingIgnoreCase(nameSearchQuery)).thenReturn(emptyFestivalEntityList);
+
+//        Act
+        Exception exception = assertThrows(FestivalNotFoundException.class,
+                () -> festivalService.getFestivalsByName(nameSearchQuery));
+
+//        Assert
+        assertTrue(exception.getMessage().contains("Could not find a festival by the name: " + nameSearchQuery));
     }
 
     @Test
