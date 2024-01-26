@@ -53,7 +53,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
             throws IOException, ParseException, SpotifyWebApiException {
 
         HashMap<ArtistResponseDTO, Double> artistScoresMap = new HashMap<>();
-        System.out.println("MATCHING VALUES START");
+
         for (ArtistResponseDTO artist : artists) {
 
             Set<String> artistGenres = artist.genres();
