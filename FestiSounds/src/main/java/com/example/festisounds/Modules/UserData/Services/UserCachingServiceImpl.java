@@ -1,9 +1,7 @@
 package com.example.festisounds.Modules.UserData.Services;
 
 import com.example.festisounds.Core.Utils.GenrePositionMapGenerator;
-import org.springframework.cache.CacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;

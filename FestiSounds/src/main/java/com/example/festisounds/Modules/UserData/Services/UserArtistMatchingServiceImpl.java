@@ -6,7 +6,6 @@ import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -18,6 +17,10 @@ import java.util.stream.Collectors;
 @Service
 public class UserArtistMatchingServiceImpl implements UserArtistMatchingService {
 
+    private final short colourNormaliser = 443;
+    private final short colourWeighting = 1;
+    private final short xAxisWeighting = 1;
+    private final short yAxisWeighting = 3;
     @Autowired
     CacheManager cacheManager;
     @Autowired
@@ -28,6 +31,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
     private UserCachingServiceImpl cachingService;
     @Value("${positionMap.location}")
     private String genrePositionMapFile;
+
     private final short colourNormaliser = 443;
     private final short colourWeighting = 1;
     private final short xAxisWeighting = 1;
@@ -83,6 +87,7 @@ public class UserArtistMatchingServiceImpl implements UserArtistMatchingService 
             double genresRatingSum = 0;
             int missingUserGenres = 0;
             for (Map.Entry<String, Double> userGenre : genreData.entrySet()) {
+
                 short[] artistGenrePosition = genrePositionMap.get(artistGenre.trim());
                 if (artistGenrePosition == null) {
                     continue OUTER;

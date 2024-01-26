@@ -8,19 +8,14 @@ import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.example.festisounds.Modules.FestivalArtists.Entities.FestivalArtist;
 import com.example.festisounds.Modules.FestivalArtists.Repositories.FestivalArtistRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
 import se.michaelthelin.spotify.requests.data.search.simplified.SearchArtistsRequest;
 
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static com.example.festisounds.Core.Controllers.AuthController.spotifyApi;
 
 @Service
 @RequiredArgsConstructor
@@ -60,7 +55,7 @@ public class ArtistService {
 
         FestivalArtist newArtist = artistRepository.save(new FestivalArtist(spotifyId, name, festival, genres));
         return FestivalDTOBuilder.artistDTOBuilder(newArtist);
-}
+    }
 
     public ArtistResponseDTO createOrAddArtistRouter(String name, UUID festivalId) {
         Festival festival = festivalRepo.findById(festivalId).orElseThrow();
@@ -76,14 +71,15 @@ public class ArtistService {
         FestivalArtist artist = artistRepository.findById(artistId).orElseThrow();
         return FestivalDTOBuilder.artistDTOBuilder(artist);
     }
+
     public FestivalArtist findArtist(String name) {
         name = name.toUpperCase().strip();
         return artistRepository.findFestivalArtistByArtistName(name);
     }
 
     public ArtistResponseDTO addArtistToFestival(FestivalArtist artist, Festival festival) {
-            artist.getFestivals().add(festival);
-            return FestivalDTOBuilder.artistDTOBuilder(artistRepository.save(artist));
+        artist.getFestivals().add(festival);
+        return FestivalDTOBuilder.artistDTOBuilder(artistRepository.save(artist));
     }
 
     public Set<String> updateArtistGenres(String name) throws Exception {
