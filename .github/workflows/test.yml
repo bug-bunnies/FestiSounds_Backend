@@ -17,4 +17,4 @@ jobs:
           distribution: 'adopt'
           architecture: x64
       - name: Build and Test
-        run: mvn clean install
+        run: cd FestiSounds && mvn clean install
