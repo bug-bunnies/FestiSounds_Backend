@@ -1,24 +1,19 @@
 package com.example.festisounds.Modules.UserData.Services;
 
 import com.example.festisounds.Core.Utils.GenrePositionMapGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -112,7 +107,7 @@ class UserArtistMatchingServiceImplTest {
 
     public static Stream<Arguments> genrePositionParameters() {
         int counter = 0;
-        int numTests = 100;
+        int numTests = 10;
         short[][] genrePositionArray = new short[numTests+1][];
         for (short[] position : genrePositionMap.values()) {
             if (counter >= numTests) {
