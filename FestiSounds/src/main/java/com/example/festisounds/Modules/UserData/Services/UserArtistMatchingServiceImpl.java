@@ -17,10 +17,6 @@ import java.util.stream.Collectors;
 @Service
 public class UserArtistMatchingServiceImpl implements UserArtistMatchingService {
 
-    private final short colourNormaliser = 443;
-    private final short colourWeighting = 1;
-    private final short xAxisWeighting = 1;
-    private final short yAxisWeighting = 3;
     @Autowired
     CacheManager cacheManager;
     @Autowired
