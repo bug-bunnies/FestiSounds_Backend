@@ -75,9 +75,4 @@ public class FestivalService {
             throw new FestivalNotFoundException("Could not delete, festivalId not found: " + festivalId);
         }
     }
-
-    private void testActionsPush() {
-        System.out.println("Nothing");
-    }
-
 }
