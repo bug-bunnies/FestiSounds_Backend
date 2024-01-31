@@ -76,5 +76,8 @@ public class FestivalService {
         }
     }
 
+    private void testActionsPush() {
+        System.out.println("Nothing");
+    }
 
 }
