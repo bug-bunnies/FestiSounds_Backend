@@ -36,8 +36,8 @@ public class ArtistController {
         }
     }
 
+    // TODO: Return a body, not just the status!!!
     @PostMapping("new")
-    // TODO: Return a body
     public ResponseEntity.HeadersBuilder createArtist(@RequestParam String artistName, @RequestParam UUID festivalId) throws SQLException {
         String[] artists = artistName.split(",");
         for (String name : artists) {
