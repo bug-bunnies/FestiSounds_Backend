@@ -4,6 +4,7 @@ import com.example.festisounds.Core.Controllers.SpotifyClientCredentials;
 import com.example.festisounds.Modules.Festival.Entities.Festival;
 import com.example.festisounds.Modules.Festival.Repository.FestivalRepo;
 import com.example.festisounds.Modules.Festival.Service.FestivalDTOBuilder;
+import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistRequestDTO;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.example.festisounds.Modules.FestivalArtists.Entities.FestivalArtist;
 import com.example.festisounds.Modules.FestivalArtists.Repositories.FestivalArtistRepository;
@@ -38,9 +39,7 @@ public class ArtistService {
         }
     }
 
-    public ArtistResponseDTO createArtist(String name, Festival festival) {
-        Artist[] artist = getSpotifyArtistData(name);
-
+    public ArtistRequestDTO findArtistInSpotifyAndCreateArtistObject(String name, Artist[] artist) {
         String spotifyId = Arrays
                 .stream(artist)
                 .map(Artist::getId)
@@ -53,18 +52,7 @@ public class ArtistService {
                 .findFirst()
                 .orElse(new String[]{"Could not find a genres for the Artist"});
 
-        FestivalArtist newArtist = artistRepository.save(new FestivalArtist(spotifyId, name, festival, genres));
-        return FestivalDTOBuilder.artistDTOBuilder(newArtist);
-    }
-
-    public ArtistResponseDTO createOrAddArtistRouter(String name, UUID festivalId) {
-        Festival festival = festivalRepo.findById(festivalId).orElseThrow();
-        name = name.toUpperCase().strip();   // may cause issues if artist name is case-sensitive
-        FestivalArtist artist = findArtist(name);
-        if (artist == null) {
-            return createArtist(name, festival);
-        }
-        return addArtistToFestival(artist, festival);
+        return new ArtistRequestDTO(spotifyId, name, Set.of(genres));
     }
 
     public ArtistResponseDTO getArtist(UUID artistId) {
@@ -72,10 +60,31 @@ public class ArtistService {
         return FestivalDTOBuilder.artistDTOBuilder(artist);
     }
 
+    public ArtistResponseDTO createOrAddArtistRouter(String name, UUID festivalId) {
+        Festival festival = festivalRepo.findById(festivalId).orElseThrow();
+        name = name.toUpperCase().strip();   // may cause issues if artist name is case-sensitive
+        FestivalArtist artist = findArtist(name);
+        if (artist == null) {
+            Artist[] spotifyArtist = getSpotifyArtistData(name);
+            ArtistRequestDTO request = findArtistInSpotifyAndCreateArtistObject(name, spotifyArtist);
+            return createArtist(festival, request);
+        }
+        return addArtistToFestival(artist, festival);
+    }
+
     public FestivalArtist findArtist(String name) {
         name = name.toUpperCase().strip();
         return artistRepository.findFestivalArtistByArtistName(name);
     }
+
+    public ArtistResponseDTO createArtist(Festival festival, ArtistRequestDTO newArtist) {
+        FestivalArtist createdArtist = artistRepository.save(new FestivalArtist(newArtist.spotifyId(),
+                newArtist.artistName(),
+                festival,
+                newArtist.genres().toArray(new String[0])));
+        return FestivalDTOBuilder.artistDTOBuilder(createdArtist);
+    }
+
 
     public ArtistResponseDTO addArtistToFestival(FestivalArtist artist, Festival festival) {
         artist.getFestivals().add(festival);

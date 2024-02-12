@@ -19,7 +19,6 @@ public class FestivalArtistEntityTest {
 
     private FestivalArtist artist1;
     private FestivalArtist artist2;
-    private Festival festival;
 
     @BeforeEach
     void setup() {
@@ -99,6 +98,5 @@ public class FestivalArtistEntityTest {
             testManager.persistAndFlush(testArtist);
         }, "Genres should always exist");
     }
-
 
 }
