@@ -47,8 +47,8 @@ public class FestivalArtist {
     private Set<String> genres = new HashSet<>();
 
     public FestivalArtist(String spotifyId, String name, Festival festival, String[] genres) {
-        this.artistName = name;
         this.spotifyId = spotifyId;
+        this.artistName = name;
         this.getFestivals().add(festival);
         for (String genre : genres) {
             this.getGenres().add(genre);

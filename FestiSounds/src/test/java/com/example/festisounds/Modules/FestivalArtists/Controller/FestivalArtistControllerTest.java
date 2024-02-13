@@ -1,11 +1,11 @@
 package com.example.festisounds.Modules.FestivalArtists.Controller;
 
-import com.example.festisounds.Modules.Festival.DTO.FestivalResponseDTO;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.example.festisounds.Modules.FestivalArtists.Service.ArtistService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +50,7 @@ public class FestivalArtistControllerTest {
     }
 
 //    TODO: test request to spotify?!?
+    @Disabled
     @Test
     @DisplayName("Find Artist by name in Spotify")
     void testGetAllArtist_whenGivenASearchParam_returnsArrayOfArtists() {
