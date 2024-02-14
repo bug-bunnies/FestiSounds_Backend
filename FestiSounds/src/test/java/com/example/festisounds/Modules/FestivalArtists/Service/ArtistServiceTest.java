@@ -1,5 +1,6 @@
 package com.example.festisounds.Modules.FestivalArtists.Service;
 
+import com.example.festisounds.Modules.Festival.DTO.FestivalResponseDTO;
 import com.example.festisounds.Modules.Festival.Entities.Festival;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistRequestDTO;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
@@ -14,8 +15,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -85,8 +89,16 @@ public class ArtistServiceTest {
 
     @Test
     void getArtist_whenGivenExistingArtistId_returnsArtist() {
-        UUID uuid = UUID.randomUUID();
+        // Arrange
+        when(artistRepository.findById(artistEntity1ID)).thenReturn(Optional.of(artistEntity1));
 
+        // Act
+        ArtistResponseDTO result = artistService.getArtist(artistEntity1ID);
 
+        // Assert
+        assertEquals(artistEntity1, result.id());
+        verify(artistRepository).findById(artistEntity1ID);
     }
+
+
 }
