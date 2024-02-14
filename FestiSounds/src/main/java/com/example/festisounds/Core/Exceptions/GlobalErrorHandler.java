@@ -2,6 +2,7 @@ package com.example.festisounds.Core.Exceptions;
 
 import com.example.festisounds.Core.Controllers.AuthController;
 import com.example.festisounds.Core.Exceptions.Festival.FestivalNotFoundException;
+import com.example.festisounds.Core.Exceptions.FestivalArtists.ArtistNotFoundException;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,13 @@ public class GlobalErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({FestivalNotFoundException.class})
     public ResponseEntity<Object> handleFestivalNotFoundException(FestivalNotFoundException e) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(e.getMessage());
+    }
+
+    @ExceptionHandler({ArtistNotFoundException.class})
+    public ResponseEntity<Object> handleArtistNotFoundException(ArtistNotFoundException e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(e.getMessage());

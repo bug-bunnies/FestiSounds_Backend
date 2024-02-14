@@ -1,6 +1,7 @@
 package com.example.festisounds.Modules.FestivalArtists.Service;
 
 import com.example.festisounds.Core.Controllers.SpotifyClientCredentials;
+import com.example.festisounds.Core.Exceptions.FestivalArtists.ArtistNotFoundException;
 import com.example.festisounds.Modules.Festival.Entities.Festival;
 import com.example.festisounds.Modules.Festival.Repository.FestivalRepo;
 import com.example.festisounds.Modules.Festival.Service.FestivalDTOBuilder;
@@ -55,8 +56,10 @@ public class ArtistService {
         return new ArtistRequestDTO(spotifyId, name, Set.of(genres));
     }
 
-    public ArtistResponseDTO getArtist(UUID artistId) {
-        FestivalArtist artist = artistRepository.findById(artistId).orElseThrow();
+    public ArtistResponseDTO getArtist(UUID artistId) throws ArtistNotFoundException {
+        FestivalArtist artist = artistRepository
+                .findById(artistId)
+                .orElseThrow(() -> new ArtistNotFoundException("Could not find artist with id " + artistId));
         return FestivalDTOBuilder.artistDTOBuilder(artist);
     }
 

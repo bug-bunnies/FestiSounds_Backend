@@ -1,5 +1,6 @@
 package com.example.festisounds.Modules.FestivalArtists.Service;
 
+import com.example.festisounds.Core.Exceptions.FestivalArtists.ArtistNotFoundException;
 import com.example.festisounds.Modules.Festival.DTO.FestivalResponseDTO;
 import com.example.festisounds.Modules.Festival.Entities.Festival;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistRequestDTO;
@@ -8,6 +9,7 @@ import com.example.festisounds.Modules.FestivalArtists.Entities.FestivalArtist;
 import com.example.festisounds.Modules.FestivalArtists.Repositories.FestivalArtistRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +18,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import java.util.Date;
 import java.util.Optional;
@@ -88,6 +90,7 @@ public class ArtistServiceTest {
     }
 
     @Test
+    @DisplayName("Get artist by ID")
     void getArtist_whenGivenExistingArtistId_returnsArtist() {
         // Arrange
         when(artistRepository.findById(artistEntity1ID)).thenReturn(Optional.ofNullable(artistEntity1));
@@ -98,6 +101,17 @@ public class ArtistServiceTest {
         // Assert
         assertEquals(artistEntity1.getId(), result.id());
         verify(artistRepository).findById(artistEntity1ID);
+    }
+
+    @Test
+    @DisplayName("Get artist by non existing ID")
+    void getArtist_whenGivenNonExistingID_throwsException() {
+        when(artistRepository.findById(artistEntity1ID)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(ArtistNotFoundException.class,
+                () -> artistService.getArtist(artistEntity1ID));
+
+        assertTrue(exception.getMessage().contains("Could not find artist with id " + artistEntity1ID));
     }
 
 
