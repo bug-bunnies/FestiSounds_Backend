@@ -63,12 +63,12 @@ public class ArtistServiceTest {
                 artistName1,
                 genres);
 
-        artistEntity1 = new FestivalArtist(artistEntity1ID,
-                artistName1,
-                spotifyId1,
-                Set.of(festival1),
-                genres);
-        MockitoAnnotations.openMocks(this);
+        artistEntity1 = new FestivalArtist();
+        artistEntity1.setId(artistEntity1ID);
+        artistEntity1.setArtistName(artistName1);
+        artistEntity1.setFestivals(Set.of(festival1));
+        artistEntity1.setSpotifyId(spotifyId1);
+        artistEntity1.setGenres(genres);
     }
 
     @Test
@@ -78,8 +78,8 @@ public class ArtistServiceTest {
         ArtistResponseDTO createdArtist = artistService.createArtist(festival1, artistRequest);
 
         verify(artistRepository).save(any(FestivalArtist.class));
-//        Assertions.assertEquals(artistEntity1.getArtistName(), createdArtist.artistName(),
-//                () -> "Artists name does not match");
+        Assertions.assertEquals(artistEntity1.getArtistName(), createdArtist.artistName(),
+                () -> "Artists name does not match");
     }
 
     @Test
@@ -90,13 +90,13 @@ public class ArtistServiceTest {
     @Test
     void getArtist_whenGivenExistingArtistId_returnsArtist() {
         // Arrange
-        when(artistRepository.findById(artistEntity1ID)).thenReturn(Optional.of(artistEntity1));
+        when(artistRepository.findById(artistEntity1ID)).thenReturn(Optional.ofNullable(artistEntity1));
 
         // Act
         ArtistResponseDTO result = artistService.getArtist(artistEntity1ID);
 
         // Assert
-        assertEquals(artistEntity1, result.id());
+        assertEquals(artistEntity1.getId(), result.id());
         verify(artistRepository).findById(artistEntity1ID);
     }
 

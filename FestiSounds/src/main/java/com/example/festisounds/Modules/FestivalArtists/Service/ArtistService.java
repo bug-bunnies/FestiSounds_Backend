@@ -82,12 +82,7 @@ public class ArtistService {
                 newArtist.artistName(),
                 festival,
                 newArtist.genres().toArray(new String[0]));
-        System.out.println(newArtist.spotifyId());
-        System.out.println(festival.getId());
-        System.out.println(createdArtist.getSpotifyId());
-        System.out.println(createdArtist.getId() + " ARTIST");
         createdArtist = artistRepository.save(createdArtist);
-        System.out.println(createdArtist.getId());
         return FestivalDTOBuilder.artistDTOBuilder(createdArtist);
     }
 
