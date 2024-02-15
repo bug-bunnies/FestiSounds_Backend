@@ -7,16 +7,22 @@ import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistRequestDTO;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.example.festisounds.Modules.FestivalArtists.Entities.FestivalArtist;
 import com.example.festisounds.Modules.FestivalArtists.Repositories.FestivalArtistRepository;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import se.michaelthelin.spotify.model_objects.specification.Artist;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -71,6 +77,20 @@ public class ArtistServiceTest {
         artistEntity1.setFestivals(Set.of(festival1));
         artistEntity1.setSpotifyId(spotifyId1);
         artistEntity1.setGenres(genres);
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = { "tom odell", "pawsa", "the lumineers", "avicii" })
+    @DisplayName("Filter out right data from spotify")
+    void findArtistInSpotifyAndCreateArtistObject_whenGivenArtistArray_returnsCorrectData(String name, Artist[] foundArtists) {
+
+        ArtistRequestDTO artist = artistService.findArtistInSpotifyAndCreateArtistObject(name, foundArtists);
+
+        Assertions.assertNotNull(artist, () -> "Artist should exist");
+        Assertions.assertEquals(foundArtists[0].getName(), name, () -> "Artist name does not match");
+        Assertions.assertTrue(artist.genres().size() > 0, () -> "Artist should have at least one genre");
+
     }
 
     @Test

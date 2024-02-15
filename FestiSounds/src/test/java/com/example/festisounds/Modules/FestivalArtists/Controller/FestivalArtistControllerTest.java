@@ -57,6 +57,7 @@ public class FestivalArtistControllerTest {
         fail("Test must be implemented yet!");
     }
 
+
     @Test
     @DisplayName("Get Artist by ID returns right artist")
     void testFindArtist_whenGivenExistingId_returnsRightArtist() throws Exception {
