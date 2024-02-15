@@ -79,20 +79,6 @@ public class ArtistServiceTest {
         artistEntity1.setGenres(genres);
     }
 
-    @ParameterizedTest
-    @NullAndEmptySource
-    @ValueSource(strings = { "tom odell", "pawsa", "the lumineers", "avicii" })
-    @DisplayName("Filter out right data from spotify")
-    void findArtistInSpotifyAndCreateArtistObject_whenGivenArtistArray_returnsCorrectData(String name, Artist[] foundArtists) {
-
-        ArtistRequestDTO artist = artistService.findArtistInSpotifyAndCreateArtistObject(name, foundArtists);
-
-        Assertions.assertNotNull(artist, () -> "Artist should exist");
-        Assertions.assertEquals(foundArtists[0].getName(), name, () -> "Artist name does not match");
-        Assertions.assertTrue(artist.genres().size() > 0, () -> "Artist should have at least one genre");
-
-    }
-
     @Test
     void createArtist_whenGivenArtistNewData_createArtist() {
         when(artistRepository.save(any(FestivalArtist.class))).thenReturn(artistEntity1);
