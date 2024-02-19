@@ -48,13 +48,13 @@ public class ArtistService {
                 .stream(artist)
                 .map(Artist::getId)
                 .findFirst()
-                .orElse("Could not find a spotifyId for the Artist");
+                .orElseThrow(() -> new ArtistNotFoundException("Could not find a spotifyId for the Artist"));
 
         String[] genres = Arrays
                 .stream(artist)
                 .map(Artist::getGenres)
                 .findFirst()
-                .orElse(new String[]{"Could not find a genres for the Artist"});
+                .orElseThrow(() -> new ArtistNotFoundException("Could not find a genre for the Artist"));
 
         return new ArtistRequestDTO(spotifyId, name, Set.of(genres));
     }

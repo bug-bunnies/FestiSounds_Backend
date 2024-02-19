@@ -1,5 +1,6 @@
 package com.example.festisounds.Modules.FestivalArtists.Service;
 
+import com.example.festisounds.Core.Controllers.SpotifyClientCredentials;
 import com.example.festisounds.FestiSoundsApplication;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistRequestDTO;
 import com.example.festisounds.Modules.FestivalArtists.Repositories.FestivalArtistRepository;
@@ -23,7 +24,8 @@ public class ArtistServiceSpotifyApiIntegrationTest {
     @Autowired
     ArtistService artistService;
 
-    @Disabled
+
+        @Disabled
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = { "tom odell", "pawsa", "the lumineers", "avicii" })
