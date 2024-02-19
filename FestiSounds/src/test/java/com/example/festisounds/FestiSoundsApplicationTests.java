@@ -5,7 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest
-//@ContextConfiguration(classes = FestiSoundsApplication.class)
+@ContextConfiguration(classes = FestiSoundsApplication.class)
 class FestiSoundsApplicationTests {
 
 	@Test
