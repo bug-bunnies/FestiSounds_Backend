@@ -7,6 +7,7 @@ import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistRequestDTO;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.example.festisounds.Modules.FestivalArtists.Entities.FestivalArtist;
 import com.example.festisounds.Modules.FestivalArtists.Repositories.FestivalArtistRepository;
+import jakarta.validation.constraints.AssertTrue;
 import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,10 +27,8 @@ import se.michaelthelin.spotify.model_objects.specification.Artist;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+
+import java.util.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ArtistServiceTest {
@@ -41,6 +40,7 @@ public class ArtistServiceTest {
     FestivalArtistRepository artistRepository;
 
     private Festival festival1;
+    private Festival festival2;
     private ArtistRequestDTO artistRequest;
     private ArtistResponseDTO artistResponse1;
     private FestivalArtist artistEntity1;
@@ -67,6 +67,17 @@ public class ArtistServiceTest {
         festival1.setWebsite("website");
         festival1.setOrganizer("organizer");
 
+        festival2 = new Festival();
+        festival2.setName("festival2");
+        festival2.setId(UUID.randomUUID());
+        festival2.setCity("festivalCity");
+        festival2.setDetails("test");
+        festival2.setCountry("festival country");
+        festival2.setEndDate(new Date());
+        festival2.setStartDate(new Date());
+        festival2.setWebsite("website");
+        festival2.setOrganizer("organizer");
+
         artistRequest = new ArtistRequestDTO(spotifyId1,
                 artistName1,
                 genres);
@@ -74,25 +85,10 @@ public class ArtistServiceTest {
         artistEntity1 = new FestivalArtist();
         artistEntity1.setId(artistEntity1ID);
         artistEntity1.setArtistName(artistName1);
-        artistEntity1.setFestivals(Set.of(festival1));
+        artistEntity1.setFestivals(new HashSet<>());
+        artistEntity1.getFestivals().add(festival1);
         artistEntity1.setSpotifyId(spotifyId1);
         artistEntity1.setGenres(genres);
-    }
-
-    @Test
-    void createArtist_whenGivenArtistNewData_createArtist() {
-        when(artistRepository.save(any(FestivalArtist.class))).thenReturn(artistEntity1);
-
-        ArtistResponseDTO createdArtist = artistService.createArtist(festival1, artistRequest);
-
-        verify(artistRepository).save(any(FestivalArtist.class));
-        Assertions.assertEquals(artistEntity1.getArtistName(), createdArtist.artistName(),
-                () -> "Artists name does not match");
-    }
-
-    @Test
-    void createOrAddArtistRouter_whenArtistDoesNotExist_createNewArtist() {
-
     }
 
     @Test
@@ -120,5 +116,73 @@ public class ArtistServiceTest {
         assertTrue(exception.getMessage().contains("Could not find artist with id " + artistEntity1ID));
     }
 
+
+//    @Test
+//    void createOrAddArtistRouter_whenArtistDoesNotExist_createNewArtist() {
+//
+//    }
+//
+//    @Test
+//    void createOrAddArtistRouter_whenArtistExists_updateArtist() {
+//
+//    }
+
+    @Test
+    void findArtist_whenGivenExistingArtistName_returnsRightArtist() {
+        when(artistRepository.findFestivalArtistByArtistName(artistName1.toUpperCase()))
+                .thenReturn(artistEntity1);
+
+        // Act
+        FestivalArtist result = artistService.findArtist(artistName1);
+
+        // Assert
+        assertEquals(artistEntity1.getId(), result.getId());
+        verify(artistRepository).findFestivalArtistByArtistName(artistName1.toUpperCase());
+    }
+
+    @Test
+    void createArtist_whenGivenArtistNewData_createArtist() {
+        when(artistRepository.save(any(FestivalArtist.class))).thenReturn(artistEntity1);
+
+        ArtistResponseDTO createdArtist = artistService.createArtist(festival1, artistRequest);
+
+        verify(artistRepository).save(any(FestivalArtist.class));
+        Assertions.assertEquals(artistEntity1.getArtistName(), createdArtist.artistName(),
+                () -> "Artists name does not match");
+    }
+
+    @Test
+    void addArtistToFestival_whenNewFestivalIsGiven_addsArtistToFestival() {
+        when(artistRepository.save(any(FestivalArtist.class))).thenReturn(artistEntity1);
+
+        ArtistResponseDTO updatedArtist = artistService.addArtistToFestival(artistEntity1, festival2);
+
+        verify(artistRepository).save(any(FestivalArtist.class));
+        Assertions.assertEquals(updatedArtist.festivalId().size(), 2,
+                () -> "Festival list size should be 2");
+    }
+
+    @Test
+    void deleteArtist_whenGivenId_removesArtist() {
+        // Arrange
+        when(artistRepository.findById(artistEntity1ID)).thenReturn(Optional.of(artistEntity1));
+
+        // Act
+        artistService.deleteArtist(artistEntity1ID);
+
+        // Assert
+        verify(artistRepository).deleteById(artistEntity1ID);
+        verify(artistRepository).findById(artistEntity1ID);
+    }
+
+    @Test
+    void deleteArtist_whenArtistIdDoesNotExist_throwsException() {
+        when(artistRepository.findById(artistEntity1ID)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(ArtistNotFoundException.class,
+                () -> artistService.deleteArtist(artistEntity1ID));
+
+        assertTrue(exception.getMessage().contains("Artist with id  " + artistEntity1ID + " does not exist"));
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.example.festisounds.Modules.FestivalArtists.Service;
 
 import com.example.festisounds.Core.Controllers.SpotifyClientCredentials;
+import com.example.festisounds.Core.Exceptions.Festival.FestivalNotFoundException;
 import com.example.festisounds.Core.Exceptions.FestivalArtists.ArtistNotFoundException;
 import com.example.festisounds.Modules.Festival.Entities.Festival;
 import com.example.festisounds.Modules.Festival.Repository.FestivalRepo;
@@ -26,6 +27,7 @@ public class ArtistService {
     private final FestivalArtistRepository artistRepository;
     private final FestivalRepo festivalRepo;
 
+//    TODO: check client credential functionality/structure
     public Artist[] getSpotifyArtistData(String name) {
 
         SpotifyApi spotifyApi = SpotifyClientCredentials.checkForToken();
@@ -40,6 +42,7 @@ public class ArtistService {
         }
     }
 
+// TODO: test if filtering works as expected and disable test before pushing
     public ArtistRequestDTO findArtistInSpotifyAndCreateArtistObject(String name, Artist[] artist) {
         String spotifyId = Arrays
                 .stream(artist)
@@ -64,17 +67,23 @@ public class ArtistService {
     }
 
     public ArtistResponseDTO createOrAddArtistRouter(String name, UUID festivalId) {
-        Festival festival = festivalRepo.findById(festivalId).orElseThrow();
+        Festival festival = festivalRepo
+                .findById(festivalId)
+                .orElseThrow(() -> new FestivalNotFoundException("Could not find a festival by the id: " + festivalId));
+
         name = name.toUpperCase().strip();   // may cause issues if artist name is case-sensitive
         FestivalArtist artist = findArtist(name);
+
         if (artist == null) {
             Artist[] spotifyArtist = getSpotifyArtistData(name);
             ArtistRequestDTO request = findArtistInSpotifyAndCreateArtistObject(name, spotifyArtist);
             return createArtist(festival, request);
         }
+
         return addArtistToFestival(artist, festival);
     }
 
+//    TODO: if returned value is null, should we handle it here?
     public FestivalArtist findArtist(String name) {
         name = name.toUpperCase().strip();
         return artistRepository.findFestivalArtistByArtistName(name);
@@ -85,6 +94,7 @@ public class ArtistService {
                 newArtist.artistName(),
                 festival,
                 newArtist.genres().toArray(new String[0]));
+
         createdArtist = artistRepository.save(createdArtist);
         return FestivalDTOBuilder.artistDTOBuilder(createdArtist);
     }
@@ -95,6 +105,7 @@ public class ArtistService {
         return FestivalDTOBuilder.artistDTOBuilder(artistRepository.save(artist));
     }
 
+//    TODO: test after spotify data has been tested
     public Set<String> updateArtistGenres(String name) throws Exception {
         try {
             FestivalArtist existingArtist = findArtist(name);
@@ -121,8 +132,13 @@ public class ArtistService {
         }
     }
 
-    public void deleteArtist(UUID id) {
-        artistRepository.deleteById(id);
+    public void deleteArtist(UUID id) throws ArtistNotFoundException {
+        if (artistRepository.findById(id).isPresent()) {
+            artistRepository.deleteById(id);
+        } else {
+            throw new ArtistNotFoundException("Artist with id  " + id + " does not exist");
+        }
+
     }
 
 }

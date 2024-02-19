@@ -4,6 +4,7 @@ import com.example.festisounds.FestiSoundsApplication;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistRequestDTO;
 import com.example.festisounds.Modules.FestivalArtists.Repositories.FestivalArtistRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,6 +23,7 @@ public class ArtistServiceSpotifyApiIntegrationTest {
     @Autowired
     ArtistService artistService;
 
+    @Disabled
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = { "tom odell", "pawsa", "the lumineers", "avicii" })
