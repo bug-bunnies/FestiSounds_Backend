@@ -2,6 +2,7 @@ package com.example.festisounds.Modules.FestivalArtists.Entities;
 
 import com.example.festisounds.Modules.Festival.Entities.Festival;
 import jakarta.persistence.PersistenceException;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -74,6 +75,18 @@ public class FestivalArtistEntityTest {
     }
 
     @Test
+    @DisplayName("Artist has name")
+    void testFestivalArtistEntity_whenArtistHasNoName_throwsException() {
+        FestivalArtist storedArtist = testManager.persistAndFlush(artist1);
+
+        artist2.setSpotifyId("test1");
+
+        Assertions.assertThrows(PersistenceException.class, () -> {
+            testManager.persistAndFlush(artist2);
+        }, "Artist without name can't be saved");
+    }
+
+    @Test
     @DisplayName("Festival list must not be null")
     void testFestivalArtistEntity_whenFestivalSetIsNull_throwsException() {
         FestivalArtist testArtist = new FestivalArtist();
@@ -81,7 +94,7 @@ public class FestivalArtistEntityTest {
         testArtist.setArtistName("NoFestival");
         testArtist.setGenres(Set.of("techno", "house"));
 
-        Assertions.assertThrows(PersistenceException.class, () -> {
+        Assertions.assertThrows(jakarta.validation.ConstraintViolationException.class, () -> {
             testManager.persistAndFlush(testArtist);
         }, "Festival set should always exist");
     }
@@ -92,9 +105,8 @@ public class FestivalArtistEntityTest {
         FestivalArtist testArtist = new FestivalArtist();
         testArtist.setSpotifyId("2");
         testArtist.setArtistName("NoFestival");
-        testArtist.setFestivals(Set.of());
 
-        Assertions.assertThrows(PersistenceException.class, () -> {
+        Assertions.assertThrows(jakarta.validation.ConstraintViolationException.class, () -> {
             testManager.persistAndFlush(testArtist);
         }, "Genres should always exist");
     }

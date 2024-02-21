@@ -25,7 +25,7 @@ public class ArtistServiceSpotifyApiIntegrationTest {
     ArtistService artistService;
 
 
-        @Disabled
+    @Disabled
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = { "tom odell", "pawsa", "the lumineers", "avicii" })
