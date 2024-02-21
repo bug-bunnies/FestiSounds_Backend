@@ -1,5 +1,6 @@
 package com.example.festisounds.Modules.FestivalArtists.Controller;
 
+import com.example.festisounds.Core.Exceptions.FestivalArtists.ArtistNotFoundException;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.example.festisounds.Modules.FestivalArtists.Service.ArtistService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -82,7 +83,7 @@ public class FestivalArtistControllerTest {
     @DisplayName("Get Artist by Id returns 404 when not found")
     void testFindArtist_whenGivenNotExistingID_returns404() throws Exception {
         UUID id = UUID.randomUUID();
-        when(service.getArtist(id)).thenThrow();
+        when(service.getArtist(id)).thenThrow(new ArtistNotFoundException("Artist not found"));
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/api/artists/" + id);
         MvcResult mvcResult = mockMvc.perform(requestBuilder).andReturn();

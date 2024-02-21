@@ -1,5 +1,6 @@
 package com.example.festisounds.Modules.FestivalArtists.Controller;
 
+import com.example.festisounds.Core.Exceptions.FestivalArtists.ArtistNotFoundException;
 import com.example.festisounds.Modules.FestivalArtists.DTO.ArtistResponseDTO;
 import com.example.festisounds.Modules.FestivalArtists.Service.ArtistService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,8 +32,8 @@ public class ArtistController {
     public ResponseEntity<ArtistResponseDTO> findArtist(@PathVariable UUID artistId) {
         try {
             return ResponseEntity.ok(service.getArtist(artistId));
-        } catch (NotFoundException e) {
-            return ResponseEntity.notFound().build();
+        } catch (ArtistNotFoundException e) {
+            return ResponseEntity.status(404).build();
         }
     }
 
