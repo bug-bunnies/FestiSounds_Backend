@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = FestiSoundsApplication.class)
+@SpringBootTest(classes = {FestiSoundsApplication.class})
 @ContextConfiguration
 class UserCachingServiceImplTest {
 
